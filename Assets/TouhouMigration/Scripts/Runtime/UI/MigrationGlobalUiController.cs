@@ -7,6 +7,7 @@ using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Quest;
+using TouhouMigration.Runtime.Save;
 using TouhouMigration.Runtime.Settings;
 using TouhouMigration.Runtime.Social;
 using TouhouMigration.Runtime.UI.Dialogue;
@@ -43,6 +44,8 @@ namespace TouhouMigration.Runtime.UI
         private ItemUseService itemUseService;
         private SocialBondService socialBondService;
         private QuestDeliveryService questDeliveryService;
+        private MigrationSaveService saveService;
+        private MigrationSaveOrchestrator saveOrchestrator;
         private DialogueEffectRouter dialogueEffectRouter;
 
         public bool BlocksGameplayInput =>
@@ -52,6 +55,43 @@ namespace TouhouMigration.Runtime.UI
 
         public CookingBuffService CookingBuffs => cookingBuffService;
         public MigrationPlayerHealthRuntime PlayerHealth => playerHealthRuntime;
+
+        // Persist gameplay state: the five life-sim service snapshots (via the save orchestrator) plus
+        // player HP. Coins/scene/position scalars remain a follow-up. Returns false if not yet initialized.
+        public bool SaveGame(int slot)
+        {
+            if (saveOrchestrator == null || saveService == null)
+            {
+                return false;
+            }
+
+            MigrationSaveData data = saveOrchestrator.Capture(new MigrationSaveData());
+            if (playerHealthRuntime != null)
+            {
+                data.max_hp = Mathf.RoundToInt(playerHealthRuntime.MaxHp);
+                data.current_hp = Mathf.RoundToInt(playerHealthRuntime.CurrentHp);
+            }
+
+            return saveService.SaveSlot(slot, data);
+        }
+
+        public bool LoadGame(int slot)
+        {
+            if (saveOrchestrator == null || saveService == null)
+            {
+                return false;
+            }
+
+            MigrationSaveData data = saveService.LoadSlot(slot);
+            if (data == null)
+            {
+                return false;
+            }
+
+            saveOrchestrator.Apply(data);
+            playerHealthRuntime?.SetHealth(data.current_hp, data.max_hp);
+            return true;
+        }
         public MigrationCombatRuntime Combat => combatRuntime;
         public MigrationPhoenixGaugeRuntime PhoenixGauge => phoenixGaugeRuntime;
         public MigrationProjectileSpecialSettlement ProjectileSettlement => projectileSettlement;
@@ -237,6 +277,10 @@ namespace TouhouMigration.Runtime.UI
             itemUseService = new ItemUseService(inventoryService, itemDatabase, cookingBuffService, playerHealthRuntime);
             dialogueEffectRouter = new DialogueEffectRouter(socialBondService, questDeliveryService);
             dialogueEffectRouter.BindInventory(inventoryService);
+
+            saveService = new MigrationSaveService(null);
+            saveOrchestrator = new MigrationSaveOrchestrator(
+                inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService);
             if (dialogueFacade != null)
             {
                 dialogueFacade.ActionRequested += OnDialogueActionRequested;

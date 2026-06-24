@@ -85,8 +85,9 @@ integration (controller dash, owner i-frame) is play-validated.
   optional polish — the bespoke smoke pattern works and the aggregator gives one-command regression.)
 - DONE (logic) — Save orchestration: `MigrationSaveOrchestrator.Capture/Apply` bridges the 5
   gameplay services (Inventory/Cooking/CookingBuff/SocialBond/QuestDelivery) and `MigrationSaveData`;
-  bond state round-trips through capture→apply (TDD). Pending: hook it into a runtime global save
-  owner + player scalar fields (fold into E2/E7 save UI).
+  bond state round-trips through capture→apply (TDD). **Now wired into the owner**:
+  `MigrationGlobalUiController.SaveGame(slot)/LoadGame(slot)` persist the 5 service snapshots + player HP
+  via the orchestrator + `MigrationSaveService`. Follow-up: coins/scene/position scalars + a save-UI trigger.
 - NEXT — Generated-asset/build-determinism hygiene (BuildInitialProject churns ~44 assets;
   gitignore builder-generated assets).
 Then proceed to E1 (player/combat execution core) per the roadmap.
