@@ -593,6 +593,9 @@ namespace TouhouMigration.Editor
             director.ConfigurePattern(80, 12, 4f, 1.2f);
             director.BindPhasePlan(phasePlan);
 
+            // Co-locate the phase-outcome presenter with the director so it auto-binds to PhaseFinished at runtime.
+            encounter.AddComponent<MigrationPerfectFreezeOutcomePresenter>();
+
             GameObject safeLane = GameObject.CreatePrimitive(PrimitiveType.Cube);
             safeLane.name = "PerfectFreezeSafeLaneCue";
             safeLane.transform.SetParent(encounter.transform, false);

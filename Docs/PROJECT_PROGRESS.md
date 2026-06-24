@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 04:06 CST
+Last updated: 2026-06-25 05:04 CST
 
 ## Working Discipline
 
@@ -20,12 +20,12 @@ Last updated: 2026-06-25 04:06 CST
 
 ## Current Handoff Snapshot
 
-- Date: 2026-06-25 04:06 CST
+- Date: 2026-06-25 05:04 CST
 - Recommended context mode: fresh/project handoff. Start a new Codex conversation from this document plus `/Users/Shared/Touhougodot/docs/AI_AGENT_GUIDE.md`.
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: M57, Snowball Damage And Arena Bounce.
+- Latest completed milestone: M58, Perfect Freeze Phase-Outcome Presenter.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -140,6 +140,9 @@ Done at handoff:
   - Snowball hits now apply a `0.75s` player-hit cooldown matching the Godot Cirno arena's player-side i-frame intent; this is intentionally local to the snowball hazard until the full Unity player i-frame system is migrated.
   - The snowball now has an arena center/radius seam with Godot's `34m` default, reflects direction off the horizontal arena normal, exposes `BounceEventCount` / `LastBounceNormal`, and still ignores wall/terrain physics for bounce just like the Godot source.
   - The generated encounter prefab now serializes `arenaRadius: 34` and `playerDamageCooldownSeconds: 0.75` on `PerfectFreezeSnowballHazard`.
+- M58 adds the first production consumer of the Perfect Freeze phase outcome: `MigrationPerfectFreezeOutcomePresenter` subscribes to `MigrationPerfectFreezeEncounterDirector.PhaseFinished` and shows capture/clear/timeout plus bonus/stun summary text via lightweight `TextMesh` children, granting no rewards and owning no settlement.
+  - `TouhouMigrationProjectBuilder.CreatePerfectFreezeEncounterPrefab` now adds the presenter on the encounter root, co-located with the director, so it auto-binds to `PhaseFinished` at runtime through its `OnEnable` `GetComponent` resolve.
+  - Verified TDD red→green (`PerfectFreezeEncounterSmokeTests.RunAll`) plus green regressions: `EnemyProjectileSpecialRulesSmokeTests`, `EnemyProjectilePerfectFreezeCycleSmokeTests`, `ProjectileSettlementStaggerSmokeTests`, `CombatBridgeSmokeTests`.
 - `vampire` remains explicit fallback because the formal Godot source scene is missing.
 
 Evidence:
@@ -312,7 +315,7 @@ Evidence:
   - `MigrationEnemy_Bat.prefab` contains `deathFeedbackEnabled: 1`, `requiresActiveWindow: 1`, `visibleWhenInactive: 0`, `windowActive: 0`, `attackActiveSeconds: 0.12`, and `defeatDelaySeconds: 0.45`.
   - `MigrationEnemy_Bat.prefab` also contains serialized `projectilePrefab`, `deathFeedbackPrefab`, `MigrationCombatHurtFeedback`, `MigrationDamageNumberPresenter`, and `MigrationCombatRewardPresentation`.
   - `HumanVillageVerticalSlice.unity` contains projectile/death feedback prefab references plus hurt, damage-number, and reward/loot presentation components for generated scene enemies.
-- Unity process check at 2026-06-25 04:06 CST: no real `Unity.app/Contents/MacOS/Unity` process remained after batch commands.
+- Unity process check at 2026-06-25 05:04 CST: no real `Unity.app/Contents/MacOS/Unity` process remained after batch commands.
 - Godot git status at handoff: `/Users/Shared/Touhougodot/assets/unity_imports/README_MIGRATED_TO_UNITY.md` is modified, and three unrelated `.png.import` files under `subprojects/ue project rebuild/artifacts` are untracked. This M57 slice did not edit the Godot source tree.
 
 Important files for the next worker:
@@ -415,7 +418,7 @@ Next recommended milestone:
 
 ### M57: Snowball Damage And Arena Bounce
 
-- Date: 2026-06-25 04:06 CST
+- Date: 2026-06-25 05:04 CST
 - Status: Complete for this slice
 - Owner: Codex, with read-only subagent findings from Kuhn
 - Goal: Turn the M54-M56 rolling snowball from pressure/presentation into a real Unity arena hazard: player damage, capture-hit registration, hit cooldown, and Godot-style arena radius bounce.
@@ -481,7 +484,7 @@ Verification:
   - `MigrationPerfectFreezeEncounter.prefab` serializes `arenaRadius: 34` and `playerDamageCooldownSeconds: 0.75`.
   - Existing snowball values remain serialized: `damage: 16`, `durationSeconds: 5.8`, and `initialShatterHp: 42`.
 - Process/tool checks:
-  - 2026-06-25 04:06 CST: no real `Unity.app/Contents/MacOS/Unity` process remained.
+  - 2026-06-25 05:04 CST: no real `Unity.app/Contents/MacOS/Unity` process remained.
   - `agent-reach check-update`: current `v1.5.0`, already latest.
 
 Known blockers:

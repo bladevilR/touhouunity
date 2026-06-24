@@ -269,3 +269,8 @@ for package replacement and direct-import decisions.
   presenters, and production combat HUD feedback around those seams, plus production cooking UI/timers,
   arbitrary `props` stack identity, save orchestration for runtime services,
   daily reset wiring, and Kaguya unlock tracking.
+
+M58 delivers the first of those Perfect Freeze production outcome consumers:
+`MigrationPerfectFreezeOutcomePresenter` (capture/clear/timeout plus bonus/stun text) is
+now wired into the generated `MigrationPerfectFreezeEncounter.prefab`, co-located with the
+encounter director and auto-binding to `PhaseFinished` at runtime.

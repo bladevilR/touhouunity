@@ -155,6 +155,8 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, director.HasStaggerAdapter, "Encounter director should wire the local Perfect Freeze stagger adapter.");
             AssertEqual(true, director.HasBossTarget, "Encounter director should target the local boss HP component.");
             AssertEqual(true, director.HasSafeLaneCue, "Encounter director should wire a local safe-lane cue.");
+            MigrationPerfectFreezeOutcomePresenter outcomePresenter = director.GetComponent<MigrationPerfectFreezeOutcomePresenter>();
+            AssertEqual(true, outcomePresenter != null, "Generated encounter prefab should carry a Perfect Freeze outcome presenter co-located with the director so it auto-binds at runtime.");
             AssertEqual(80, director.ActiveProjectileCap, "Encounter should preserve the Godot Perfect Freeze active bullet cap.");
             AssertEqual(12, director.BurstProjectileCount, "Encounter burst should preserve the 12 frozen-crystal stagger threshold.");
             AssertEqual(18, director.MaxProjectilesPerCast, "Encounter timed casts should preserve Godot's per-cast projectile budget.");

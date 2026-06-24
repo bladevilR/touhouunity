@@ -392,6 +392,7 @@ GameObject:
   - component: {fileID: 8115908012674800521}
   - component: {fileID: 7857494016398600730}
   - component: {fileID: 7288488509946191174}
+  - component: {fileID: 4559044349844519911}
   m_Layer: 0
   m_Name: MigrationPerfectFreezeEncounter
   m_TagString: Untagged
@@ -505,6 +506,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationPrefabPoolService
   maxInactivePerPrefab: 128
+--- !u!114 &4559044349844519911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901283516490810615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a5ef2f7d14e53a8a73c0dd0c481bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationPerfectFreezeOutcomePresenter
+  displaySeconds: 1.1
+  clearColor: {r: 0.64, g: 0.95, b: 1, a: 1}
+  captureColor: {r: 1, g: 0.86, b: 0.34, a: 1}
+  timeoutColor: {r: 0.74, g: 0.78, b: 0.86, a: 1}
 --- !u!1 &5410547579064108400
 GameObject:
   m_ObjectHideFlags: 0
