@@ -46,6 +46,7 @@ namespace TouhouMigration.Runtime.UI
         private QuestDeliveryService questDeliveryService;
         private MigrationSaveService saveService;
         private MigrationSaveOrchestrator saveOrchestrator;
+        private MigrationGameStateMachine gameState;
         private DialogueEffectRouter dialogueEffectRouter;
 
         public bool BlocksGameplayInput =>
@@ -55,6 +56,7 @@ namespace TouhouMigration.Runtime.UI
 
         public CookingBuffService CookingBuffs => cookingBuffService;
         public MigrationPlayerHealthRuntime PlayerHealth => playerHealthRuntime;
+        public MigrationGameStateMachine GameState => gameState;
 
         // Persist gameplay state: the five life-sim service snapshots (via the save orchestrator) plus
         // player HP. Coins/scene/position scalars remain a follow-up. Returns false if not yet initialized.
@@ -91,6 +93,20 @@ namespace TouhouMigration.Runtime.UI
             saveOrchestrator.Apply(data);
             playerHealthRuntime?.SetHealth(data.current_hp, data.max_hp);
             return true;
+        }
+
+        // Game loop tracks Dialogue as a transient mode layered over the base (Overworld) mode.
+        private void OnDialogueStartedMode(string npcId, int sessionId)
+        {
+            gameState?.Push(MigrationGameStateMode.Dialogue);
+        }
+
+        private void OnDialogueFinishedMode(System.Collections.Generic.Dictionary<string, object> result)
+        {
+            if (gameState != null && gameState.CurrentMode == MigrationGameStateMode.Dialogue)
+            {
+                gameState.Pop();
+            }
         }
         public MigrationCombatRuntime Combat => combatRuntime;
         public MigrationPhoenixGaugeRuntime PhoenixGauge => phoenixGaugeRuntime;
@@ -281,9 +297,12 @@ namespace TouhouMigration.Runtime.UI
             saveService = new MigrationSaveService(null);
             saveOrchestrator = new MigrationSaveOrchestrator(
                 inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService);
+            gameState = new MigrationGameStateMachine(MigrationGameStateMode.Overworld);
             if (dialogueFacade != null)
             {
                 dialogueFacade.ActionRequested += OnDialogueActionRequested;
+                dialogueFacade.DialogueStarted += OnDialogueStartedMode;
+                dialogueFacade.DialogueFinished += OnDialogueFinishedMode;
             }
 
             giftInteractionService = new GiftInteractionService(
