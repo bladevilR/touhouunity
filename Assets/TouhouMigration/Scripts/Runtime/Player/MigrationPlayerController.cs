@@ -13,10 +13,15 @@ namespace TouhouMigration.Runtime.Player
         [SerializeField] private float gravity = -24f;
         [SerializeField] private float jumpHeight = 1.4f;
         [SerializeField] private float dashCooldown = 0.75f;
+        [SerializeField] private float dashDurationSeconds = 0.2f;
+        [SerializeField] private float dashSpeed = 14f;
+        [SerializeField] private KeyCode dashKey = KeyCode.LeftControl;
 
         private CharacterController characterController;
         private CookingBuffService cookingBuffService;
         private float verticalVelocity;
+        private readonly MigrationDashState dashState = new MigrationDashState();
+        private Vector3 dashDirection;
 
         private void Awake()
         {
@@ -58,13 +63,24 @@ namespace TouhouMigration.Runtime.Player
 
             if (characterController.isGrounded && Input.GetButtonDown("Jump"))
             {
-                verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                verticalVelocity = Mathf.Sqrt(GetModifiedJumpHeight() * -2f * gravity);
             }
 
             verticalVelocity += gravity * Time.deltaTime;
 
-            float speed = Input.GetKey(KeyCode.LeftShift) ? GetModifiedRunSpeed() : GetModifiedWalkSpeed();
-            Vector3 velocity = movement * speed;
+            dashState.Tick(Time.deltaTime);
+            if (Input.GetKeyDown(dashKey) && dashState.CanDash)
+            {
+                dashDirection = movement.sqrMagnitude > 0.001f ? movement.normalized : transform.forward;
+                dashState.Configure(GetModifiedDashCooldown(), dashDurationSeconds, dashSpeed * GetModifiedDashDistanceMultiplier());
+                dashState.TryStartDash();
+            }
+
+            Vector3 horizontalVelocity = dashState.IsDashing
+                ? dashDirection * dashState.DashSpeed
+                : movement * (Input.GetKey(KeyCode.LeftShift) ? GetModifiedRunSpeed() : GetModifiedWalkSpeed());
+
+            Vector3 velocity = horizontalVelocity;
             velocity.y = verticalVelocity;
 
             characterController.Move(velocity * Time.deltaTime);

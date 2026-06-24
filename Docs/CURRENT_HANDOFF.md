@@ -29,8 +29,11 @@ migration**, driven autonomously against the north-star roadmap
   in `MigrationPlayerHealthRuntime`: a landed hit blocks further damage until it ticks down; default 0 =
   off, live player sets 0.75; 37/37 regression). Wiring 0.75 into the live player + reconciling the
   snowball's local cooldown is deferred to player integration. **E1.2 dash state machine DONE** (pure
-`MigrationDashState`: cooldown + active window). **In progress: E1.3** — wire dash + i-frames into the
-live `MigrationPlayerController` and integrate movement/Animator.
+`MigrationDashState`: cooldown + active window). **E1.3 dash wiring DONE** — `MigrationPlayerController`
+dashes on LeftControl in move/facing direction (buff-modified cooldown/distance); also fixed jump to use
+the cooking jump-boost (`GetModifiedJumpHeight`). Verified by compile gate; dash motion to be confirmed by
+play-validation. **In progress: E1.4** — wire i-frames (0.75s) into the live health-runtime owner +
+reconcile the snowball's local cooldown; then Animator/animation integration.
 
 ## M58 — Done
 
