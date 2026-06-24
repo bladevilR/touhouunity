@@ -98,7 +98,7 @@ namespace TouhouMigration.Editor
 
         private static void OnLogMessage(string condition, string stackTrace, LogType type)
         {
-            if (!MigrationPlayModeReport.IsFailureLog(type))
+            if (!MigrationPlayModeReport.IsRuntimeFailure(type, stackTrace))
             {
                 return;
             }

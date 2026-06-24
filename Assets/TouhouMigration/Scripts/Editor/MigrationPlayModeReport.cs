@@ -29,6 +29,20 @@ namespace TouhouMigration.Editor
             return type == LogType.Error || type == LogType.Exception || type == LogType.Assert;
         }
 
+        // A play-mode failure that is actually relevant to the migrated game. Editor-internal tooling
+        // noise (e.g. Unity QuickSearch index-on-startup) throws exceptions whose stack lives entirely
+        // in UnityEditor.* with no project frame; those are not game runtime errors.
+        public static bool IsRuntimeFailure(LogType type, string stackTrace)
+        {
+            if (!IsFailureLog(type))
+            {
+                return false;
+            }
+            string stack = stackTrace ?? string.Empty;
+            bool editorOnly = stack.Contains("UnityEditor.") && !stack.Contains("TouhouMigration");
+            return !editorOnly;
+        }
+
         public static string EmptyResults()
         {
             return JsonUtility.ToJson(new ResultSet());

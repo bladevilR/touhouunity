@@ -14,6 +14,7 @@ namespace TouhouMigration.Editor.Tests
             TestHasFailuresDetectsErrorsAndMissedPlay();
             TestReportContainsScenesAndErrors();
             TestAppendAndDeserializeRoundTrip();
+            TestRuntimeFailureExcludesEditorOnlyNoise();
             Debug.Log("Play mode validator smoke tests passed.");
         }
 
@@ -61,6 +62,22 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(2, back.Count, "Two results should round-trip.");
             AssertEqual("S1", back[0].sceneName, "First scene name should survive serialization.");
             AssertEqual(false, back[1].enteredPlay, "Second scene enteredPlay flag should survive serialization.");
+        }
+
+        private static void TestRuntimeFailureExcludesEditorOnlyNoise()
+        {
+            string quickSearchStack =
+                "  at System.Collections.Generic.List`1[T].get_Item (System.Int32 index)\n"
+                + "  at UnityEditor.Search.SearchDatabase+<EnumerateAll>d__75.MoveNext ()\n"
+                + "  at UnityEditor.Search.SearchInit.IndexationOnStartup ()";
+            string gameStack =
+                "  at TouhouMigration.Runtime.Combat.MigrationCombatRuntime.Foo () (at Assets/TouhouMigration/Scripts/Runtime/Combat/MigrationCombatRuntime.cs:42)";
+            string engineRuntimeStack = "  at UnityEngine.Material.GetColor (System.String name)";
+
+            AssertEqual(false, MigrationPlayModeReport.IsRuntimeFailure(LogType.Exception, quickSearchStack), "Editor-only QuickSearch exceptions must not count as game runtime failures.");
+            AssertEqual(true, MigrationPlayModeReport.IsRuntimeFailure(LogType.Exception, gameStack), "Exceptions from project code must count as runtime failures.");
+            AssertEqual(true, MigrationPlayModeReport.IsRuntimeFailure(LogType.Error, engineRuntimeStack), "Engine runtime errors (non-editor) must count as runtime failures.");
+            AssertEqual(false, MigrationPlayModeReport.IsRuntimeFailure(LogType.Warning, gameStack), "Warnings must not count as runtime failures.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

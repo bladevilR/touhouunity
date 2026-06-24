@@ -39,15 +39,24 @@ migration**, driven autonomously against the north-star roadmap
   `EnemyProjectilePerfectFreezeCycleSmokeTests`, `ProjectileSettlementStaggerSmokeTests`,
   `CombatBridgeSmokeTests`.
 
-## Next Step — roadmap Phase 0.3 (foundation debts)
+## Phase 0.3 — Foundation Debts
 
-1. Run the Cycle A in-editor play-mode validation acceptance
-   (`Docs/superpowers/plans/2026-06-24-playmode-validation.md`) and record results — the
-   first real "does it run on screen" check.
-2. Add assembly definitions (Runtime/Editor/Tests) + migrate the bespoke smoke tests onto
-   Unity Test Runner + a master "run all tests" entry (today 35 tests run one-by-one).
-3. Wire the repeatedly-deferred save orchestration (cooking/buffs/quest/bond/inventory
-   snapshots persisted by one runtime owner).
+- DONE — In-editor play-mode validation: the Cycle A validator runs end-to-end; all 4
+  current scenes (Bootstrap, BambooHome, HumanVillage, TitleScreen) enter Play and run with
+  **zero game-runtime errors** after filtering Unity QuickSearch editor-tooling noise
+  (`MigrationPlayModeReport.IsRuntimeFailure`). First real play validation; scenes are
+  runtime-clean.
+  - Finding A (validator capture gap): `camera.Render()` does not capture Screen-Space-Overlay
+    UI, so UI-only scenes (TitleScreen, Bootstrap) capture black. Not a game error; improve
+    capture (ScreenCapture / end-of-frame) when UI-scene visual proof matters.
+  - Finding B (scene): HumanVillage camera framing is poor (content clusters at top of frame);
+    scene/camera-setup polish belongs to E2/E3.
+- NEXT — Assembly definitions (Runtime/Editor/Tests) + migrate the bespoke smoke tests onto
+  Unity Test Runner + a master "run all tests" entry (today 35 tests run one-by-one).
+- NEXT — Wire the deferred save orchestration (cooking/buffs/quest/bond/inventory persisted by
+  one runtime owner).
+- NEXT — Generated-asset/build-determinism hygiene (BuildInitialProject churns ~44 assets;
+  gitignore builder-generated assets).
 Then proceed to E1 (player/combat execution core) per the roadmap.
 
 ## Hazards
