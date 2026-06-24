@@ -218,6 +218,8 @@ namespace TouhouMigration.Runtime.UI
             cookingBuffService = new CookingBuffService(cookingDatabase);
             playerHealthRuntime = new MigrationPlayerHealthRuntime();
             playerHealthRuntime.BindCookingBuffs(cookingBuffService);
+            // General player i-frame after any landed hit (Godot Cirno-arena 0.75s intent); ticked each frame.
+            playerHealthRuntime.SetInvulnerabilityDuration(0.75f);
             MigrationPlayerController playerController = FindAnyObjectByType<MigrationPlayerController>();
             if (playerController != null)
             {

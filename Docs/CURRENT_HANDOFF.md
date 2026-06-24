@@ -32,8 +32,9 @@ migration**, driven autonomously against the north-star roadmap
 `MigrationDashState`: cooldown + active window). **E1.3 dash wiring DONE** — `MigrationPlayerController`
 dashes on LeftControl in move/facing direction (buff-modified cooldown/distance); also fixed jump to use
 the cooking jump-boost (`GetModifiedJumpHeight`). Verified by compile gate; dash motion to be confirmed by
-play-validation. **In progress: E1.4** — wire i-frames (0.75s) into the live health-runtime owner +
-reconcile the snowball's local cooldown; then Animator/animation integration.
+play-validation. **E1.4 DONE** — `MigrationGlobalUiController` sets the player health runtime i-frame to
+0.75s (ticked each frame); 38/38 regression. Snowball's local 0.75s cooldown left as redundant-but-harmless.
+**In progress: E1.5** — Animator / movement-animation integration (player Mecanim humanoid + locomotion).
 
 ## M58 — Done
 
