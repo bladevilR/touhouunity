@@ -1,100 +1,45 @@
-# Current Handoff
+# Current Handoff — Resume Point
 
-Last updated: 2026-06-25 05:04 CST
+Last updated: 2026-06-25 (session 1 handoff)
 
-## Objective
+## Objective & Ownership
 
-Build the full Touhou Phantom game in `/Users/Shared/TouhouUnityMigration`. Godot at
-`/Users/Shared/Touhougodot` is the gameplay/content reference, not the implementation
-shape to copy. Prefer Unity-native prefab, ScriptableObject, physics, animation, camera,
-UI, and service boundaries where they serve the same player-facing effect better.
+Build the full Touhou Phantom game in `/Users/Shared/TouhouUnityMigration`, migrating from Godot
+(`/Users/Shared/Touhougodot`, read-only reference). Claude is sole owner (Codex stopped 2026-06-25).
+Standing goal: **complete all migration**, driven autonomously, user reviews final results only.
 
-Ownership: Claude is sole owner (Codex stopped 2026-06-25). Standing goal: **complete all
-migration**, driven autonomously against the north-star roadmap
-`Docs/superpowers/plans/2026-06-25-migration-completion-roadmap.md` (Phase 0 → E1…E8).
+- North-star roadmap: `Docs/superpowers/plans/2026-06-25-migration-completion-roadmap.md` (Phase 0 → E1…E8; all locations incl. PureNature/AngryMesh variants are in scope).
+- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit at handoff: `33ed866`.
 
-## Current State
+## Verified State
 
-- Compiles green; full smoke suite **42/42 via `MigrationSmokeTestRunner.RunAll`** (one command).
-  Under git, pushed to `git@github.com:bladevilR/touhouunity.git` (`main`).
-- **Phase 0 (foundation) COMPLETE**: M58 closed; git + GitHub live; first real play-mode validation
-  (scenes runtime-clean); master one-command test runner; save-orchestration logic. Deferred as
-  optional: full asmdef/NUnit migration; generated-asset gitignore hygiene.
-- **Next: E1 — player/combat execution core.** `MigrationPlayerController` already has
-  CharacterController move + jump + cooking-buff-modified speed/dash/jump *queries*, but lacks dash
-  *execution*, swim, animation-event attack windows, a general player **i-frame** system (only a local
-  snowball cooldown today), Animator integration, and split concerns. E1 sub-milestones: (1) player
-  i-frames ✓ → (2) dash execution → (3) Animator/movement integration → (4) animation-event attack
-  windows → (5) swim → (6) split Player concerns. **E1.1 i-frames DONE** (opt-in invulnerability window
-  in `MigrationPlayerHealthRuntime`: a landed hit blocks further damage until it ticks down; default 0 =
-  off, live player sets 0.75; 37/37 regression). Wiring 0.75 into the live player + reconciling the
-  snowball's local cooldown is deferred to player integration. **E1.2 dash state machine DONE** (pure
-`MigrationDashState`: cooldown + active window). **E1.3 dash wiring DONE** — `MigrationPlayerController`
-dashes on LeftControl in move/facing direction (buff-modified cooldown/distance); also fixed jump to use
-the cooking jump-boost (`GetModifiedJumpHeight`). Verified by compile gate; dash motion to be confirmed by
-play-validation. **E1.4 DONE** — `MigrationGlobalUiController` sets the player health runtime i-frame to
-0.75s (ticked each frame); 38/38 regression. Snowball's local 0.75s cooldown left as redundant-but-harmless.
-E1 **swim model done** (`MigrationSwimState`: slowed horizontal + buoyant clamped vertical, TDD;
-water-volume detection wired during integration). E1 **locomotion params done** (`MigrationLocomotion.Resolve`
-→ normalized speed + move/run/grounded/dash flags for an Animator driver, TDD). E1's remaining items — the
-**Mecanim humanoid AnimatorController setup** (player model + clips → controller). The live
-`MigrationPlayerController` now exposes `CurrentLocomotion` each frame as the driver seam, so what remains
-is the AnimatorController asset + a component that pushes those params onto it. Plus animation-event attack
-windows and splitting Player concerns — heavier asset/integration work for a fresh pass. **E2.1 game-state mode machine DONE**
-(`MigrationGameStateMachine` + `MigrationGameStateMode` Menu/Home/Overworld/Combat/Dialogue/Cutscene/Sleeping,
-ChangeMode/Push/Pop, TDD) — game-loop foundation. **Next:** E2 scene-flow driving the mode machine, or E1
-Animator integration. Pure-logic milestones (i-frames, dash, save orch, game-state) are TDD-tested; live
-integration (controller dash, owner i-frame) is play-validated.
+- Tree clean, `main` in sync with origin. ~120 runtime C# files; **43 smoke-test suites**.
+- Last full regression: **42/42 green** (`MigrationSmokeTestRunner.RunAll`) after the owner save+game-state wiring. The 43rd suite (`GameStateRulesSmokeTests`, E2.3) was added after, focused-green only — **run a confirming full regression at resume (expect 43/43).**
+- 4 scenes (Bootstrap/BambooHome/HumanVillage/TitleScreen) **play-validated runtime-clean** via `MigrationPlayModeValidator` (note: it can't capture Screen-Space-Overlay UI, so UI scenes screenshot black — a capture limitation, not a game error).
+- Completion: **~13% by roadmap structure.** This is a multi-session, weeks-scale effort.
 
-## M58 — Done
+## Done (session 1)
 
-- `MigrationPerfectFreezeOutcomePresenter` (runtime component) subscribes to
-  `MigrationPerfectFreezeEncounterDirector.PhaseFinished` and shows capture/clear/timeout
-  plus bonus/stun summary text via lightweight `TextMesh` children. Grants no rewards and
-  owns no settlement.
-- `TouhouMigrationProjectBuilder.CreatePerfectFreezeEncounterPrefab(...)` now adds the
-  presenter on the encounter root (co-located with the director), so it auto-binds to
-  `PhaseFinished` at runtime via its `OnEnable` `GetComponent` resolve.
-- `PerfectFreezeEncounterSmokeTests.TestGeneratedPerfectFreezeEncounterPrefabWiresScopedBoss`
-  now asserts the generated prefab carries the presenter.
+- **Phase 0 (complete):** M58 closed; git + GitHub live; first in-editor play-mode validation; master one-command test runner (`MigrationSmokeTestRunner`); save orchestration (`MigrationSaveOrchestrator`).
+- **E1 player core:** i-frames (`MigrationPlayerHealthRuntime` opt-in window + owner sets 0.75s); dash (`MigrationDashState` + controller wiring, LeftControl; also fixed jump to use cooking boost); swim (`MigrationSwimState`); locomotion (`MigrationLocomotion` + controller `CurrentLocomotion` seam). **Remaining:** Mecanim humanoid AnimatorController asset + a driver pushing `CurrentLocomotion`; animation-event attack windows; split the controller's concerns.
+- **E2:** `MigrationGameStateMachine` + `MigrationGameStateMode` + `MigrationGameStateRules`; owner Pushes `Dialogue` mode on dialogue start / Pops on finish (`MigrationGlobalUiController.GameState`). **Remaining:** drive Combat/Sleeping/Menu modes; use the rules to gate input/HUD/world-time; scene-flow + full day loop.
+- **E5.1:** dialogue give/take-item routing (`DialogueEffectRouter.BindInventory`, wired in owner). **Grounded next:** the NPC dialogue data's `fx` are only `[["bond",N]]` and `[["humanity",N]]` — **bond is routed, `humanity` is NOT yet** (needs a humanity-stat target). The give_item capability is added but the current data may not use it.
+- **E4/E8:** save orchestrator wired into owner `SaveGame(slot)/LoadGame(slot)` (5 service snapshots + HP). **Remaining:** coins/scene/position scalars + a save-UI trigger.
 
-## Verification
+## How To Work (established rhythm)
 
-- TDD red→green (`PerfectFreezeEncounterSmokeTests.RunAll`):
-  - RED before builder wiring: "...outcome presenter co-located..." failed (Expected True, Actual False).
-  - GREEN: exit 0, "Perfect Freeze encounter smoke tests passed."
-- Adjacent regressions all green (exit 0): `EnemyProjectileSpecialRulesSmokeTests`,
-  `EnemyProjectilePerfectFreezeCycleSmokeTests`, `ProjectileSettlementStaggerSmokeTests`,
-  `CombatBridgeSmokeTests`.
+- **One Unity batch at a time** (no parallel); verify compile-green before batches.
+- Unity binary: `/Applications/Unity/Hub/Editor/6000.5.0f1/Unity.app/Contents/MacOS/Unity`.
+- Full regression (one command): `... -batchmode -quit -executeMethod TouhouMigration.Editor.Tests.MigrationSmokeTestRunner.RunAll`.
+- Per milestone: prefer pure-logic TDD (focused smoke test, red→green); for owner/controller (MonoBehaviour) changes, gate via `GlobalUiSmokeTests` + a full regression; then **commit** (end message with `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`) + **push**.
+- **Builder churn:** tests that call `TouhouMigrationProjectBuilder.BuildInitialProject` regenerate ~44 generated assets (enemy prefabs/controllers, scenes). Revert before committing so commits stay focused: `git checkout -- Assets/TouhouMigration/Animations/Enemies Assets/TouhouMigration/Prefabs Assets/TouhouMigration/Scenes`. (Roadmap Phase 0.3 lists gitignoring generated assets as a deferred hygiene fix.)
+- Generated prefabs/scenes are owned by `TouhouMigrationProjectBuilder` — author them in the builder, never hand-edit generated assets. Keep the Godot source tree read-only.
 
-## Phase 0.3 — Foundation Debts
+## Prioritized Next (heavy integration/content — best in fresh context)
 
-- DONE — In-editor play-mode validation: the Cycle A validator runs end-to-end; all 4
-  current scenes (Bootstrap, BambooHome, HumanVillage, TitleScreen) enter Play and run with
-  **zero game-runtime errors** after filtering Unity QuickSearch editor-tooling noise
-  (`MigrationPlayModeReport.IsRuntimeFailure`). First real play validation; scenes are
-  runtime-clean.
-  - Finding A (validator capture gap): `camera.Render()` does not capture Screen-Space-Overlay
-    UI, so UI-only scenes (TitleScreen, Bootstrap) capture black. Not a game error; improve
-    capture (ScreenCapture / end-of-frame) when UI-scene visual proof matters.
-  - Finding B (scene): HumanVillage camera framing is poor (content clusters at top of frame);
-    scene/camera-setup polish belongs to E2/E3.
-- DONE — Master one-command smoke-test runner: `MigrationSmokeTestRunner.RunAll` discovers and
-  runs every `*SmokeTests` suite in one Unity launch. First full-suite baseline: **35/35 suites
-  pass, 0 compile errors**. (Full asmdef restructure + NUnit Test Runner migration deferred as
-  optional polish — the bespoke smoke pattern works and the aggregator gives one-command regression.)
-- DONE (logic) — Save orchestration: `MigrationSaveOrchestrator.Capture/Apply` bridges the 5
-  gameplay services (Inventory/Cooking/CookingBuff/SocialBond/QuestDelivery) and `MigrationSaveData`;
-  bond state round-trips through capture→apply (TDD). **Now wired into the owner**:
-  `MigrationGlobalUiController.SaveGame(slot)/LoadGame(slot)` persist the 5 service snapshots + player HP
-  via the orchestrator + `MigrationSaveService`. Follow-up: coins/scene/position scalars + a save-UI trigger.
-- NEXT — Generated-asset/build-determinism hygiene (BuildInitialProject churns ~44 assets;
-  gitignore builder-generated assets).
-Then proceed to E1 (player/combat execution core) per the roadmap.
-
-## Hazards
-
-- Verify compile-green before every Unity batch; run only one Unity batch/editor command at a time (no parallel).
-- Generated prefabs/scenes are regenerated by `TouhouMigrationProjectBuilder` — author them in the builder, not by hand-editing generated assets.
-- git is live; commit per milestone, never force-push shared history.
-- Keep the Godot source tree (`/Users/Shared/Touhougodot`) read-only unless explicitly exporting/reading source data.
+1. **E5 quick win:** route dialogue `humanity` fx (data-grounded; bond already routed).
+2. **E1.5:** player Mecanim AnimatorController (model + MokouValidation clips → controller) + a driver consuming `CurrentLocomotion`; then animation-event attack windows.
+3. **E2:** Combat/Sleeping/Menu mode drivers + use `MigrationGameStateRules` to gate input/HUD/time; scene-flow + full day loop (time/calendar/weather/day-night already have foundations).
+4. **E3:** the ~20 formal locations (incl. all PureNature/AngryMesh variants), asset-promoted from `ExternalUnityAssets/unity_imports`; each play-validated.
+5. **E4:** life-sim closure — shop/economy, cooking UI/timer, farming, fishing, quest/NPC schedule/bond loops to playable.
+6. **E5/E6/E7/E8:** full dialogue (portraits, all 35 NPCs, shop) → combat breadth (general arena, 20-enemy AI, cardbuild loop, more bosses) → presentation (URP/audio/VFX/UI) → save parity + content audit + full play-validation.
