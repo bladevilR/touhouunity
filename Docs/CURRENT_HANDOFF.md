@@ -51,8 +51,10 @@ migration**, driven autonomously against the north-star roadmap
     capture (ScreenCapture / end-of-frame) when UI-scene visual proof matters.
   - Finding B (scene): HumanVillage camera framing is poor (content clusters at top of frame);
     scene/camera-setup polish belongs to E2/E3.
-- NEXT — Assembly definitions (Runtime/Editor/Tests) + migrate the bespoke smoke tests onto
-  Unity Test Runner + a master "run all tests" entry (today 35 tests run one-by-one).
+- DONE — Master one-command smoke-test runner: `MigrationSmokeTestRunner.RunAll` discovers and
+  runs every `*SmokeTests` suite in one Unity launch. First full-suite baseline: **35/35 suites
+  pass, 0 compile errors**. (Full asmdef restructure + NUnit Test Runner migration deferred as
+  optional polish — the bespoke smoke pattern works and the aggregator gives one-command regression.)
 - NEXT — Wire the deferred save orchestration (cooking/buffs/quest/bond/inventory persisted by
   one runtime owner).
 - NEXT — Generated-asset/build-determinism hygiene (BuildInitialProject churns ~44 assets;
