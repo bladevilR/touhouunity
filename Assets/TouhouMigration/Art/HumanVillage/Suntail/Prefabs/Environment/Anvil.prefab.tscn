@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://6x8jqsftcy7"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Anvil.Anvil.mesh" id="1_a1hoh"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Environment/Anvil.material" id="2_jyg0h"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Anvil.Anvil_LOD0.mesh" id="3_os3m6"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Anvil.Anvil_LOD1.mesh" id="4_r4e0e"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_amue3"]
+points = PackedVector3Array(0.620091, 1.058948, 0.18393761, 0.028266072, 0.43345952, 0.518904, 0.23276901, 0.4372181, 0.47367388, 0.23731351, 0.4108037, 0.48097557, 0.40961534, 0.41257858, 0.36171418, 0.4127316, 0.036304094, 0.36587209, 0.5211505, 0.03588648, 0.18272066, 0.55088466, 0.035782076, -0.03622952, 0.620091, 1.058948, -0.18408933, -0.20493215, 1.0503869, 0.18393761, 0.029174984, 0.408298, 0.527017, -0.18143058, 0.42928332, 0.49223238, -0.18441695, 0.40558347, 0.49983835, 0.029174984, 0.037765764, 0.5325947, 0.23913133, 0.036930524, 0.48614764, 0.4026038, -0.0020124237, 0.35704917, 0.23315853, -0.0020124237, 0.47438377, 0.5082961, -0.0019080187, 0.17825848, 0.537381, -0.0019080187, -0.035215378, 0.48271698, -0.0020124237, -0.24311155, 0.49492222, 0.035990886, -0.24929774, 0.36832517, 0.0364085, -0.4189613, 0.3655985, 0.40965524, -0.41703445, 0.18161082, 0.40714952, -0.49968585, 0.17797518, 0.43262428, -0.48944315, -0.023151815, 0.4286569, -0.4906601, -0.20493215, 1.0503869, -0.18408933, -0.70638627, 1.0182302, 0.0018002987, -0.70638627, 1.0148892, 0.013361335, -0.70638627, 1.0066413, 0.018939018, -0.1861049, 0.038601004, 0.5051118, -0.37178054, 0.40297335, 0.4027863, -0.37502664, 0.039436236, 0.40734988, 0.028266072, -0.0020124237, 0.51961386, -0.18169022, -0.0020124237, 0.4928409, 0.35404247, -0.0076502766, 0.31476003, 0.4470101, -0.0076502766, 0.15736747, 0.02437079, -0.0076502766, 0.45795488, 0.20472288, -0.0076502766, 0.41809964, 0.472719, -0.0076502766, -0.030651808, 0.42454726, -0.0076502766, -0.21380326, 0.35923618, -0.0020124237, -0.4087186, 0.17823488, -0.0020124237, -0.4899502, 0.18290925, 0.037139334, -0.50232255, -0.023151815, 0.4045394, -0.5010042, -0.22531751, 0.4022425, -0.44887805, -0.70638627, 1.0066413, -0.018989354, -0.70638627, 1.0148892, -0.013513058, -0.70638627, 0.9948436, 0.013259888, -0.58095783, 0.04016707, 0.02989161, -0.517075, 0.03995826, 0.24255419, -0.36593762, -0.0019080187, 0.39741147, -0.50461006, -0.0019080187, 0.23667222, -0.1605258, -0.0076502766, 0.43442714, -0.3228297, -0.0076502766, 0.35035592, 0.31573874, -0.0076502766, -0.35963482, 0.15642124, -0.0076502766, -0.4312322, -0.021074295, -0.0076502766, -0.43224636, -0.023281634, -0.0020124237, -0.49106577, -0.023801029, 0.037974574, -0.5034381, -0.227395, 0.038809806, -0.45100772, -0.42345813, 0.03954064, -0.36460406, -0.4198225, 0.40005, -0.36308286, -0.5431735, 0.040062666, -0.18429214, -0.70638627, 0.9949479, -0.01381731, -0.70638627, 0.9912938, -2.515316e-05, -0.5668049, -0.0019080187, 0.029283106, -0.53005934, -0.0019080187, -0.17972857, -0.44501206, -0.0076502766, 0.20878375, -0.1961028, -0.0076502766, -0.38721907, -0.22194159, -0.0020124237, -0.4399537, -0.4132005, -0.0020124237, -0.35567972, -0.49980587, -0.0076502766, 0.026037931, -0.4673451, -0.0076502766, -0.15792483, -0.36450934, -0.0076502766, -0.31288356)
+
+[node name="Anvil" type="Node3D" unique_id=1972904798]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1807467672]
+layers = 512
+gi_mode = 2
+visibility_range_end = 7.0290384
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_a1hoh")
+surface_material_override/0 = ExtResource("2_jyg0h")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1166633578]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1942463230]
+shape = SubResource("ConvexPolygonShape3D_amue3")
+
+[node name="Anvil_LOD0" type="Node3D" parent="." unique_id=1016406314]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Anvil_LOD0" unique_id=1448221694]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 7.0290384
+visibility_range_begin_margin = 0.5
+visibility_range_end = 14.283604
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_os3m6")
+surface_material_override/0 = ExtResource("2_jyg0h")
+
+[node name="Anvil_LOD1" type="Node3D" parent="." unique_id=2094848744]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Anvil_LOD1" unique_id=520157880]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 14.283604
+visibility_range_begin_margin = 0.5
+visibility_range_end = 52.322796
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_r4e0e")
+surface_material_override/0 = ExtResource("2_jyg0h")

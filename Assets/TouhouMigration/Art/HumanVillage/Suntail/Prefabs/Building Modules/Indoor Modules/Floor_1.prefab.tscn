@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bibm1adpd5suj"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Indoor Modules/extracted/Floor_1.Floor_1.mesh" id="1_0hkvs"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Wooden_Boards.material" id="2_mhnxx"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_j84vy"]
+data = PackedVector3Array(0, 0, 1, 0, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 1, 0, 0, 1, 0, 0.1277, 1, -1, 0.1277, 1, -1, 0.1277, 0, -1, 0.1277, 0, 0, 0.1277, 0, 0, 0.1277, 1, 0, 0.1277, 1, 0, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0.1277, 1, 0, 0.1277, 1, -1, 0.1277, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1277, 0, -1, 0.1277, 0, 0, 0.1277, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0.1277, 1, 0, 0.1277, 0, -1, 0.1277, 1, -1, 0, 1, -1, 0, 0, -1, 0, 0, -1, 0.1277, 0, -1, 0.1277, 1, -0.5568, -0.0517, 1, -0.4432, -0.0517, 1, -0.4432, -0.0517, 0, -0.4432, -0.0517, 0, -0.5568, -0.0517, 0, -0.5568, -0.0517, 1, -0.4432, 0.0050999997, 1, -0.4432, -0.0517, 1, -0.5568, -0.0517, 1, -0.5568, -0.0517, 1, -0.5568, 0.0050999997, 1, -0.4432, 0.0050999997, 1, -0.5568, 0.0050999997, 0, -0.5568, -0.0517, 0, -0.4432, -0.0517, 0, -0.4432, -0.0517, 0, -0.4432, 0.0050999997, 0, -0.5568, 0.0050999997, 0, -0.4432, 0.0050999997, 0, -0.4432, -0.0517, 0, -0.4432, -0.0517, 1, -0.4432, -0.0517, 1, -0.4432, 0.0050999997, 1, -0.4432, 0.0050999997, 0, -0.5568, 0.0050999997, 1, -0.5568, -0.0517, 1, -0.5568, -0.0517, 0, -0.5568, -0.0517, 0, -0.5568, 0.0050999997, 0, -0.5568, 0.0050999997, 1)
+
+[node name="Floor_1" type="Node3D" unique_id=1755620813]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1560429338]
+layers = 512
+gi_mode = 2
+visibility_range_end = 92.24994
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_0hkvs")
+surface_material_override/0 = ExtResource("2_mhnxx")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1337108652]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=425516578]
+shape = SubResource("ConcavePolygonShape3D_j84vy")

@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://dcphemni51vql"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Box_1.Box_1.mesh" id="1_p4v7q"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Environment/Box_1.material" id="2_uq2t5"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Box_1.Box_1_LOD0.mesh" id="3_alp7q"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Box_1.Box_1_LOD1.mesh" id="4_7u5bq"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_e016k"]
+points = PackedVector3Array(-0.44081813, 1.0073823, -0.39336857, -0.44081813, 1.0073823, -0.4929233, -0.54039836, 1.0073823, -0.39336857, 0.49556053, 1.0062834, 0.48501047, -0.54039836, 1.0073823, -0.4929233, 0.49556053, 1.0062834, 0.38536003, 0.49556053, 1.0061835, -0.4929233, -0.54039836, 1.0062834, 0.48501047, 0.49556053, -0.012867422, 0.48501047, -0.54039836, -0.013167113, -0.4929233, 0.49556053, -0.013167113, -0.4929233, -0.54039836, -0.013167113, 0.48501047, 0.49556053, -0.013167113, -0.39336857, -0.44081813, -0.013167113, 0.48501047)
+
+[node name="Box_1" type="Node3D" unique_id=1951591208]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=345127061]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.4641767
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_p4v7q")
+surface_material_override/0 = ExtResource("2_uq2t5")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2144284218]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=105243093]
+shape = SubResource("ConvexPolygonShape3D_e016k")
+
+[node name="Box_1_LOD0" type="Node3D" parent="." unique_id=1478543762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1920929e-09, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Box_1_LOD0" unique_id=1236829594]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.4641767
+visibility_range_begin_margin = 0.5
+visibility_range_end = 11.231665
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_alp7q")
+surface_material_override/0 = ExtResource("2_uq2t5")
+
+[node name="Box_1_LOD1" type="Node3D" parent="." unique_id=314589673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1920929e-09, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Box_1_LOD1" unique_id=71170381]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 11.231665
+visibility_range_begin_margin = 0.5
+visibility_range_end = 58.630787
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_7u5bq")
+surface_material_override/0 = ExtResource("2_uq2t5")

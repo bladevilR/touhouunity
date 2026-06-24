@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cdyndyfhgqg3u"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chest_2.Chest_2.mesh" id="1_mdw3o"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Environment/Chest_2.material" id="2_8qvq1"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chest_2.Chest_2_LOD0.mesh" id="3_r484h"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chest_2.Chest_2_LOD1.mesh" id="4_4yfxa"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v5x7s"]
+size = Vector3(1.1411494, 0.6998311, 0.83111197)
+
+[node name="Chest_2" type="Node3D" unique_id=9569804]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1000013711]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.9873123
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_mdw3o")
+surface_material_override/0 = ExtResource("2_8qvq1")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=1731669042]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=1364061038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0002655056, 0.35347953, -0.005470432)
+shape = SubResource("BoxShape3D_v5x7s")
+
+[node name="Chest_2_LOD0" type="Node3D" parent="." unique_id=1182464060]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chest_2_LOD0" unique_id=2135189175]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.9873123
+visibility_range_begin_margin = 0.5
+visibility_range_end = 10.036998
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_r484h")
+surface_material_override/0 = ExtResource("2_8qvq1")
+
+[node name="Chest_2_LOD1" type="Node3D" parent="." unique_id=935964784]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chest_2_LOD1" unique_id=1537417244]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 10.036998
+visibility_range_begin_margin = 0.5
+visibility_range_end = 55.118885
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_4yfxa")
+surface_material_override/0 = ExtResource("2_8qvq1")

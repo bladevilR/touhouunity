@@ -1,0 +1,39 @@
+{
+  "statuses": [
+    {
+      "id": "burn",
+      "display_name_en": "Burn",
+      "polarity": "debuff",
+      "stack_policy": "intensity",
+      "tags": ["fire", "damage_over_time", "cashout"]
+    },
+    {
+      "id": "fate_lock",
+      "display_name_en": "Fate Lock",
+      "polarity": "debuff",
+      "stack_policy": "refresh_duration",
+      "tags": ["blood", "mark", "unavoidable"]
+    },
+    {
+      "id": "evidence",
+      "display_name_en": "Evidence",
+      "polarity": "buff",
+      "stack_policy": "intensity",
+      "tags": ["mechanism", "seal", "boss_clause"]
+    },
+    {
+      "id": "exposed",
+      "display_name_en": "Exposed",
+      "polarity": "debuff",
+      "stack_policy": "refresh_duration",
+      "tags": ["answer_window", "damage_taken"]
+    },
+    {
+      "id": "clause_pressure",
+      "display_name_en": "Clause Pressure",
+      "polarity": "hazard",
+      "stack_policy": "intensity",
+      "tags": ["boss_clause", "pressure", "timer"]
+    }
+  ]
+}

@@ -1,0 +1,1002 @@
+{
+  "source": "scripts/data/CookingDatabase.gd::RECIPES",
+  "recipe_count": 40,
+  "recipes": [
+    {
+      "id": "onigiri",
+      "name": "饭团",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "rice",
+          "quantity": 1
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "rice_ball",
+      "result_qty": 2,
+      "cooking_time": 1.5,
+      "exp_gain": 5,
+      "description": "简单的盐味饭团",
+      "unlock_condition": ""
+    },
+    {
+      "id": "grilled_fish",
+      "name": "烤鱼",
+      "category": "main",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "fish_any",
+          "quantity": 1
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "grilled_fish",
+      "result_qty": 1,
+      "cooking_time": 3.0,
+      "exp_gain": 10,
+      "description": "简单的盐烤鱼，香气扑鼻",
+      "unlock_condition": ""
+    },
+    {
+      "id": "miso_soup",
+      "name": "味噌汤",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "miso",
+          "quantity": 1
+        },
+        {
+          "id": "tofu",
+          "quantity": 1
+        }
+      ],
+      "result_id": "miso_soup",
+      "result_qty": 1,
+      "cooking_time": 2.0,
+      "exp_gain": 8,
+      "description": "温暖身心的味噌汤",
+      "unlock_condition": ""
+    },
+    {
+      "id": "bamboo_rice",
+      "name": "竹笋饭",
+      "category": "main",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "rice",
+          "quantity": 1
+        },
+        {
+          "id": "bamboo_shoot",
+          "quantity": 2
+        }
+      ],
+      "result_id": "bamboo_rice",
+      "result_qty": 1,
+      "cooking_time": 4.0,
+      "exp_gain": 15,
+      "description": "竹林特产，清香可口的竹笋饭",
+      "unlock_condition": ""
+    },
+    {
+      "id": "mushroom_stew",
+      "name": "蘑菇炖菜",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "mushroom",
+          "quantity": 3
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "mushroom_stew",
+      "result_qty": 1,
+      "cooking_time": 5.0,
+      "exp_gain": 20,
+      "description": "用多种蘑菇慢炖的浓郁炖菜",
+      "unlock_condition": ""
+    },
+    {
+      "id": "dango",
+      "name": "团子",
+      "category": "dessert",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "rice_flour",
+          "quantity": 2
+        }
+      ],
+      "result_id": "dango",
+      "result_qty": 3,
+      "cooking_time": 2.0,
+      "exp_gain": 8,
+      "description": "软糯的三色团子",
+      "unlock_condition": ""
+    },
+    {
+      "id": "senbei",
+      "name": "仙贝",
+      "category": "dessert",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "rice_flour",
+          "quantity": 1
+        },
+        {
+          "id": "soy_sauce",
+          "quantity": 1
+        }
+      ],
+      "result_id": "senbei",
+      "result_qty": 2,
+      "cooking_time": 2.0,
+      "exp_gain": 8,
+      "description": "酱油味的烤米饼",
+      "unlock_condition": ""
+    },
+    {
+      "id": "tempura",
+      "name": "天妇罗",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "fish_any",
+          "quantity": 1
+        },
+        {
+          "id": "flour",
+          "quantity": 1
+        },
+        {
+          "id": "oil",
+          "quantity": 1
+        }
+      ],
+      "result_id": "tempura",
+      "result_qty": 1,
+      "cooking_time": 3.0,
+      "exp_gain": 18,
+      "description": "酥脆的天妇罗，外酥里嫩",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "green_tea",
+      "name": "绿茶",
+      "category": "drink",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "tea_leaves",
+          "quantity": 1
+        },
+        {
+          "id": "hot_water",
+          "quantity": 1
+        }
+      ],
+      "result_id": "green_tea",
+      "result_qty": 1,
+      "cooking_time": 1.5,
+      "exp_gain": 5,
+      "description": "清香的绿茶，提神醒脑",
+      "unlock_condition": ""
+    },
+    {
+      "id": "eel_rice",
+      "name": "鳗鱼饭",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "eel",
+          "quantity": 1
+        },
+        {
+          "id": "rice",
+          "quantity": 1
+        },
+        {
+          "id": "soy_sauce",
+          "quantity": 1
+        }
+      ],
+      "result_id": "eel_rice",
+      "result_qty": 1,
+      "cooking_time": 5.0,
+      "exp_gain": 25,
+      "description": "香甜酱汁烤鳗鱼配白饭，夏日元气料理",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "herb_salad",
+      "name": "草药沙拉",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "herb",
+          "quantity": 2
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "herb_salad",
+      "result_qty": 1,
+      "cooking_time": 1.0,
+      "exp_gain": 8,
+      "description": "新鲜草药制成的沙拉，有轻微治愈效果",
+      "unlock_condition": ""
+    },
+    {
+      "id": "grilled_bamboo_shoot",
+      "name": "烤竹笋",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "bamboo_shoot",
+          "quantity": 2
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "grilled_bamboo_shoot",
+      "result_qty": 1,
+      "cooking_time": 2.0,
+      "exp_gain": 8,
+      "description": "外焦里嫩的竹笋小食",
+      "unlock_condition": ""
+    },
+    {
+      "id": "spicy_stir_meat",
+      "name": "辣炒肉",
+      "category": "main",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "chili",
+          "quantity": 1
+        },
+        {
+          "id": "meat_any",
+          "quantity": 1
+        },
+        {
+          "id": "oil",
+          "quantity": 1
+        }
+      ],
+      "result_id": "spicy_stir_meat",
+      "result_qty": 1,
+      "cooking_time": 3.0,
+      "exp_gain": 12,
+      "description": "辛辣爆香的前线战斗餐",
+      "unlock_condition": ""
+    },
+    {
+      "id": "pumpkin_congee",
+      "name": "南瓜粥",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "pumpkin",
+          "quantity": 2
+        },
+        {
+          "id": "rice",
+          "quantity": 1
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "pumpkin_congee",
+      "result_qty": 1,
+      "cooking_time": 2.5,
+      "exp_gain": 12,
+      "description": "温润顺口，适合硬仗前补状态",
+      "unlock_condition": ""
+    },
+    {
+      "id": "moon_herb_dango",
+      "name": "月见草团子",
+      "category": "dessert",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "moon_herb",
+          "quantity": 1
+        },
+        {
+          "id": "sugar",
+          "quantity": 1
+        },
+        {
+          "id": "rice_flour",
+          "quantity": 2
+        }
+      ],
+      "result_id": "moon_herb_dango",
+      "result_qty": 2,
+      "cooking_time": 2.5,
+      "exp_gain": 12,
+      "description": "月色香甜，灵力上涌",
+      "unlock_condition": ""
+    },
+    {
+      "id": "honey_skewer",
+      "name": "蜂蜜烤串",
+      "category": "main",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "meat_any",
+          "quantity": 1
+        },
+        {
+          "id": "honey",
+          "quantity": 1
+        }
+      ],
+      "result_id": "honey_skewer",
+      "result_qty": 1,
+      "cooking_time": 2.5,
+      "exp_gain": 10,
+      "description": "甜香肉汁，越打越有劲",
+      "unlock_condition": ""
+    },
+    {
+      "id": "phoenix_roast_chicken",
+      "name": "凤凰烤鸡",
+      "category": "special",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "impatiens",
+          "quantity": 1
+        },
+        {
+          "id": "chili",
+          "quantity": 1
+        },
+        {
+          "id": "beast_meat",
+          "quantity": 1
+        }
+      ],
+      "result_id": "phoenix_roast_chicken",
+      "result_qty": 1,
+      "cooking_time": 5.0,
+      "exp_gain": 32,
+      "description": "焦香与烈火并存的主力正餐",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "reishi_stew",
+      "name": "灵芝炖汤",
+      "category": "special",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "reishi",
+          "quantity": 1
+        },
+        {
+          "id": "pumpkin",
+          "quantity": 1
+        },
+        {
+          "id": "honey",
+          "quantity": 1
+        }
+      ],
+      "result_id": "reishi_stew",
+      "result_qty": 1,
+      "cooking_time": 5.0,
+      "exp_gain": 30,
+      "description": "高韧高灵的续航药膳",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "bamboo_cold_noodles",
+      "name": "竹林冷面",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "bamboo_shoot",
+          "quantity": 1
+        },
+        {
+          "id": "rainbow_trout",
+          "quantity": 1
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "bamboo_cold_noodles",
+      "result_qty": 1,
+      "cooking_time": 4.0,
+      "exp_gain": 28,
+      "description": "清爽高速构筑核心",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "moon_reishi_boil",
+      "name": "月见灵茸煮",
+      "category": "special",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "moon_herb",
+          "quantity": 1
+        },
+        {
+          "id": "reishi",
+          "quantity": 1
+        },
+        {
+          "id": "phantom_fish",
+          "quantity": 1
+        }
+      ],
+      "result_id": "moon_reishi_boil",
+      "result_qty": 1,
+      "cooking_time": 5.5,
+      "exp_gain": 36,
+      "description": "灵系爆发向核心正餐",
+      "unlock_condition": "cooking_level_4"
+    },
+    {
+      "id": "fairy_meat_pie",
+      "name": "妖精肉饼",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "fairy_meat",
+          "quantity": 2
+        },
+        {
+          "id": "chili",
+          "quantity": 1
+        },
+        {
+          "id": "flour",
+          "quantity": 1
+        }
+      ],
+      "result_id": "fairy_meat_pie",
+      "result_qty": 1,
+      "cooking_time": 4.0,
+      "exp_gain": 26,
+      "description": "高破防重击料理",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "ginseng_chicken_soup",
+      "name": "人参鸡汤",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "ginseng",
+          "quantity": 1
+        },
+        {
+          "id": "beast_meat",
+          "quantity": 1
+        },
+        {
+          "id": "salt",
+          "quantity": 1
+        }
+      ],
+      "result_id": "ginseng_chicken_soup",
+      "result_qty": 1,
+      "cooking_time": 4.5,
+      "exp_gain": 30,
+      "description": "高韧稳扎稳打的经典肉汤",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "spicy_beast_skewer",
+      "name": "辛辣兽肉串",
+      "category": "main",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "beast_meat",
+          "quantity": 1
+        },
+        {
+          "id": "chili",
+          "quantity": 2
+        }
+      ],
+      "result_id": "spicy_beast_skewer",
+      "result_qty": 1,
+      "cooking_time": 3.5,
+      "exp_gain": 20,
+      "description": "激进的攻击向肉串",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "moon_herb_soup",
+      "name": "月见草汤",
+      "category": "appetizer",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "moon_herb",
+          "quantity": 2
+        },
+        {
+          "id": "hot_water",
+          "quantity": 1
+        }
+      ],
+      "result_id": "moon_herb_soup",
+      "result_qty": 1,
+      "cooking_time": 3.5,
+      "exp_gain": 20,
+      "description": "灵力恢复向汤品",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "pufferfish_sashimi",
+      "name": "河豚刺身",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "pufferfish",
+          "quantity": 1
+        },
+        {
+          "id": "soy_sauce",
+          "quantity": 1
+        }
+      ],
+      "result_id": "pufferfish_sashimi",
+      "result_qty": 1,
+      "cooking_time": 6.0,
+      "exp_gain": 50,
+      "description": "极致美味的河豚刺身，需要精湛的刀工",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "mokou_yakitori",
+      "name": "妹红特制烤串",
+      "category": "special",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "fish_any",
+          "quantity": 1
+        },
+        {
+          "id": "soy_sauce",
+          "quantity": 1
+        },
+        {
+          "id": "bamboo",
+          "quantity": 1
+        }
+      ],
+      "result_id": "mokou_yakitori",
+      "result_qty": 2,
+      "cooking_time": 3.0,
+      "exp_gain": 20,
+      "description": "妹红用凤凰之火烤制的特色串烧",
+      "unlock_condition": ""
+    },
+    {
+      "id": "moon_viewing_dango",
+      "name": "月见团子",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "rice_flour",
+          "quantity": 3
+        },
+        {
+          "id": "moon_fish",
+          "quantity": 1
+        }
+      ],
+      "result_id": "moon_viewing_dango",
+      "result_qty": 1,
+      "cooking_time": 5.0,
+      "exp_gain": 60,
+      "description": "用月光鱼精华制成的神秘团子，辉夜的最爱",
+      "unlock_condition": "cooking_level_3"
+    },
+    {
+      "id": "phoenix_hotpot",
+      "name": "凤凰火锅",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "fish_any",
+          "quantity": 1
+        },
+        {
+          "id": "mushroom",
+          "quantity": 2
+        },
+        {
+          "id": "herb",
+          "quantity": 2
+        },
+        {
+          "id": "miso",
+          "quantity": 1
+        }
+      ],
+      "result_id": "phoenix_hotpot",
+      "result_qty": 1,
+      "cooking_time": 8.0,
+      "exp_gain": 80,
+      "description": "妹红的终极料理，用不死鸟之火慢炖的豪华火锅",
+      "unlock_condition": "cooking_level_4"
+    },
+    {
+      "id": "hourai_hotpot",
+      "name": "蓬莱火锅",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "impatiens",
+          "quantity": 1
+        },
+        {
+          "id": "chili",
+          "quantity": 1
+        },
+        {
+          "id": "reishi",
+          "quantity": 1
+        },
+        {
+          "id": "beast_meat",
+          "quantity": 1
+        },
+        {
+          "id": "fish_any",
+          "quantity": 1
+        }
+      ],
+      "result_id": "hourai_hotpot",
+      "result_qty": 1,
+      "cooking_time": 9.0,
+      "exp_gain": 90,
+      "description": "HP压低后爆发极强的不死鸟宴席",
+      "unlock_condition": "cooking_level_6"
+    },
+    {
+      "id": "eternal_night_banquet",
+      "name": "永夜宴",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "moon_herb",
+          "quantity": 1
+        },
+        {
+          "id": "reishi",
+          "quantity": 1
+        },
+        {
+          "id": "phantom_fish",
+          "quantity": 1
+        },
+        {
+          "id": "bamboo_shoot",
+          "quantity": 1
+        },
+        {
+          "id": "sugar",
+          "quantity": 1
+        }
+      ],
+      "result_id": "eternal_night_banquet",
+      "result_qty": 1,
+      "cooking_time": 9.0,
+      "exp_gain": 95,
+      "description": "灵弹追踪流派核心宴席",
+      "unlock_condition": "cooking_level_6"
+    },
+    {
+      "id": "mokou_full_course",
+      "name": "妹红特制全席",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "fire_eggplant",
+          "quantity": 1
+        },
+        {
+          "id": "chili",
+          "quantity": 1
+        },
+        {
+          "id": "impatiens",
+          "quantity": 1
+        },
+        {
+          "id": "youkai_beast_meat",
+          "quantity": 1
+        },
+        {
+          "id": "spice",
+          "quantity": 1
+        }
+      ],
+      "result_id": "mokou_full_course",
+      "result_qty": 1,
+      "cooking_time": 10.0,
+      "exp_gain": 110,
+      "description": "妹红专属的极致炎拳构筑终端",
+      "unlock_condition": "cooking_level_7"
+    },
+    {
+      "id": "kaguya_elixir_feast",
+      "name": "辉夜秘药膳",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "hourai_branch",
+          "quantity": 1
+        },
+        {
+          "id": "ginseng",
+          "quantity": 1
+        },
+        {
+          "id": "reishi",
+          "quantity": 1
+        },
+        {
+          "id": "moon_dew",
+          "quantity": 1
+        }
+      ],
+      "result_id": "kaguya_elixir_feast",
+      "result_qty": 1,
+      "cooking_time": 10.0,
+      "exp_gain": 110,
+      "description": "复活型战略宴席",
+      "unlock_condition": "cooking_level_7"
+    },
+    {
+      "id": "bamboo_taketori_feast",
+      "name": "竹取盛宴",
+      "category": "special",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "bamboo_shoot",
+          "quantity": 1
+        },
+        {
+          "id": "rainbow_trout",
+          "quantity": 1
+        },
+        {
+          "id": "impatiens",
+          "quantity": 1
+        },
+        {
+          "id": "beast_meat",
+          "quantity": 1
+        },
+        {
+          "id": "honey",
+          "quantity": 1
+        }
+      ],
+      "result_id": "bamboo_taketori_feast",
+      "result_qty": 1,
+      "cooking_time": 9.0,
+      "exp_gain": 100,
+      "description": "高机动流宴席，冲刺收益最大化",
+      "unlock_condition": "cooking_level_6"
+    },
+    {
+      "id": "reishi_tea",
+      "name": "灵芝茶",
+      "category": "drink",
+      "difficulty": "easy",
+      "ingredients": [
+        {
+          "id": "reishi",
+          "quantity": 1
+        },
+        {
+          "id": "hot_water",
+          "quantity": 1
+        }
+      ],
+      "result_id": "reishi_tea",
+      "result_qty": 1,
+      "cooking_time": 2.0,
+      "exp_gain": 14,
+      "description": "符卡续航型饮品",
+      "unlock_condition": ""
+    },
+    {
+      "id": "bamboo_leaf_wine",
+      "name": "竹叶酒",
+      "category": "drink",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "bamboo_shoot",
+          "quantity": 1
+        },
+        {
+          "id": "honey",
+          "quantity": 1
+        }
+      ],
+      "result_id": "bamboo_leaf_wine",
+      "result_qty": 1,
+      "cooking_time": 2.0,
+      "exp_gain": 16,
+      "description": "高风险高回报酒饮",
+      "unlock_condition": ""
+    },
+    {
+      "id": "moon_herb_dew",
+      "name": "月见草露",
+      "category": "drink",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "moon_herb",
+          "quantity": 1
+        },
+        {
+          "id": "moon_dew",
+          "quantity": 1
+        }
+      ],
+      "result_id": "moon_herb_dew",
+      "result_qty": 1,
+      "cooking_time": 2.5,
+      "exp_gain": 18,
+      "description": "夜间探索强化饮品",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "impatiens_tea",
+      "name": "凤仙花茶",
+      "category": "drink",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "impatiens",
+          "quantity": 1
+        },
+        {
+          "id": "sugar",
+          "quantity": 1
+        },
+        {
+          "id": "hot_water",
+          "quantity": 1
+        }
+      ],
+      "result_id": "impatiens_tea",
+      "result_qty": 1,
+      "cooking_time": 2.0,
+      "exp_gain": 18,
+      "description": "速度与机动强化饮品",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "ginseng_tonic",
+      "name": "人参汤",
+      "category": "drink",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "ginseng",
+          "quantity": 1
+        },
+        {
+          "id": "honey",
+          "quantity": 1
+        },
+        {
+          "id": "hot_water",
+          "quantity": 1
+        }
+      ],
+      "result_id": "ginseng_tonic",
+      "result_qty": 1,
+      "cooking_time": 2.5,
+      "exp_gain": 18,
+      "description": "短时高回复饮品",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "chili_shochu",
+      "name": "辣椒烧酒",
+      "category": "drink",
+      "difficulty": "normal",
+      "ingredients": [
+        {
+          "id": "chili",
+          "quantity": 2
+        },
+        {
+          "id": "hot_water",
+          "quantity": 1
+        }
+      ],
+      "result_id": "chili_shochu",
+      "result_qty": 1,
+      "cooking_time": 2.0,
+      "exp_gain": 18,
+      "description": "烈性攻击饮品",
+      "unlock_condition": "cooking_level_2"
+    },
+    {
+      "id": "phantom_koi_broth",
+      "name": "幻想鲤鱼汤",
+      "category": "drink",
+      "difficulty": "hard",
+      "ingredients": [
+        {
+          "id": "phantom_fish",
+          "quantity": 1
+        },
+        {
+          "id": "moon_dew",
+          "quantity": 1
+        }
+      ],
+      "result_id": "phantom_koi_broth",
+      "result_qty": 1,
+      "cooking_time": 3.5,
+      "exp_gain": 26,
+      "description": "探索隐藏资源的神秘汤饮",
+      "unlock_condition": "cooking_level_4"
+    }
+  ]
+}

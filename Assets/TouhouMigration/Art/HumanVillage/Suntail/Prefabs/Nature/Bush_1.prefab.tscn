@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://cfriwbs0lxwf8"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Bush_1.Bush_1.mesh" id="1_nxxec"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Bush.material" id="2_g8h51"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Bush_1.Bush_1_LOD0.mesh" id="3_ffwt4"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Bush_1.Bush_1_LOD1.mesh" id="4_72vgw"]
+
+[node name="Bush_1" type="Node3D" unique_id=923810931]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=2073015751]
+gi_mode = 2
+visibility_range_end = 7.049992
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_nxxec")
+surface_material_override/0 = ExtResource("2_g8h51")
+
+[node name="Bush_1_LOD0" type="Node3D" parent="." unique_id=912565724]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Bush_1_LOD0" unique_id=1076262611]
+gi_mode = 2
+visibility_range_begin = 7.049992
+visibility_range_begin_margin = 0.5
+visibility_range_end = 14.016177
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_ffwt4")
+surface_material_override/0 = ExtResource("2_g8h51")
+
+[node name="Bush_1_LOD1" type="Node3D" parent="." unique_id=1791227588]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Bush_1_LOD1" unique_id=1410179111]
+gi_mode = 2
+visibility_range_begin = 14.016177
+visibility_range_begin_margin = 0.5
+visibility_range_end = 101.4286
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_72vgw")
+surface_material_override/0 = ExtResource("2_g8h51")

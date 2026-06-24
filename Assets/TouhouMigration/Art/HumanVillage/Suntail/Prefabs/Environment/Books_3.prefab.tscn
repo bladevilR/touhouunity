@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bend6qesw78ol"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Books_3.Books_3.mesh" id="1_ww78c"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Books_3.material" id="2_jmmvt"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_lsdtm"]
+points = PackedVector3Array(0.15880305, 0.3708346, 0.1014781, 0.24317193, 0.36366946, 0.11822249, 0.25855327, 0.36366946, 0.105620265, 0.15880305, 0.3708346, -0.13256672, 0.06808871, 0.36946803, 0.11355315, 0.14184806, 0.37057602, 0.11355315, 0.24317193, -0.003969183, 0.11822249, -0.06968337, 0.36536837, 0.11822249, 0.25855327, 0.36366946, -0.13824023, 0.25855327, -0.003969183, 0.105620265, 0.051133692, 0.36920953, -0.13256672, -0.054352805, 0.36621785, -0.13824023, 0.051133692, 0.36920953, 0.1014781, -0.054352805, 0.36621785, 0.105620265, -0.11998998, -0.0056312024, 0.11822249, -0.13532054, -0.006480679, 0.105620265, -0.26004642, 0.3584987, 0.1014781, -0.24309142, 0.3584987, 0.11355315, -0.13633582, 0.36156422, 0.11822249, 0.25855327, -0.003969183, -0.13824023, -0.0707494, 0.36529452, -0.13824023, -0.26004642, 0.3584987, -0.13256672, -0.24309142, -0.0038953158, 0.11355315, -0.26004642, -0.0038953158, 0.1014781, -0.13532054, -0.006480679, -0.13824023, -0.1516664, 0.36067778, -0.13824023, -0.26004642, -0.0038953158, -0.13256672)
+
+[node name="Books_3" type="Node3D" unique_id=386654116]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1322281596]
+layers = 512
+gi_mode = 2
+visibility_range_end = 20.456131
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_ww78c")
+surface_material_override/0 = ExtResource("2_jmmvt")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=915136042]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=389596778]
+shape = SubResource("ConvexPolygonShape3D_lsdtm")

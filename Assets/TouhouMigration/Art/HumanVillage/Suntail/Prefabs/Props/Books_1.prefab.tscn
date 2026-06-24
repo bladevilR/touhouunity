@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dj1pasry8u6n4"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Books_1.Books_1.mesh" id="1_ifvyb"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Books_1.material" id="2_sv0gl"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_vb31o"]
+points = PackedVector3Array(0.032955498, 0.3585048, 0.11354828, 0.047725603, 0.3585048, 0.10147843, -0.031176671, 0.3585048, 0.11354828, 0.032955498, -0.0038871663, 0.11354828, 0.047725603, 0.3585048, -0.13254647, 0.047725603, -0.0038871663, 0.10147843, -0.045937613, 0.3585048, 0.10147843, -0.031176671, -0.0038871663, 0.11354828, -0.045937613, 0.3585048, -0.13254647, 0.047725603, -0.0038871663, -0.13254647, -0.045937613, -0.0038871663, 0.10147843, -0.045937613, -0.0038871663, -0.13254647)
+
+[node name="Books_1" type="RigidBody3D" unique_id=1541721056]
+freeze_mode = 1
+continuous_cd = true
+angular_damp = 0.05
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=541587092]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 18.05054
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_ifvyb")
+surface_material_override/0 = ExtResource("2_sv0gl")
+
+[node name="MeshCollider" type="CollisionShape3D" parent="." unique_id=1380784108]
+shape = SubResource("ConvexPolygonShape3D_vb31o")
+
+[node name="AudioSource" type="AudioStreamPlayer" parent="." unique_id=1766803148]

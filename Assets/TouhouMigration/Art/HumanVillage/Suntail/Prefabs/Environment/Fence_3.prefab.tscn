@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cksf0mmxj20wa"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Fence_3.Fence_3.mesh" id="1_re1e8"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Fence.material" id="2_fhrgd"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Fence_3.Fence_3_LOD0.mesh" id="3_knfky"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_haw18"]
+points = PackedVector3Array(0.08233523, 1.1620841, 0.051176727, 0.08233523, 1.1620841, -0.0248889, -0.03307426, 1.1620841, 0.051176727, 1.0289359, 1.0839293, 0.07815789, 0.5855206, 1.1571923, 0.047715545, 0.5855206, 1.1571923, -0.030571684, -0.71824217, 1.1620841, -0.041647483, 0.25362718, 1.1129386, 0.06608398, -0.9223348, 1.1620841, 0.014810115, -0.88540375, 1.1378527, 0.03908673, -0.57975084, 1.1368288, 0.05098355, 1.1513915, 1.050028, 0.078173995, 1.1270947, 1.0761933, 0.07815789, -1.0564528, 1.0871146, 0.05570042, -1.2087933, 1.0735768, 0.05570042, 0.8173115, 1.0156717, 0.07815789, 0.7361603, 1.1383077, 0.047715545, 0.76507354, 1.1346673, -0.030571684, 1.1270947, 1.0761933, -0.047748834, 0.76458764, 1.1103221, -0.049278192, 0.5464028, 1.1222672, -0.049278192, -0.9223348, 1.1620841, -0.041647483, -1.2377064, 1.0709603, 0.038153008, 1.207031, 0.80111563, -0.039876644, 1.1513915, 1.050028, -0.047748834, 0.9453552, -3.4406644e-09, 0.078173995, 1.1513915, -3.4406644e-09, 0.078173995, 0.76507354, 1.1346673, 0.03139162, -1.1801231, -3.4406644e-09, 0.05570042, 0.8488972, -3.4406644e-09, 0.07815789, 1.1997421, 0.8147671, -0.08628875, 1.1623251, 0.88734764, -0.07856145, -0.6397638, 0.9113515, -0.081652366, -1.2741514, 0.8829109, -0.08269878, -1.2377064, 1.0709603, -0.048521563, -1.2741514, 0.8829109, -0.056329355, -1.2741514, 0.87153465, -0.044931587, -1.2751234, 0.36051342, -0.039876644, -1.2090362, -3.4406644e-09, 0.038153008, 1.1761742, 0.27871817, -0.05716648, 1.1761742, 0.27871817, -0.08269878, 1.2067881, 0.80111563, -0.073957264, 1.1513915, -3.4406644e-09, -0.047748834, -1.2673484, 0.34515548, -0.086111665, -1.2741514, 0.8101029, -0.08269878, -1.2751234, 0.36051342, -0.07221862, -1.2090362, -3.4406644e-09, -0.048521563, 0.7366462, -3.4406644e-09, -0.049278192, 0.5184616, -3.4406644e-09, -0.049278192, -1.2311462, 0.2742814, -0.07856145)
+
+[node name="Fence_3" type="Node3D" unique_id=541983696]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1479820146]
+layers = 512
+gi_mode = 2
+visibility_range_end = 9.306564
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_re1e8")
+surface_material_override/0 = ExtResource("2_fhrgd")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=949602758]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=863958029]
+shape = SubResource("ConvexPolygonShape3D_haw18")
+
+[node name="Fence_3_LOD0" type="Node3D" parent="." unique_id=208552962]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.1035155e-07, 0, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Fence_3_LOD0" unique_id=149184627]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 9.306564
+visibility_range_begin_margin = 0.5
+visibility_range_end = 100.65558
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_knfky")
+surface_material_override/0 = ExtResource("2_fhrgd")

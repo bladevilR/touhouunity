@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://c2qaafmjdf23w"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chest_1.Chest.mesh" id="1_jq6xp"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Environment/Chest_1.material" id="2_6jfpm"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chest_1.Chest_LOD0.mesh" id="3_k8ueu"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chest_1.Chest_LOD1.mesh" id="4_axirq"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_2u16h"]
+points = PackedVector3Array(0.57698166, 0.8138045, 2.9802322e-08, 0.5783367, 0.7840855, 0.15383196, 0.5783367, 0.7840855, -0.15390995, -0.57528424, 0.784006, -0.15390995, -0.57415503, 0.8137251, 2.9802322e-08, -0.57528424, 0.784006, 0.15383196, 0.57686865, 0.6992192, 0.28254533, 0.57652986, 0.57247615, 0.36656004, 0.57652986, 0.57247615, -0.36663803, 0.57686865, 0.6992192, -0.28262332, -0.5739292, 0.69913983, -0.28262332, -0.57336456, 0.57239676, -0.36663803, -0.57336456, 0.57239676, 0.36656004, -0.5739292, 0.69913983, 0.28254533, 0.25063425, 0.47783604, 0.3919127, 0.5732552, 0.44899106, 0.39752924, 0.56173706, 0.003999676, 0.3984654, -0.2544701, 0.47815388, 0.3919127, 0.56173706, 0.003999676, -0.39846534, 0.5732552, 0.44899106, -0.39760724, 0.25063425, 0.47783604, -0.39199066, -0.2544701, 0.47815388, -0.39199066, -0.5702027, 0.4489116, -0.39760724, -0.5702027, 0.4489116, 0.39752924, -0.5586846, 0.003999676, 0.3984654, 0.23979366, 0.00209257, 0.39027452, 0.23979366, 0.00209257, -0.3903525, -0.5586846, 0.003999676, -0.39846534, -0.24532336, 0.00209257, 0.39027452, -0.24532336, 0.00209257, -0.3903525)
+
+[node name="Chest_1" type="Node3D" unique_id=113690323]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=616304480]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.934756
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_jq6xp")
+surface_material_override/0 = ExtResource("2_6jfpm")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=664196322]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1619736915]
+shape = SubResource("ConvexPolygonShape3D_2u16h")
+
+[node name="Chest_LOD0" type="Node3D" parent="." unique_id=443523583]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chest_LOD0" unique_id=1941982363]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.934756
+visibility_range_begin_margin = 0.5
+visibility_range_end = 10.146691
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_k8ueu")
+surface_material_override/0 = ExtResource("2_6jfpm")
+
+[node name="Chest_LOD1" type="Node3D" parent="." unique_id=1940148293]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chest_LOD1" unique_id=252232689]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 10.146691
+visibility_range_begin_margin = 0.5
+visibility_range_end = 57.46122
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_axirq")
+surface_material_override/0 = ExtResource("2_6jfpm")

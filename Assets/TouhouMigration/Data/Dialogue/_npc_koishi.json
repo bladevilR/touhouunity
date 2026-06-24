@@ -1,0 +1,37 @@
+{"id":"koishi","name":"古明地恋",
+"greeting":{"rain":[
+{"l":[["???","...你能看见我吗？真少见。大家都看不见我的。","surprised"]],"c":"bond_max:0,weather:rain"},
+{"l":[["古明地恋","啊...又是你。你又来了。","happy"]],"c":"bond_min:1,bond_max:3,weather:rain"},
+{"l":[["古明地恋","~~~♪ 你...记得我吗？","neutral"]],"c":"bond_min:4,weather:rain"}
+],"any":[
+{"l":[["","（你感觉到有什么...但转眼就忘记了）",""]],"c":"bond_max:5,weather_not:rain"},
+{"l":[["古明地恋","...嗯？","neutral"],["","（恋恋就在你身边，但你几乎察觉不到）",""]],"c":"bond_min:6,weather_not:rain"}
+]},
+"casual":[
+{"l":[["古明地恋","...我也不知道。","neutral"],["","（你已经忘记她说了什么）",""]],"c":"bond_max:5"},
+{"l":[["古明地恋","有人等...有地方回...真好啊。","sad"]],"c":"bond_min:6,humanity_min:40"},
+{"l":[["古明地恋","（戳你的脸）...软的。嘻嘻。...我在干什么来着？","happy"]],"c":"bond_min:3,weather:rain"}
+],
+"annoyed":[
+{"l":[["古明地恋","...你又来了。你心里好吵哦。","sad"]],"c":"talk_count_min:3,weather:rain"},
+{"l":[["","（恋恋看了你一眼然后忘了你来过）",""]],"c":"talk_count_min:5"}
+],
+"low_humanity_approach":[
+{"l":[["古明地恋","嘻嘻♪ 你现在的感觉跟我好像。什么都没有，空空的。好舒服对吧？","happy"]],"c":"humanity_max:40,weather:rain,bond_min:2"},
+{"l":[["古明地恋","你的感觉和我好像。空空的什么都没有。（蹲在旁边戳你的脸）","happy"]],"c":"humanity_max:30,weather:rain,bond_min:4"}
+],
+"high_humanity_distance":[
+{"l":[["古明地恋","你的心里好吵哦。为什么要想那么多？（远远看着你不敢靠近）","sad"]],"c":"humanity_min:60,weather:rain"}
+],
+"void_temptation":[
+{"l":[["古明地恋","~~~♪ 来嘛...（拉着你的手，意识在远离...好舒服...）","happy"],["???","妹红！！！醒醒！",""],["上白泽慧音","离她远点！那个孩子很危险！","angry"]],"c":"humanity_max:25,weather:rain,bond_min:5","fx":[["humanity",15],["bond",50]]}
+],
+"third_eye_trembling":[
+{"l":[["古明地恋","...妹红。我的眼睛在动。（闭着的第三只眼微微颤动）","neutral"],["古明地恋","因为你和我太像了。空洞虚无...","sad"]],"c":"humanity_max:25,bond_min:8","ch":["（远离恋恋）>bond:-50,humanity:10","（靠近恋恋）>bond:100,humanity:-20,event:third_eye_resonance","（呼唤慧音）>bond:20,humanity:15"]}
+],
+"being_remembered":[
+{"l":[["古明地恋","你...记得我的名字？真好啊。被人记住的感觉真好啊。","happy"]],"c":"bond_min:3,event:remember_name"}
+],
+"gift_reaction":{
+"any":[{"l":[["古明地恋","给我的...？谢谢...我会记住的。","happy"],["","（但她很快就会忘记）",""]],"fx":[["bond",30]]}]
+}}

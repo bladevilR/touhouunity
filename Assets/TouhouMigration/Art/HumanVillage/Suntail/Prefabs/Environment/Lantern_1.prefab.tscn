@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dre8tnjaih8sw"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Lantern_1.Lantern_1.mesh" id="1_o366n"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Lantern.material" id="2_uo4a7"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Lantern_1.Lantern_1_LOD0.mesh" id="3_1qpi1"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_klhp8"]
+points = PackedVector3Array(-0.110342845, 0.31969082, -0.1099824, -0.085610256, 0.02015814, -0.085314445, -0.110342845, 0.31969082, 0.11011177, -0.059628107, 0.4424376, -0.008488312, -0.05032107, 0.46489418, -0.008488312, -0.035132505, 0.48018375, -0.008488312, -0.012597404, 0.48950085, -0.008488312, 0.008925118, 0.48954862, -0.008488312, 0.10975136, 0.31969082, -0.1099824, 0.08506186, 0.02015814, -0.085314445, -0.08358511, 0.0014283898, -0.08326776, -0.085610256, 0.02015814, 0.085357636, 0.10975136, 0.31969082, 0.11011177, 0.008925118, 0.48954862, 0.009673335, -0.012597404, 0.48950085, 0.009673335, -0.035132505, 0.48018375, 0.009673335, -0.05032107, 0.46489418, 0.009673335, -0.059628107, 0.4424376, 0.009673335, 0.031481758, 0.48018375, -0.008488312, 0.046648785, 0.46489418, -0.008488312, 0.08506186, 0.02015814, 0.085357636, 0.08303672, 0.0014283898, -0.08326776, -0.08358511, 0.0014283898, 0.083332494, 0.046648785, 0.46489418, 0.009673335, 0.031481758, 0.48018375, 0.009673335, 0.08303672, 0.0014283898, 0.083332494)
+
+[node name="Lantern_1" type="Node3D" unique_id=1121697425]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1674242392]
+layers = 512
+gi_mode = 2
+visibility_range_end = 3.1543536
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_o366n")
+surface_material_override/0 = ExtResource("2_uo4a7")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=73575439]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=11446302]
+shape = SubResource("ConvexPolygonShape3D_klhp8")
+
+[node name="Lantern_1_LOD0" type="Node3D" parent="." unique_id=13298891]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2207031e-06, 7.6293944e-08, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Lantern_1_LOD0" unique_id=802619153]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 3.1543536
+visibility_range_begin_margin = 0.5
+visibility_range_end = 22.202333
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_1qpi1")
+surface_material_override/0 = ExtResource("2_uo4a7")

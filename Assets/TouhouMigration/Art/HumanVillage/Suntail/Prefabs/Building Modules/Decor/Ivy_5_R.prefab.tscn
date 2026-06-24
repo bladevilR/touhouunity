@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bdrsrk4rxp1rt"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Decor/extracted/Ivy_5_R.Ivy_5_R.mesh" id="1_ufmmy"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Ivy.material" id="2_s84o3"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Decor/extracted/Ivy_5_R.Ivy_5_R_LOD0.mesh" id="3_a78i4"]
+
+[node name="Ivy_5_R" type="Node3D" unique_id=88789609]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1946759438]
+gi_mode = 2
+visibility_range_end = 8.961058
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_ufmmy")
+surface_material_override/0 = ExtResource("2_s84o3")
+
+[node name="Ivy_5_R_LOD0" type="Node3D" parent="." unique_id=36392718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0022534179, 0.0047088624, 0.009500351)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Ivy_5_R_LOD0" unique_id=1881864448]
+gi_mode = 2
+visibility_range_begin = 8.961058
+visibility_range_begin_margin = 0.5
+visibility_range_end = 86.32422
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_a78i4")
+surface_material_override/0 = ExtResource("2_s84o3")

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cwuvvh2vkp8j8"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Decor/extracted/Ridge.Ridge.mesh" id="1_npby0"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Wooden_Planks.material" id="2_hynw2"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ju1r1"]
+data = PackedVector3Array(1, -0.3545, -0.3012, 1, 0.013499999, -0.0506, -1, 0.013499999, -0.0506, -1, 0.013499999, -0.0506, -1, -0.3545, -0.3012, 1, -0.3545, -0.3012, -1, -0.3545, 0.3012, 1, -0.3545, 0.3012, 1, -0.4068, 0.23779999, 1, -0.4068, 0.23779999, -1, -0.4068, 0.23779999, -1, -0.3545, 0.3012, 1, -0.4068, 0.23779999, 1, -0.1533, 0, -1, -0.1533, 0, -1, -0.1533, 0, -1, -0.4068, 0.23779999, 1, -0.4068, 0.23779999, 1, -0.3545, -0.3012, 1, -0.4068, -0.23779999, 1, -0.1533, 0, 1, -0.1533, 0, 1, 0.013499999, -0.0506, 1, -0.3545, -0.3012, -1, -0.3545, 0.3012, -1, -0.4068, 0.23779999, -1, -0.1533, 0, -1, -0.1533, 0, -1, 0.013499999, 0.0506, -1, -0.3545, 0.3012, -1, -0.3545, -0.3012, -1, -0.4068, -0.23779999, 1, -0.4068, -0.23779999, 1, -0.4068, -0.23779999, 1, -0.3545, -0.3012, -1, -0.3545, -0.3012, 1, -0.4068, -0.23779999, -1, -0.4068, -0.23779999, -1, -0.1533, 0, -1, -0.1533, 0, 1, -0.1533, 0, 1, -0.4068, -0.23779999, 1, 0.013499999, -0.0506, 1, 0.013499999, 0.0506, -1, 0.013499999, 0.0506, -1, 0.013499999, 0.0506, -1, 0.013499999, -0.0506, 1, 0.013499999, -0.0506, 1, 0.013499999, 0.0506, 1, -0.3545, 0.3012, -1, -0.3545, 0.3012, -1, -0.3545, 0.3012, -1, 0.013499999, 0.0506, 1, 0.013499999, 0.0506, 1, -0.3545, 0.3012, 1, 0.013499999, 0.0506, 1, -0.1533, 0, 1, 0.013499999, -0.0506, 1, -0.1533, 0, 1, 0.013499999, 0.0506, 1, -0.1533, 0, 1, -0.4068, 0.23779999, 1, -0.3545, 0.3012, -1, 0.013499999, -0.0506, -1, 0.013499999, 0.0506, -1, -0.1533, 0, -1, -0.1533, 0, -1, -0.4068, -0.23779999, -1, -0.3545, -0.3012, -1, -0.3545, -0.3012, -1, 0.013499999, -0.0506, -1, -0.1533, 0)
+
+[node name="Ridge" type="Node3D" unique_id=141773665]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1368860332]
+layers = 512
+gi_mode = 2
+visibility_range_end = 192.67105
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_npby0")
+surface_material_override/0 = ExtResource("2_hynw2")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=304419023]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1475762048]
+shape = SubResource("ConcavePolygonShape3D_ju1r1")

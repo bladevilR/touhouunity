@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://bwq25amcu05us"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Decor/extracted/Flovers_1.Flovers_1.mesh" id="1_3s2kw"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/FlowerPot.material" id="2_wqaof"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/FlowerPot_Leaves.material" id="3_v3owq"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/FlowerPot_Flowers_Purple.material" id="4_t57yh"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Decor/extracted/Flovers_1.Flovers_1_LOD0.mesh" id="5_vt8vs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0531r"]
+size = Vector3(1.04, 0.27, 0.28)
+
+[node name="Flovers_1" type="Node3D" unique_id=1871669613]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=112503475]
+gi_mode = 2
+visibility_range_end = 10.0198
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_3s2kw")
+surface_material_override/0 = ExtResource("2_wqaof")
+surface_material_override/1 = ExtResource("3_v3owq")
+surface_material_override/2 = ExtResource("4_t57yh")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=503330789]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=518138508]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07, 0.13)
+shape = SubResource("BoxShape3D_0531r")
+
+[node name="Flovers_1_LOD0" type="Node3D" parent="." unique_id=633440064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0006258392, 0, 3.8146972e-08)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Flovers_1_LOD0" unique_id=205163509]
+gi_mode = 2
+visibility_range_begin = 10.0198
+visibility_range_begin_margin = 0.5
+visibility_range_end = 88.24217
+visibility_range_end_margin = 0.5
+mesh = ExtResource("5_vt8vs")
+surface_material_override/0 = ExtResource("2_wqaof")
+surface_material_override/1 = ExtResource("3_v3owq")
+surface_material_override/2 = ExtResource("4_t57yh")

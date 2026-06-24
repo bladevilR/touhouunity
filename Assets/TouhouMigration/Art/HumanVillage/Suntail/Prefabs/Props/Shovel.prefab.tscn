@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://4o37xc3vwcg4"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Shovel.Shovel.mesh" id="1_fcspc"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Forge.material" id="2_kfssa"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Shovel.Shovel_LOD0.mesh" id="3_bsvt4"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_t0vh3"]
+points = PackedVector3Array(0.1842079, 0.03649977, -0.49003208, -0.00023625791, 0.060565237, -0.3519938, -0.00023625791, 0.059075657, 0.67179006, 0.020093039, 0.050891474, 0.67179006, 0.02828975, 0.031124828, 0.67179006, 0.1842079, 0.022079747, -0.49003208, 0.1842079, 0.034698684, -0.72960514, -0.18468042, 0.03649977, -0.49003208, -0.00023625791, 0.03812528, -0.88972956, -0.18468042, 0.034698684, -0.72960514, -0.020601675, 0.050891474, 0.67179006, -0.016557485, 0.046847522, 0.6771583, -0.00023625791, 0.053355224, 0.6771583, 0.016048834, 0.046847522, 0.6771583, 0.022584543, 0.031124828, 0.6771583, 0.020093039, 0.011358184, 0.67179006, 0.1842079, 0.019587679, -0.5265355, 0.1842079, 0.02667875, -0.72960514, 0.1419244, 0.029986406, -0.8006182, -0.18468042, 0.022079747, -0.49003208, -0.028798386, 0.031124828, 0.67179006, 0.07920326, 0.029238785, -0.84847146, -0.00023625791, 0.032540776, -0.88972956, -0.07971191, 0.029238785, -0.84847146, -0.14243303, 0.029986406, -0.8006182, -0.18468042, 0.02667875, -0.72960514, -0.023093179, 0.031124828, 0.6771583, 0.016048834, 0.015402134, 0.6771583, -0.00023625791, 0.0031683363, 0.67179006, 0.1842079, 0.018132083, -0.6093585, 0.1842079, 0.022629136, -0.69156796, 0.1419244, 0.024401903, -0.8006182, -0.020601675, 0.011358184, 0.67179006, -0.18468042, 0.019587679, -0.5265355, 0.07920326, 0.023654282, -0.84847146, -0.07971191, 0.023654282, -0.84847146, -0.14243303, 0.024401903, -0.8006182, -0.18468042, 0.022629136, -0.69156796, -0.016557485, 0.015402134, 0.6771583, -0.00023625791, 0.00888877, 0.6771583, -0.00023625791, 0.002703905, -0.3819021, 0.1411661, 0.012672184, -0.6458619, -0.18468042, 0.018132083, -0.6093585, -0.14167474, 0.012672184, -0.6458619, 0.14206882, 0.017152246, -0.7273045, 0.07920326, 0.015028323, -0.7506176, -0.07971191, 0.015028323, -0.7506176, -0.14257747, 0.017152246, -0.7273045, -0.07891751, 0.011018356, -0.6694818, 0.07840888, 0.011018356, -0.6694818)
+
+[node name="Shovel" type="RigidBody3D" unique_id=41517823]
+freeze_mode = 1
+continuous_cd = true
+angular_damp = 0.05
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1226706947]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 5.1214666
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_fcspc")
+surface_material_override/0 = ExtResource("2_kfssa")
+
+[node name="MeshCollider" type="CollisionShape3D" parent="." unique_id=489424493]
+shape = SubResource("ConvexPolygonShape3D_t0vh3")
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=901113606]
+attenuation_model = 2
+max_db = 0.0
+max_distance = 500.0
+
+[node name="Shovel_LOD0" type="Node3D" parent="." unique_id=239796283]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Shovel_LOD0" unique_id=731871658]
+layers = 1024
+gi_mode = 2
+visibility_range_begin = 5.1214666
+visibility_range_begin_margin = 0.5
+visibility_range_end = 32.956417
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_bsvt4")
+surface_material_override/0 = ExtResource("2_kfssa")

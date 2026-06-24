@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bwspgjew7upih"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Carpet_2.Carpet_2.mesh" id="1_dh8yw"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Carpet_2.material" id="2_fdlv8"]
+
+[node name="Carpet_2" type="Node3D" unique_id=789849918]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1568706982]
+layers = 512
+gi_mode = 2
+visibility_range_end = 29.114828
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_dh8yw")
+surface_material_override/0 = ExtResource("2_fdlv8")

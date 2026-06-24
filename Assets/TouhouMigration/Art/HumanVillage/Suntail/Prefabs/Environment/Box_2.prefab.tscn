@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://tpo1p85ks6tn"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Box_2.Box_2.mesh" id="1_eepv7"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Environment/Box_2.material" id="2_23a2s"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Box_2.Box_2_LOD0.mesh" id="3_txkbm"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_1mgwu"]
+points = PackedVector3Array(-0.44081813, 1.0073823, -0.39336857, -0.44081813, 1.0073823, -0.4929233, -0.54039836, 1.0073823, -0.39336857, 0.49556053, 1.0062834, 0.48501047, -0.54039836, 1.0073823, -0.4929233, 0.49556053, 1.0062834, 0.38536003, 0.49556053, 1.0061835, -0.4929233, -0.54039836, 1.0062834, 0.48501047, 0.49556053, -0.012867422, 0.48501047, -0.54039836, -0.013167113, -0.4929233, 0.49556053, -0.013167113, -0.4929233, -0.54039836, -0.013167113, 0.48501047, 0.49556053, -0.013167113, -0.39336857, -0.44081813, -0.013167113, 0.48501047)
+
+[node name="Box_2" type="Node3D" unique_id=1559005547]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=683684770]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.4354053
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_eepv7")
+surface_material_override/0 = ExtResource("2_23a2s")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=535703812]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1311585121]
+shape = SubResource("ConvexPolygonShape3D_1mgwu")
+
+[node name="Box_2_LOD0" type="Node3D" parent="." unique_id=1764916645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1920929e-09, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Box_2_LOD0" unique_id=1186561115]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.4354053
+visibility_range_begin_margin = 0.5
+visibility_range_end = 58.655434
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_txkbm")
+surface_material_override/0 = ExtResource("2_23a2s")

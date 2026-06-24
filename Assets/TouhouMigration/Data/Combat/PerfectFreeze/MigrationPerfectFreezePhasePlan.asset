@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d30ab4b03d246d6a9e149e1926cb85, type: 3}
+  m_Name: MigrationPerfectFreezePhasePlan
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationPerfectFreezePhasePlan
+  phaseMaxHp: 300
+  phaseDurationSeconds: 70
+  patternIntervalSeconds: 2.2
+  maxProjectilesPerCast: 18
+  safeLaneHalfAngleDegrees: 22
+  safeLaneCueDurationSeconds: 1.05
+  clearBonus: 70
+  captureBonus: 100
+  clearStunSeconds: 3.5
+  captureStunSeconds: 4.5
+  orbSpreadProjectileCount: 11
+  orbSpreadDegrees: 82
+  fieldRingCount: 2
+  fieldBulletsPerRing: 12
+  shardFanRowCount: 3
+  shardFanColumnCount: 6
+  shardFanSpreadDegrees: 68
+  closeRangeDistance: 4.2
+  iceLanceMinDistance: 12
+  snowballPreferredDistance: 8

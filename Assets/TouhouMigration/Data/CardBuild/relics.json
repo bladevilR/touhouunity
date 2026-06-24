@@ -1,0 +1,35 @@
+{
+  "relics": [
+    {
+      "id": "phoenix_ash_lantern",
+      "display_name_en": "Phoenix Ash Lantern",
+      "archetype": "fire",
+      "rarity": "starter",
+      "tags": ["fire", "ember", "burn"],
+      "effect_blocks": [
+        {"type": "create_resource_on_status_applied", "status": "burn", "resource": "ember", "amount": 1, "limit_per_turn": 1}
+      ]
+    },
+    {
+      "id": "scarlet_contract_pin",
+      "display_name_en": "Scarlet Contract Pin",
+      "archetype": "blood",
+      "rarity": "uncommon",
+      "tags": ["blood", "fate", "self_damage"],
+      "effect_blocks": [
+        {"type": "create_resource_on_self_damage", "resource": "fate", "amount": 1, "limit_per_turn": 1}
+      ]
+    },
+    {
+      "id": "sealed_verdict_codex",
+      "display_name_en": "Sealed Verdict Codex",
+      "archetype": "mechanism",
+      "rarity": "rare",
+      "tags": ["mechanism", "seal", "verdict"],
+      "effect_blocks": [
+        {"type": "create_resource_on_clause_seen", "resource": "seal", "amount": 1},
+        {"type": "append_answer_tag", "answer_tag": "mechanism_victory"}
+      ]
+    }
+  ]
+}

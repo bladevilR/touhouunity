@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://b3u2uxmwb7yqn"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Candles_3.Candles_3.mesh" id="1_cidcy"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Candles.material" id="2_o3i28"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Candles_3.Candles_3_LOD0.mesh" id="3_raqkq"]
+[ext_resource type="PackedScene" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Prefabs/FX/Candle Fire.prefab.tscn" id="4_kh5vm"]
+
+[node name="Candles_3" type="Node3D" unique_id=432130789]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1184352285]
+layers = 512
+gi_mode = 2
+visibility_range_end = 2.8856754
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_cidcy")
+surface_material_override/0 = ExtResource("2_o3i28")
+
+[node name="Candles_3_LOD0" type="Node3D" parent="." unique_id=647868350]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.6293944e-08, 9.536743e-09)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Candles_3_LOD0" unique_id=492669132]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 2.8856754
+visibility_range_begin_margin = 0.5
+visibility_range_end = 14.459965
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_raqkq")
+surface_material_override/0 = ExtResource("2_o3i28")
+
+[node name="Candle Fire" parent="." unique_id=141390447 instance=ExtResource("4_kh5vm")]
+transform = Transform3D(1.3842, 0, 0, 0, -6.05053e-08, 1.3842, 0, -1.3842, -6.05053e-08, 0.010619995, 0.2636, 0.2141)
+
+[node name="Candle Fire (1)" parent="." unique_id=1792066213 instance=ExtResource("4_kh5vm")]
+transform = Transform3D(1.3842, 0, 0, 0, -6.05053e-08, 1.3842, 0, -1.3842, -6.05053e-08, -0.1426, 0.1965, 0.1409)
+
+[node name="Candle Fire (2)" parent="." unique_id=994750494 instance=ExtResource("4_kh5vm")]
+transform = Transform3D(1.3842, 0, 0, 0, -6.05053e-08, 1.3842, 0, -1.3842, -6.05053e-08, 0.1625, 0.17930001, 0.1393)
+
+[editable path="Candle Fire"]
+[editable path="Candle Fire (1)"]
+[editable path="Candle Fire (2)"]

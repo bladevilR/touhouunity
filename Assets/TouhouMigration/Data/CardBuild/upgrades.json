@@ -1,0 +1,36 @@
+{
+  "upgrades": [
+    {
+      "id": "quickened_fire_bird",
+      "display_name_en": "Quickened Fire Bird",
+      "target_card_id": "mokou_starter_fire_bird",
+      "operation": "set_cooldown",
+      "cooldown": 1.4,
+      "tags": ["cooldown", "fire"]
+    },
+    {
+      "id": "ember_reserve",
+      "display_name_en": "Ember Reserve",
+      "target_card_id": "mokou_resource_hourai_embers",
+      "operation": "set_charges",
+      "charges": 2,
+      "tags": ["charges", "ember"]
+    },
+    {
+      "id": "verdict_keyword_patch",
+      "display_name_en": "Verdict Keyword Patch",
+      "target_card_id": "mechanism_terminal_fantasy_verdict",
+      "operation": "append_answer_tags",
+      "answer_tags": ["mechanism_victory", "sealed_clause"],
+      "tags": ["answer_tags", "mechanism"]
+    },
+    {
+      "id": "installed_clause_lock",
+      "display_name_en": "Installed Clause Lock",
+      "target_card_id": "mechanism_boss_clause_lock",
+      "operation": "set_activation_mode",
+      "activation_mode": "installed_passive",
+      "tags": ["activation_mode", "mechanism"]
+    }
+  ]
+}

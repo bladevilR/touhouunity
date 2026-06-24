@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dadl82whpwu5e"]
+
+[node name="GodRays" type="Node3D" unique_id=102765812]
+transform = Transform3D(0.64278764, 0.76604444, 0, -0.76604444, 0.64278764, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="ParticleSystem" type="Node" parent="." unique_id=1808778959]
+
+[node name="ParticleSystemRenderer" type="Node" parent="." unique_id=1843683557]

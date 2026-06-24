@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://do5k6u7trf2t4"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Flowers.Flowers.mesh" id="1_kki6m"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Flowers_2.material" id="2_2iw67"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Flowers.Flowers_LOD0.mesh" id="3_nrnm0"]
+
+[node name="Flowers_Yellow" type="Node3D" unique_id=829928729]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1494780897]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 8.945373
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_kki6m")
+surface_material_override/0 = ExtResource("2_2iw67")
+
+[node name="Flowers_LOD0" type="Node3D" parent="." unique_id=237045391]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Flowers_LOD0" unique_id=135974669]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 8.945373
+visibility_range_begin_margin = 0.5
+visibility_range_end = 41.24892
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_nrnm0")
+surface_material_override/0 = ExtResource("2_2iw67")

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://k3gno67xygw8"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Background Terrains/extracted/Mountain_2.Mountain_1_001.mesh" id="1_lvj5n"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Background Terrains/Mountain_2.material" id="2_kjfqk"]
+
+[node name="Mountain_2" type="Node3D" unique_id=390016695]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=54825585]
+cast_shadow = 0
+gi_mode = 2
+mesh = ExtResource("1_lvj5n")
+surface_material_override/0 = ExtResource("2_kjfqk")

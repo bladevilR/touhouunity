@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://byr2duxw3fxm1"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Case_1.Case_1.mesh" id="1_dx76a"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Case_1.material" id="2_8fu50"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Case_1.Case_1_LOD0.mesh" id="3_ldhso"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_f2k33"]
+points = PackedVector3Array(0.3374059, 0.31006378, -0.34794235, 0.3374059, 0.29896352, -0.38288552, 0.3310435, 0.48786604, -0.3862773, 0.3310435, 0.4979752, -0.34794235, 0.3354136, 0.48271236, 0.3811312, 0.3354136, 0.47329697, 0.41954497, 0.33669892, 0.012537331, 0.41638985, 0.33669892, 0.001288414, 0.3811312, 0.3310435, 0.012537331, -0.38320103, 0.3310435, 0.13478878, -0.38604066, -0.3172102, 0.47329697, -0.3862773, -0.20994982, 0.50174135, -0.34865227, 0.21922025, 0.5075393, -0.34881002, 0.2950544, 0.5075393, -0.2834198, 0.29241952, 0.50174135, 0.3045402, 0.29241952, 0.49881762, 0.3818411, -0.3128401, 0.48786604, 0.4194661, -0.3128401, 0.13478878, 0.41922948, 0.3264806, 0.13478878, 0.41922948, 0.22815326, 0.50174135, 0.3818411, -0.3128401, 0.012537331, 0.41638985, 0.0068202615, 0.001288414, 0.38925567, 0.3310435, 0.001288414, -0.34794235, 0.011383146, 0.001288414, -0.35606685, -0.31849554, 0.012537331, -0.38320103, -0.3082772, 0.13478878, -0.38604066, -0.3191382, 0.31006378, 0.3811312, -0.3172102, 0.48271236, -0.34794235, -0.2742161, 0.49881762, -0.34865227, -0.2742161, 0.50174135, -0.2713514, -0.276851, 0.5075393, 0.31660858, -0.20101681, 0.5075393, 0.38199887, -0.3191382, 0.29896352, 0.4160743, -0.3128401, 0.4979752, 0.3811312, -0.31849554, 0.001288414, -0.34794235, -0.3128401, 0.001288414, 0.3811312)
+
+[node name="Case_1" type="RigidBody3D" unique_id=1252851793]
+freeze_mode = 1
+continuous_cd = true
+angular_damp = 0.05
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=442939845]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 5.2650914
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_dx76a")
+surface_material_override/0 = ExtResource("2_8fu50")
+
+[node name="MeshCollider" type="CollisionShape3D" parent="." unique_id=872008799]
+shape = SubResource("ConvexPolygonShape3D_f2k33")
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=268864628]
+attenuation_model = 2
+max_db = 0.0
+max_distance = 500.0
+
+[node name="Case_1_LOD0" type="Node3D" parent="." unique_id=1368666415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0517577e-07, 5.9604643e-10, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Case_1_LOD0" unique_id=1970835184]
+layers = 1024
+gi_mode = 2
+visibility_range_begin = 5.2650914
+visibility_range_begin_margin = 0.5
+visibility_range_end = 32.67745
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_ldhso")
+surface_material_override/0 = ExtResource("2_8fu50")

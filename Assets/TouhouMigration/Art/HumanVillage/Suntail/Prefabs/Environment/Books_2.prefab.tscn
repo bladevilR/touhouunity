@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bqu4qdlyod2li"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Books_2.Books_2.mesh" id="1_stp5y"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Books_2.material" id="2_alnrf"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_puxly"]
+points = PackedVector3Array(0.18175918, 0.19434997, -0.16271693, 0.18175918, 0.26646, -0.16271693, 0.21621773, -0.0034688264, -0.11622802, 0.17952836, 0.08232838, -0.15368564, -0.16597334, -0.0034688264, -0.14385487, 0.18359166, 0.28303605, -0.15078379, 0.21621773, 0.082188144, -0.11622802, -0.16597334, 0.082188144, -0.14385487, -0.17645033, 0.26646, -0.107700124, 0.22028106, 0.17774586, 0.08474025, 0.1993669, -0.0034688264, 0.11820042, -0.18278433, -0.0034688264, 0.090543956, -0.1866883, 0.08232838, -0.12176523, 0.22024122, 0.28303605, 0.08474025, -0.17461786, 0.28303605, -0.095766984, -0.1866883, 0.17760563, -0.12176523, 0.1984905, 0.010022006, 0.13019279, 0.1984905, 0.06869731, 0.13019279, -0.18366073, 0.010022006, 0.102565944, -0.13792847, 0.28303605, 0.13978666, -0.18366073, 0.06869731, 0.102565944, -0.16553514, 0.17760563, 0.12329346, -0.13792847, 0.17774586, 0.13978666, -0.16441971, 0.097361825, 0.13584843, -0.16441971, 0.16260023, 0.13584843)
+
+[node name="Books_2" type="Node3D" unique_id=1208565756]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1902652632]
+layers = 512
+gi_mode = 2
+visibility_range_end = 15.62082
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_stp5y")
+surface_material_override/0 = ExtResource("2_alnrf")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=110687101]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=766323176]
+shape = SubResource("ConvexPolygonShape3D_puxly")

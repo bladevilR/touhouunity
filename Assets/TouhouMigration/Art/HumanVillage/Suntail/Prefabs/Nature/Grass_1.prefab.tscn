@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://cel11facf42t4"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Grass.Grass.mesh" id="1_dh47f"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Grass_1.material" id="2_d43lw"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Grass.Grass_LOD0.mesh" id="3_k8mfn"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Grass.Grass_LOD1.mesh" id="4_rseqy"]
+
+[node name="Grass_1" type="Node3D" unique_id=898762506]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=265369785]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_end = 5.5950046
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_dh47f")
+surface_material_override/0 = ExtResource("2_d43lw")
+
+[node name="Grass_LOD0" type="Node3D" parent="." unique_id=2022101705]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Grass_LOD0" unique_id=96397563]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 5.5950046
+visibility_range_begin_margin = 0.5
+visibility_range_end = 11.231238
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_k8mfn")
+surface_material_override/0 = ExtResource("2_d43lw")
+
+[node name="Grass_LOD1" type="Node3D" parent="." unique_id=1600962801]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Grass_LOD1" unique_id=1501921236]
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 11.231238
+visibility_range_begin_margin = 0.5
+visibility_range_end = 42.931553
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_rseqy")
+surface_material_override/0 = ExtResource("2_d43lw")

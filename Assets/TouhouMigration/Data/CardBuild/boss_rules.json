@@ -1,0 +1,100 @@
+{
+  "boss_rules": [
+    {
+      "id": "unavoidable_danmaku",
+      "display_name_zh": "完全无法躲避的弹幕",
+      "display_name_en": "Unavoidable Danmaku",
+      "candidate_bosses": ["reimu_hakurei", "sakuya_izayoi", "aya_shameimaru"],
+      "answer_families": ["barrier_reflect", "time_skip", "summon_body_block", "mechanism_clause_seal"],
+      "pressure": "Boss fires patterns that cover the arena and make pure movement insufficient."
+    },
+    {
+      "id": "projectile_immunity",
+      "display_name_zh": "弹幕完全免疫",
+      "display_name_en": "Projectile Immunity",
+      "candidate_bosses": ["tenshi_hinanawi", "flandre_scarlet", "suwako_moriya"],
+      "answer_families": ["poison_tick", "summon_contact", "mechanism_clause_bypass", "blood_life_loss"],
+      "pressure": "Normal projectile damage is ignored until the player changes damage type or disables the clause."
+    },
+    {
+      "id": "immortal_loop",
+      "display_name_zh": "死亡后复活循环",
+      "display_name_en": "Immortal Loop",
+      "candidate_bosses": ["fujiwara_no_mokou", "kaguya_houraisan", "yuyuko_saigyouji"],
+      "answer_families": ["fire_ash_seal", "poison_death_counter", "mechanism_rule_exile", "information_reveal_core"],
+      "pressure": "Boss returns after lethal damage unless the deck answers regeneration as a rule."
+    },
+    {
+      "id": "no_damage_taken",
+      "display_name_zh": "不会受到任何伤害",
+      "display_name_en": "No Damage Taken",
+      "candidate_bosses": ["kaguya_houraisan", "remilia_scarlet", "hata_no_kokoro"],
+      "answer_families": ["mechanism_alternate_win", "inversion_make_damage_heal", "information_solve_condition", "barrier_purify_clause"],
+      "pressure": "Boss cannot lose HP until the encounter condition is solved."
+    },
+    {
+      "id": "adaptive_immunity",
+      "display_name_zh": "适应性免疫",
+      "display_name_en": "Adaptive Immunity",
+      "candidate_bosses": ["eirin_yagokoro", "satori_komeiji", "patchouli_knowledge"],
+      "answer_families": ["multi_archetype_rotation", "deck_thinning", "information_predict", "inversion_reset_memory"],
+      "pressure": "Repeated use of the same answer family becomes weaker or disabled."
+    },
+    {
+      "id": "board_wipe",
+      "display_name_zh": "全场清空",
+      "display_name_en": "Board Wipe",
+      "candidate_bosses": ["flandre_scarlet", "byakuren_hijiri", "yuuka_kazami"],
+      "answer_families": ["summon_death_value", "equipment_insurance", "time_retain", "fire_rekindle"],
+      "pressure": "Installed objects, summons, fields, or hand setup are periodically destroyed."
+    },
+    {
+      "id": "hand_pollution",
+      "display_name_zh": "手牌污染",
+      "display_name_en": "Hand Pollution",
+      "candidate_bosses": ["kosuzu_motoori", "rumia", "koishi_komeiji"],
+      "answer_families": ["poison_use_curses", "information_filter", "fire_exhaust_hand", "inversion_turn_junk_positive"],
+      "pressure": "Boss adds curses, blanks, or forced choices into the player's hand."
+    },
+    {
+      "id": "deck_copy",
+      "display_name_zh": "复制你的卡组",
+      "display_name_en": "Deck Copy",
+      "candidate_bosses": ["satori_komeiji", "mamizou_futatsuiwa", "ran_yakumo"],
+      "answer_families": ["low_value_decoys", "mechanism_one_sided_clause", "information_false_signal", "summon_scaling_outside_deck"],
+      "pressure": "Boss gains mirrored cards or partner hooks based on the player's strongest lines."
+    },
+    {
+      "id": "untargetable",
+      "display_name_zh": "无法被指定",
+      "display_name_en": "Untargetable",
+      "candidate_bosses": ["koishi_komeiji", "aya_shameimaru", "kogasa_tatara"],
+      "answer_families": ["field_damage", "homing_rule", "summon_auto_target", "information_reveal_target"],
+      "pressure": "Aiming, lock-on, and target-required effects fail until the boss is exposed."
+    },
+    {
+      "id": "buff_reversal",
+      "display_name_zh": "增益反转",
+      "display_name_en": "Buff Reversal",
+      "candidate_bosses": ["seija_kijin", "hata_no_kokoro", "reisen_udongein_inaba"],
+      "answer_families": ["inversion_double_reverse", "barrier_purify", "blood_negative_payoff", "mechanism_disable_clause"],
+      "pressure": "Positive status, resources, or upgrades become harmful under the active clause."
+    },
+    {
+      "id": "terrain_tyranny",
+      "display_name_zh": "地形暴政",
+      "display_name_en": "Terrain Tyranny",
+      "candidate_bosses": ["suwako_moriya", "letty_whiterock", "tenshi_hinanawi", "yuuka_kazami"],
+      "answer_families": ["field_replace", "ice_slow_abuse", "movement_ignore_terrain", "mechanism_rewrite_environment"],
+      "pressure": "Arena rules and environmental damage become the main enemy."
+    },
+    {
+      "id": "fate_lock",
+      "display_name_zh": "命运锁定",
+      "display_name_en": "Fate Lock",
+      "candidate_bosses": ["remilia_scarlet", "keine_kamishirasawa", "toyosatomimi_no_miko"],
+      "answer_families": ["information_foresee", "time_rewind", "mechanism_clause_break", "inversion_bad_fate_conversion"],
+      "pressure": "Boss predetermines draws, damage windows, or unavoidable losses unless fate is rewritten."
+    }
+  ]
+}

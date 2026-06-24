@@ -1,0 +1,1264 @@
+{
+  "gifts": {
+    "rice_ball": {
+      "name": "饭团",
+      "category": "FOOD",
+      "description": "简单但美味的饭团",
+      "base_value": 10,
+      "tags": [
+        "warm",
+        "simple",
+        "homemade"
+      ]
+    },
+    "manjuu": {
+      "name": "馒头",
+      "category": "FOOD",
+      "description": "甜甜的日式点心",
+      "base_value": 15,
+      "tags": [
+        "sweet",
+        "traditional",
+        "snack"
+      ]
+    },
+    "dango": {
+      "name": "团子",
+      "category": "FOOD",
+      "description": "串在竹签上的糯米团子",
+      "base_value": 20,
+      "tags": [
+        "sweet",
+        "traditional",
+        "festive"
+      ]
+    },
+    "youkan": {
+      "name": "羊羹",
+      "category": "FOOD",
+      "description": "精致的和菓子",
+      "base_value": 30,
+      "tags": [
+        "sweet",
+        "elegant",
+        "traditional"
+      ]
+    },
+    "mushroom_stew": {
+      "name": "蘑菇炖菜",
+      "category": "FOOD",
+      "description": "用各种蘑菇熬制的炖菜",
+      "base_value": 25,
+      "tags": [
+        "warm",
+        "magical",
+        "forest"
+      ]
+    },
+    "moon_cake": {
+      "name": "月饼",
+      "category": "FOOD",
+      "description": "传统的中秋月饼",
+      "base_value": 40,
+      "tags": [
+        "sweet",
+        "festive",
+        "lunar",
+        "elegant"
+      ]
+    },
+    "green_tea": {
+      "name": "绿茶",
+      "category": "DRINK",
+      "description": "清香的绿茶",
+      "base_value": 10,
+      "tags": [
+        "warm",
+        "calm",
+        "traditional",
+        "herbal"
+      ]
+    },
+    "black_tea": {
+      "name": "红茶",
+      "category": "DRINK",
+      "description": "浓郁的红茶",
+      "base_value": 15,
+      "tags": [
+        "warm",
+        "elegant",
+        "western"
+      ]
+    },
+    "sake": {
+      "name": "日本酒",
+      "category": "DRINK",
+      "description": "品质上乘的清酒",
+      "base_value": 35,
+      "tags": [
+        "alcohol",
+        "traditional",
+        "festive"
+      ]
+    },
+    "herbal_tea": {
+      "name": "药草茶",
+      "category": "DRINK",
+      "description": "有治愈效果的草药茶",
+      "base_value": 20,
+      "tags": [
+        "warm",
+        "herbal",
+        "healing"
+      ]
+    },
+    "cherry_blossom": {
+      "name": "樱花",
+      "category": "FLOWER",
+      "description": "春天的象征",
+      "base_value": 25
+    },
+    "sunflower": {
+      "name": "向日葵",
+      "category": "FLOWER",
+      "description": "明亮的太阳之花",
+      "base_value": 20
+    },
+    "lily": {
+      "name": "百合",
+      "category": "FLOWER",
+      "description": "纯洁的白色百合",
+      "base_value": 30
+    },
+    "spider_lily": {
+      "name": "彼岸花",
+      "category": "FLOWER",
+      "description": "妖艳的红色花朵",
+      "base_value": 35
+    },
+    "lotus": {
+      "name": "莲花",
+      "category": "FLOWER",
+      "description": "出淤泥而不染的圣洁之花",
+      "base_value": 40
+    },
+    "history_book": {
+      "name": "历史书",
+      "category": "BOOK",
+      "description": "记载幻想乡历史的书籍",
+      "base_value": 30
+    },
+    "magic_grimoire": {
+      "name": "魔导书",
+      "category": "BOOK",
+      "description": "记载魔法知识的书籍",
+      "base_value": 50
+    },
+    "poetry_collection": {
+      "name": "诗集",
+      "category": "BOOK",
+      "description": "优美的诗歌合集",
+      "base_value": 25
+    },
+    "cooking_recipe": {
+      "name": "料理食谱",
+      "category": "BOOK",
+      "description": "各种料理的做法",
+      "base_value": 20
+    },
+    "magic_crystal": {
+      "name": "魔法水晶",
+      "category": "MAGIC_ITEM",
+      "description": "蕴含魔力的水晶",
+      "base_value": 40,
+      "tags": [
+        "magical",
+        "shiny",
+        "rare"
+      ]
+    },
+    "spell_card": {
+      "name": "符卡",
+      "category": "MAGIC_ITEM",
+      "description": "封印着弹幕的卡片",
+      "base_value": 60,
+      "tags": [
+        "magical",
+        "combat",
+        "danmaku"
+      ]
+    },
+    "magic_mushroom": {
+      "name": "魔法蘑菇",
+      "category": "MAGIC_ITEM",
+      "description": "带有魔力的奇特蘑菇",
+      "base_value": 35,
+      "tags": [
+        "magical",
+        "forest",
+        "mysterious"
+      ]
+    },
+    "moon_stone": {
+      "name": "月石",
+      "category": "MAGIC_ITEM",
+      "description": "来自月球的神秘石头",
+      "base_value": 100,
+      "tags": [
+        "lunar",
+        "rare",
+        "elegant",
+        "magical"
+      ]
+    },
+    "hair_ribbon": {
+      "name": "发带",
+      "category": "ACCESSORY",
+      "description": "漂亮的发带",
+      "base_value": 25
+    },
+    "silver_knife": {
+      "name": "银制小刀",
+      "category": "ACCESSORY",
+      "description": "精致的银质小刀",
+      "base_value": 45
+    },
+    "pocket_watch": {
+      "name": "怀表",
+      "category": "ACCESSORY",
+      "description": "精密的怀表",
+      "base_value": 55
+    },
+    "jade_pendant": {
+      "name": "玉坠",
+      "category": "ACCESSORY",
+      "description": "温润的玉石吊坠",
+      "base_value": 50
+    },
+    "hourai_elixir": {
+      "name": "蓬莱之药",
+      "category": "SPECIAL",
+      "description": "传说中的不死之药",
+      "base_value": 999
+    },
+    "lunar_veil": {
+      "name": "月之羽衣",
+      "category": "SPECIAL",
+      "description": "月之公主的羽衣",
+      "base_value": 999
+    },
+    "dragon_pearl": {
+      "name": "龙颈之玉",
+      "category": "SPECIAL",
+      "description": "五难题之一",
+      "base_value": 999
+    }
+  },
+  "npc_preferences": {
+    "keine": {
+      "loves": [
+        "history_book",
+        "poetry_collection",
+        "green_tea"
+      ],
+      "likes": [
+        "manjuu",
+        "cherry_blossom",
+        "cooking_recipe"
+      ],
+      "dislikes": [
+        "sake",
+        "magic_mushroom"
+      ],
+      "hates": [
+        "spider_lily"
+      ],
+      "liked_tags": [
+        "academic",
+        "traditional",
+        "warm",
+        "herbal",
+        "calm"
+      ],
+      "disliked_tags": [
+        "alcohol",
+        "magical",
+        "dangerous"
+      ],
+      "special": {
+        "moon_stone": "hakutaku_reaction"
+      },
+      "category_bonus": {
+        "BOOK": 1.5,
+        "FOOD": 1.2
+      },
+      "dialogues": {
+        "LOVE": [
+          "这本书...太珍贵了！谢谢你！",
+          "你怎么知道我喜欢这个的？"
+        ],
+        "LIKE": [
+          "谢谢，我很喜欢。",
+          "这个很不错呢。"
+        ],
+        "NEUTRAL": [
+          "谢谢你的心意。",
+          "嗯，收下了。"
+        ],
+        "DISLIKE": [
+          "这个...我不太需要。",
+          "谢谢，不过..."
+        ],
+        "HATE": [
+          "请把这个拿走...",
+          "我不想看到这个。"
+        ]
+      }
+    },
+    "reimu": {
+      "loves": [
+        "sake",
+        "youkan",
+        "donation"
+      ],
+      "likes": [
+        "green_tea",
+        "dango",
+        "cherry_blossom"
+      ],
+      "dislikes": [
+        "magic_grimoire",
+        "magic_mushroom"
+      ],
+      "hates": [],
+      "liked_tags": [
+        "sweet",
+        "traditional",
+        "festive",
+        "simple",
+        "warm"
+      ],
+      "disliked_tags": [
+        "magical",
+        "mysterious"
+      ],
+      "special": {
+        "spell_card": "shrine_maiden_reaction"
+      },
+      "category_bonus": {
+        "FOOD": 1.3,
+        "DRINK": 1.2
+      },
+      "dialogues": {
+        "LOVE": [
+          "这个！太好了！谢谢！",
+          "你真是太懂我了！"
+        ],
+        "LIKE": [
+          "嗯，不错。谢谢。",
+          "这个我喜欢。"
+        ],
+        "NEUTRAL": [
+          "哦，谢谢。",
+          "收下了。"
+        ],
+        "DISLIKE": [
+          "这个...给我有什么用？",
+          "算了，收下吧。"
+        ]
+      }
+    },
+    "marisa": {
+      "loves": [
+        "magic_grimoire",
+        "magic_mushroom",
+        "magic_crystal"
+      ],
+      "likes": [
+        "mushroom_stew",
+        "spell_card",
+        "black_tea"
+      ],
+      "dislikes": [
+        "history_book",
+        "poetry_collection"
+      ],
+      "hates": [],
+      "liked_tags": [
+        "magical",
+        "forest",
+        "mysterious",
+        "rare",
+        "shiny"
+      ],
+      "disliked_tags": [
+        "academic",
+        "calm"
+      ],
+      "special": {
+        "stolen_grimoire": "library_reaction"
+      },
+      "category_bonus": {
+        "MAGIC_ITEM": 1.5,
+        "BOOK": 0.8
+      },
+      "dialogues": {
+        "LOVE": [
+          "哦！这个太棒了！",
+          "你懂我！这正是我想要的！",
+          "哈哈！这个借我吧！...开玩笑的，是送我的对吧？"
+        ],
+        "LIKE": [
+          "不错不错！谢谢！",
+          "这个可以用在我的研究上！"
+        ],
+        "NEUTRAL": [
+          "哦，谢谢。",
+          "嗯...也不是不能用。"
+        ],
+        "DISLIKE": [
+          "这个...不太是我的风格。",
+          "嗯...谢谢？"
+        ]
+      }
+    },
+    "koishi": {
+      "loves": [],
+      "likes": [
+        "sunflower"
+      ],
+      "dislikes": [],
+      "hates": [],
+      "special": {
+        "spider_lily": "eye_reaction",
+        "heart_pendant": "heart_reaction"
+      },
+      "category_bonus": {},
+      "dialogues": {
+        "LOVE": [
+          "...？...！（似乎很开心）"
+        ],
+        "LIKE": [
+          "嗯...谢谢...？",
+          "这是...给我的？"
+        ],
+        "NEUTRAL": [
+          "...",
+          "嗯...？你给了我什么来着..."
+        ],
+        "DISLIKE": [
+          "..."
+        ]
+      },
+      "special_behavior": "forgets_gift"
+    },
+    "sakuya": {
+      "loves": [
+        "black_tea",
+        "pocket_watch",
+        "silver_knife"
+      ],
+      "likes": [
+        "youkan",
+        "lily",
+        "jade_pendant"
+      ],
+      "dislikes": [
+        "magic_mushroom",
+        "sake"
+      ],
+      "hates": [],
+      "liked_tags": [
+        "elegant",
+        "western",
+        "shiny",
+        "functional"
+      ],
+      "disliked_tags": [
+        "simple",
+        "forest",
+        "alcohol"
+      ],
+      "special": {
+        "lunar_veil": "moon_reaction"
+      },
+      "category_bonus": {
+        "DRINK": 1.3,
+        "ACCESSORY": 1.4
+      },
+      "dialogues": {
+        "LOVE": [
+          "这...真是太精致了。谢谢你。",
+          "你的品味很好。"
+        ],
+        "LIKE": [
+          "谢谢。这个很实用。",
+          "不错的选择。"
+        ],
+        "NEUTRAL": [
+          "收到了。谢谢。",
+          "我会妥善保管的。"
+        ],
+        "DISLIKE": [
+          "这个...不太适合在红魔馆使用。",
+          "谢谢，不过..."
+        ]
+      }
+    },
+    "kaguya": {
+      "loves": [
+        "moon_stone",
+        "lotus",
+        "jade_pendant",
+        "poetry_collection"
+      ],
+      "likes": [
+        "moon_cake",
+        "lily",
+        "hair_ribbon"
+      ],
+      "dislikes": [],
+      "hates": [
+        "hourai_elixir"
+      ],
+      "liked_tags": [
+        "lunar",
+        "elegant",
+        "rare",
+        "festive"
+      ],
+      "disliked_tags": [
+        "simple",
+        "broken"
+      ],
+      "special": {
+        "dragon_pearl": "riddle_reaction",
+        "lunar_veil": "past_reaction"
+      },
+      "category_bonus": {
+        "SPECIAL": 2.0,
+        "FLOWER": 1.3,
+        "ACCESSORY": 1.2
+      },
+      "dialogues": {
+        "LOVE": [
+          "这个...让我想起了很久以前的事...",
+          "你懂得欣赏美。我很高兴。",
+          "真漂亮...谢谢你。"
+        ],
+        "LIKE": [
+          "嗯，不错。谢谢。",
+          "这个很雅致呢。"
+        ],
+        "NEUTRAL": [
+          "谢谢。",
+          "收下了。"
+        ],
+        "HATE": [
+          "请把这个...拿走...",
+          "（表情变得复杂）...我不想看到这个。"
+        ]
+      }
+    },
+    "akyuu": {
+      "loves": [
+        "history_book",
+        "poetry_collection",
+        "ancient_scroll"
+      ],
+      "likes": [
+        "green_tea",
+        "lotus",
+        "jade_pendant"
+      ],
+      "dislikes": [
+        "sake",
+        "magic_mushroom"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "BOOK": 2.0
+      }
+    },
+    "nitori": {
+      "loves": [
+        "cucumber",
+        "mechanism",
+        "magic_crystal"
+      ],
+      "likes": [
+        "silver_knife",
+        "spell_card",
+        "sunflower"
+      ],
+      "dislikes": [
+        "history_book",
+        "poetry_collection"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 1.5
+      }
+    },
+    "remilia": {
+      "loves": [
+        "black_tea",
+        "jade_pendant",
+        "lunar_veil"
+      ],
+      "likes": [
+        "silver_knife",
+        "lotus",
+        "youkan"
+      ],
+      "dislikes": [
+        "sake"
+      ],
+      "hates": [
+        "garlic",
+        "cross"
+      ],
+      "category_bonus": {
+        "DRINK": 1.5,
+        "ACCESSORY": 1.3
+      }
+    },
+    "patchouli": {
+      "loves": [
+        "magic_grimoire",
+        "ancient_scroll",
+        "magic_crystal"
+      ],
+      "likes": [
+        "green_tea",
+        "lotus",
+        "poetry_collection"
+      ],
+      "dislikes": [
+        "sake"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "BOOK": 2.0,
+        "MAGIC_ITEM": 1.3
+      }
+    },
+    "meiling": {
+      "loves": [
+        "rice_ball",
+        "manjuu",
+        "dragon_pearl"
+      ],
+      "likes": [
+        "green_tea",
+        "spell_card",
+        "silver_knife"
+      ],
+      "dislikes": [
+        "history_book"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 1.5
+      }
+    },
+    "eirin": {
+      "loves": [
+        "herbal_tea",
+        "moon_stone",
+        "lotus"
+      ],
+      "likes": [
+        "green_tea",
+        "jade_pendant",
+        "lily"
+      ],
+      "dislikes": [
+        "sake",
+        "magic_mushroom"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "DRINK": 1.3,
+        "BOOK": 1.2
+      }
+    },
+    "reisen": {
+      "loves": [
+        "carrot",
+        "herbal_tea",
+        "hair_ribbon"
+      ],
+      "likes": [
+        "rice_ball",
+        "sunflower",
+        "lily"
+      ],
+      "dislikes": [
+        "magic_mushroom",
+        "spider_lily"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 1.3
+      }
+    },
+    "tewi": {
+      "loves": [
+        "carrot",
+        "magic_mushroom",
+        "rare_mushroom"
+      ],
+      "likes": [
+        "sunflower",
+        "dango",
+        "rice_ball"
+      ],
+      "dislikes": [
+        "history_book",
+        "sake"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 1.3
+      }
+    },
+    "satori": {
+      "loves": [
+        "poetry_collection",
+        "lotus",
+        "jade_pendant"
+      ],
+      "likes": [
+        "green_tea",
+        "lily",
+        "cherry_blossom"
+      ],
+      "dislikes": [
+        "sake",
+        "magic_mushroom"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "BOOK": 1.5
+      }
+    },
+    "utsuho": {
+      "loves": [
+        "magic_crystal",
+        "dragon_pearl",
+        "moon_stone"
+      ],
+      "likes": [
+        "spell_card",
+        "magic_mushroom",
+        "spider_lily"
+      ],
+      "dislikes": [
+        "history_book",
+        "green_tea"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 2.0
+      }
+    },
+    "rin": {
+      "loves": [
+        "fish",
+        "magic_crystal",
+        "spider_lily"
+      ],
+      "likes": [
+        "sake",
+        "rice_ball",
+        "cherry_blossom"
+      ],
+      "dislikes": [
+        "history_book"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 1.2,
+        "MAGIC_ITEM": 1.2
+      }
+    },
+    "cirno": {
+      "loves": [
+        "frog",
+        "magic_crystal",
+        "sunflower"
+      ],
+      "likes": [
+        "cherry_blossom",
+        "dango"
+      ],
+      "dislikes": [
+        "black_tea",
+        "fire_item"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 1.5
+      }
+    },
+    "aya": {
+      "loves": [
+        "notebook",
+        "spell_card",
+        "green_tea"
+      ],
+      "likes": [
+        "sunflower",
+        "cherry_blossom"
+      ],
+      "dislikes": [
+        "history_book"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "BOOK": 1.5
+      }
+    },
+    "alice": {
+      "loves": [
+        "silk_thread",
+        "magic_crystal",
+        "spell_card"
+      ],
+      "likes": [
+        "green_tea",
+        "lily"
+      ],
+      "dislikes": [
+        "sake",
+        "mushroom_stew"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 1.5,
+        "ACCESSORY": 1.3
+      }
+    },
+    "youmu": {
+      "loves": [
+        "whetstone",
+        "silver_knife",
+        "green_tea"
+      ],
+      "likes": [
+        "rice_ball",
+        "lotus",
+        "spell_card"
+      ],
+      "dislikes": [
+        "sake",
+        "magic_mushroom"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "ACCESSORY": 1.5
+      }
+    },
+    "yuyuko": {
+      "loves": [
+        "rice_ball",
+        "manjuu",
+        "dango",
+        "youkan",
+        "moon_cake"
+      ],
+      "likes": [
+        "cherry_blossom",
+        "lotus",
+        "green_tea"
+      ],
+      "dislikes": [],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 3.0
+      }
+    },
+    "sanae": {
+      "loves": [
+        "robot_model",
+        "magic_crystal",
+        "spell_card"
+      ],
+      "likes": [
+        "green_tea",
+        "lotus",
+        "sunflower"
+      ],
+      "dislikes": [
+        "ancient_scroll",
+        "sake"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 1.5
+      }
+    },
+    "yuuka": {
+      "loves": [
+        "rare_seed",
+        "sunflower",
+        "lotus"
+      ],
+      "likes": [
+        "green_tea",
+        "lily",
+        "cherry_blossom"
+      ],
+      "dislikes": [],
+      "hates": [
+        "fake_flower",
+        "plastic_flower"
+      ],
+      "category_bonus": {
+        "FLOWER": 2.0
+      }
+    },
+    "yukari": {
+      "loves": [
+        "lunar_veil",
+        "dragon_pearl",
+        "jade_pendant"
+      ],
+      "likes": [
+        "green_tea",
+        "lotus"
+      ],
+      "dislikes": [
+        "common_item"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "SPECIAL": 1.5
+      }
+    },
+    "suika": {
+      "loves": [
+        "sake",
+        "dragon_pearl",
+        "rice_ball"
+      ],
+      "likes": [
+        "dango",
+        "youkan"
+      ],
+      "dislikes": [
+        "green_tea",
+        "history_book"
+      ],
+      "hates": [
+        "water"
+      ],
+      "category_bonus": {
+        "DRINK": 2.0,
+        "FOOD": 1.3
+      }
+    },
+    "kosuzu": {
+      "loves": [
+        "rare_book",
+        "history_book",
+        "poetry_collection"
+      ],
+      "likes": [
+        "green_tea",
+        "lily",
+        "cherry_blossom"
+      ],
+      "dislikes": [
+        "sake",
+        "magic_mushroom"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "BOOK": 2.0
+      }
+    },
+    "mamizou": {
+      "loves": [
+        "sake",
+        "tea_set",
+        "jade_pendant"
+      ],
+      "likes": [
+        "rice_ball",
+        "dango",
+        "green_tea"
+      ],
+      "dislikes": [
+        "magic_grimoire",
+        "history_book"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "ACCESSORY": 1.3
+      }
+    },
+    "kogasa": {
+      "loves": [
+        "umbrella_cloth",
+        "spider_lily",
+        "cherry_blossom"
+      ],
+      "likes": [
+        "magic_mushroom",
+        "dango"
+      ],
+      "dislikes": [
+        "history_book",
+        "green_tea"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 1.3
+      }
+    },
+    "mystia": {
+      "loves": [
+        "fresh_fish",
+        "cooking_recipe",
+        "rice_ball"
+      ],
+      "likes": [
+        "sunflower",
+        "green_tea",
+        "dango"
+      ],
+      "dislikes": [
+        "history_book",
+        "sake"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 1.5
+      }
+    },
+    "miyoi": {
+      "loves": [
+        "tea_leaves",
+        "sake",
+        "cooking_recipe"
+      ],
+      "likes": [
+        "green_tea",
+        "lotus",
+        "cherry_blossom"
+      ],
+      "dislikes": [
+        "magic_mushroom",
+        "spider_lily"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "DRINK": 1.5,
+        "FOOD": 1.2
+      }
+    },
+    "sumireko": {
+      "loves": [
+        "smartphone",
+        "magic_crystal",
+        "spell_card"
+      ],
+      "likes": [
+        "sunflower",
+        "green_tea"
+      ],
+      "dislikes": [
+        "ancient_scroll",
+        "history_book"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "MAGIC_ITEM": 1.5
+      }
+    },
+    "yuuma": {
+      "loves": [
+        "giant_meat",
+        "fish",
+        "exotic_food"
+      ],
+      "likes": [
+        "rice_ball",
+        "dango",
+        "mushroom_stew"
+      ],
+      "dislikes": [
+        "green_tea",
+        "history_book"
+      ],
+      "hates": [
+        "inedible_item"
+      ],
+      "category_bonus": {
+        "FOOD": 2.5
+      }
+    },
+    "tenshi": {
+      "loves": [
+        "rare_peach",
+        "jade_pendant",
+        "spell_card"
+      ],
+      "likes": [
+        "cherry_blossom",
+        "dango",
+        "lotus"
+      ],
+      "dislikes": [
+        "ancient_scroll",
+        "history_book"
+      ],
+      "hates": [],
+      "category_bonus": {
+        "FOOD": 1.5,
+        "ACCESSORY": 1.3
+      }
+    }
+  },
+  "npc_birthdays": {
+    "keine": {
+      "month": 5,
+      "day": 3
+    },
+    "reimu": {
+      "month": 3,
+      "day": 3
+    },
+    "marisa": {
+      "month": 8,
+      "day": 8
+    },
+    "koishi": {
+      "month": 5,
+      "day": 14
+    },
+    "sakuya": {
+      "month": 1,
+      "day": 1
+    },
+    "kaguya": {
+      "month": 9,
+      "day": 15
+    },
+    "akyuu": {
+      "month": 7,
+      "day": 7
+    },
+    "nitori": {
+      "month": 3,
+      "day": 15
+    },
+    "remilia": {
+      "month": 7,
+      "day": 1
+    },
+    "patchouli": {
+      "month": 3,
+      "day": 1
+    },
+    "meiling": {
+      "month": 1,
+      "day": 7
+    },
+    "eirin": {
+      "month": 9,
+      "day": 23
+    },
+    "reisen": {
+      "month": 11,
+      "day": 21
+    },
+    "tewi": {
+      "month": 12,
+      "day": 1
+    },
+    "satori": {
+      "month": 11,
+      "day": 7
+    },
+    "utsuho": {
+      "month": 8,
+      "day": 3
+    },
+    "rin": {
+      "month": 2,
+      "day": 22
+    },
+    "cirno": {
+      "month": 1,
+      "day": 1
+    },
+    "aya": {
+      "month": 10,
+      "day": 1
+    },
+    "alice": {
+      "month": 3,
+      "day": 18
+    },
+    "youmu": {
+      "month": 10,
+      "day": 1
+    },
+    "yuyuko": {
+      "month": 5,
+      "day": 17
+    },
+    "sanae": {
+      "month": 3,
+      "day": 8
+    },
+    "yuuka": {
+      "month": 5,
+      "day": 23
+    },
+    "yukari": {
+      "month": 6,
+      "day": 1
+    },
+    "suika": {
+      "month": 6,
+      "day": 15
+    },
+    "kosuzu": {
+      "month": 8,
+      "day": 10
+    },
+    "mamizou": {
+      "month": 10,
+      "day": 10
+    },
+    "kogasa": {
+      "month": 7,
+      "day": 7
+    },
+    "mystia": {
+      "month": 9,
+      "day": 1
+    },
+    "miyoi": {
+      "month": 4,
+      "day": 15
+    },
+    "sumireko": {
+      "month": 3,
+      "day": 3
+    },
+    "yuuma": {
+      "month": 11,
+      "day": 1
+    },
+    "tenshi": {
+      "month": 1,
+      "day": 20
+    }
+  },
+  "birthday_gift_multiplier": 2.0
+}

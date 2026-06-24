@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://dg371mnjp67dg"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Ladder.Ladder.mesh" id="1_1vuhs"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Ladder.material" id="2_enauk"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Ladder.Ladder_LOD0.mesh" id="3_mi4hg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f56na"]
+size = Vector3(0.54775, 2.3471372, 0.12125024)
+
+[node name="Ladder" type="Node3D" unique_id=1251596281]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=856723028]
+layers = 512
+gi_mode = 2
+visibility_range_end = 4.3529224
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_1vuhs")
+surface_material_override/0 = ExtResource("2_enauk")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=889873060]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=1131670956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00056800246, 1.1809171, -0.0018876176)
+shape = SubResource("BoxShape3D_f56na")
+
+[node name="Ladder_LOD0" type="Node3D" parent="." unique_id=619556270]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2207031e-06, 0, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Ladder_LOD0" unique_id=1450395950]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 4.3529224
+visibility_range_begin_margin = 0.5
+visibility_range_end = 55.847675
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_mi4hg")
+surface_material_override/0 = ExtResource("2_enauk")

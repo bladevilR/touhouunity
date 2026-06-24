@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://qxhqgqcrwk25"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Broadleaf_2.LOD0.mesh" id="1_wiw2d"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Bark.material" id="2_elyt3"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Leafs.material" id="3_c1kho"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Branches.material" id="4_c4wap"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Broadleaf_2.LOD1.mesh" id="5_gl0qu"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Broadleaf_2.LOD2.mesh" id="6_bi86r"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fme7e"]
+height = 4.371333
+
+[node name="Broadleaf_2" type="Node3D" unique_id=1986178444]
+
+[node name="CapsuleCollider" type="StaticBody3D" parent="." unique_id=1437008822]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CapsuleCollider" unique_id=593616076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 2.1856666, 0)
+shape = SubResource("CapsuleShape3D_fme7e")
+
+[node name="LOD0" type="Node3D" parent="." unique_id=412202018]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="LOD0" unique_id=1567754361]
+gi_mode = 2
+visibility_range_end = 24.788706
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_wiw2d")
+surface_material_override/0 = ExtResource("2_elyt3")
+surface_material_override/1 = ExtResource("3_c1kho")
+surface_material_override/2 = ExtResource("4_c4wap")
+
+[node name="LOD1" type="Node3D" parent="." unique_id=134481876]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="LOD1" unique_id=1518302284]
+gi_mode = 2
+visibility_range_begin = 24.788706
+visibility_range_begin_margin = 0.5
+visibility_range_end = 57.577377
+visibility_range_end_margin = 0.5
+mesh = ExtResource("5_gl0qu")
+surface_material_override/0 = ExtResource("2_elyt3")
+surface_material_override/1 = ExtResource("3_c1kho")
+surface_material_override/2 = ExtResource("4_c4wap")
+
+[node name="LOD2" type="Node3D" parent="." unique_id=1123774259]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="LOD2" unique_id=1366943029]
+gi_mode = 2
+visibility_range_begin = 57.577377
+visibility_range_begin_margin = 0.5
+visibility_range_end = 322.20184
+visibility_range_end_margin = 0.5
+mesh = ExtResource("6_bi86r")
+surface_material_override/0 = ExtResource("2_elyt3")
+surface_material_override/1 = ExtResource("3_c1kho")

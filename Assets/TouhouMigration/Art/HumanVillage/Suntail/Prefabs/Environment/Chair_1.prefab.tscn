@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://iig876l83uai"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chair_1.Chair_1.mesh" id="1_0b522"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Chair_1.material" id="2_8nyoc"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chair_1.Chair_1_LOD0.mesh" id="3_gi1ea"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chair_1.Chair_1_LOD1.mesh" id="4_nm776"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_cj1b3"]
+points = PackedVector3Array(-0.027793914, -0.0024408102, -0.29824135, -0.29673493, -0.0024408102, -0.031475127, -0.2974336, 0.017165083, -0.03699404, -0.032277226, 0.017959917, -0.2978347, 0.026937544, -0.0024408102, -0.29824135, -0.29673493, -0.0024408102, 0.025805235, -0.2974336, 0.017165083, 0.03132415, -0.2803737, 0.53884083, -0.05721064, -0.23868465, 0.53884083, -0.15782891, -0.23868465, 0.48627585, -0.15782891, -0.1580431, 0.48627585, -0.23846294, -0.0574304, 0.53884083, -0.2801161, 0.031420857, 0.017959917, -0.2978347, -0.1580431, 0.53884083, -0.23846294, 0.29733413, 0.017747963, -0.03711024, 0.2962861, -0.0024408102, -0.031068474, -0.026105374, -0.0024408102, 0.29501137, -0.23868465, 0.48627585, 0.15744552, -0.23868465, 0.53884083, 0.15744552, -0.2803737, 0.53884083, 0.056827277, -0.03204432, 0.020874308, 0.29524377, -0.1580431, 0.48627585, 0.23807958, 0.056574017, 0.53884083, -0.2801161, 0.15718672, 0.53884083, -0.23846294, 0.15718672, 0.48627585, -0.23846294, 0.23788649, 0.48627585, -0.15782891, 0.23788649, 0.53884083, -0.15782891, 0.27951735, 0.53884083, -0.05721064, 0.29733413, 0.017747963, 0.031440318, 0.2962861, -0.0024408102, 0.025398582, 0.025249004, -0.0024408102, 0.29501137, -0.1580431, 0.53884083, 0.23807958, 0.031187952, 0.020874308, 0.29524377, -0.0574304, 0.53884083, 0.27979085, 0.27951735, 0.53884083, 0.056827277, 0.23788649, 0.53884083, 0.15744552, 0.23788649, 0.48627585, 0.15744552, 0.15718672, 0.48627585, 0.23807958, 0.056574017, 0.53884083, 0.27979085, 0.15718672, 0.53884083, 0.23807958)
+
+[node name="Chair_1" type="Node3D" unique_id=1728871064]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=2019191996]
+layers = 512
+gi_mode = 2
+visibility_range_end = 3.8020391
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_0b522")
+surface_material_override/0 = ExtResource("2_8nyoc")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1834562895]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1428008503]
+shape = SubResource("ConvexPolygonShape3D_cj1b3")
+
+[node name="Chair_1_LOD0" type="Node3D" parent="." unique_id=109188173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6293944e-08, 0, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chair_1_LOD0" unique_id=1833616385]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 3.8020391
+visibility_range_begin_margin = 0.5
+visibility_range_end = 7.4220324
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_gi1ea")
+surface_material_override/0 = ExtResource("2_8nyoc")
+
+[node name="Chair_1_LOD1" type="Node3D" parent="." unique_id=1860776442]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6293944e-08, 0, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chair_1_LOD1" unique_id=1583582653]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 7.4220324
+visibility_range_begin_margin = 0.5
+visibility_range_end = 29.627953
+visibility_range_end_margin = 0.5
+mesh = ExtResource("4_nm776")
+surface_material_override/0 = ExtResource("2_8nyoc")

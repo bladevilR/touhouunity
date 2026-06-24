@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://ckv7j6yuiuux6"]
+
+[ext_resource type="PackedScene" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Prefabs/Nature/Grass_1.prefab.tscn" id="1_xwk8w"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Grass_2.material" id="2_n8f12"]
+
+[node name="Grass_2" unique_id=1315552480 instance=ExtResource("1_xwk8w")]
+transform = Transform3D(1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="MeshRenderer" parent="." index="0" unique_id=265369785]
+surface_material_override/0 = ExtResource("2_n8f12")
+
+[node name="MeshRenderer" parent="Grass_LOD0" parent_id_path=PackedInt32Array(2022101705) index="0" unique_id=96397563]
+surface_material_override/0 = ExtResource("2_n8f12")
+
+[node name="MeshRenderer" parent="Grass_LOD1" parent_id_path=PackedInt32Array(1600962801) index="0" unique_id=1501921236]
+surface_material_override/0 = ExtResource("2_n8f12")

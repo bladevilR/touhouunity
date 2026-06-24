@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://s82ww3dlmo2b"]
+
+[ext_resource type="PackedScene" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Prefabs/Building Modules/Decor/Flovers_1.prefab.tscn" id="1_pu4gh"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/FlowerPot_Flowers_Blue.material" id="2_vh122"]
+
+[node name="Flovers_2" unique_id=478005083 instance=ExtResource("1_pu4gh")]
+
+[node name="MeshRenderer" parent="." index="0" unique_id=112503475]
+surface_material_override/2 = ExtResource("2_vh122")
+
+[node name="MeshRenderer" parent="Flovers_1_LOD0" parent_id_path=PackedInt32Array(633440064) index="0" unique_id=205163509]
+surface_material_override/2 = ExtResource("2_vh122")

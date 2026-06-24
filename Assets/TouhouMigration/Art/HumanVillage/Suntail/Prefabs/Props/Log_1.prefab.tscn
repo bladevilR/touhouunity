@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://x5862ti672nf"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Log_1.Log_1.mesh" id="1_x7h75"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Log.material" id="2_ev6av"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Log_1.Log_1_LD0.mesh" id="3_v0hqt"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0xqk1"]
+points = PackedVector3Array(0.12730905, 0.05424499, -0.38257045, 0.0870092, 0.036105108, -0.38356844, -0.034895804, 0.066327706, -0.38448966, -0.056407217, 0.09332403, -0.3841058, 0.054522134, 0.16314757, -0.3593094, 0.05313971, 0.15818164, 0.010333568, 0.11664761, 0.04728636, 0.00856787, 0.1082902, 0.032293677, 0.3996294, 0.022789143, 0.025303416, -0.3846432, 0.06551873, 0.013046737, 0.39855468, -0.002639152, 0.001580812, 0.39732635, -0.04867819, 0.05511482, 0.006571889, -0.063843004, 0.045119695, 0.39755666, -0.07249365, 0.08571698, 0.006955743, -0.08665306, 0.0737766, 0.39794052, 0.032591812, 0.14813906, 0.37851793)
+
+[node name="Log_1" type="RigidBody3D" unique_id=1354481315]
+freeze_mode = 1
+continuous_cd = true
+angular_damp = 0.05
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=383606192]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 4.074469
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_x7h75")
+surface_material_override/0 = ExtResource("2_ev6av")
+
+[node name="MeshCollider" type="CollisionShape3D" parent="." unique_id=229088607]
+shape = SubResource("ConvexPolygonShape3D_0xqk1")
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=1510995984]
+attenuation_model = 2
+max_db = 0.0
+max_distance = 500.0
+
+[node name="Log_1_LD0" type="Node3D" parent="." unique_id=284897130]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Log_1_LD0" unique_id=743848606]
+layers = 1024
+gi_mode = 2
+visibility_range_begin = 4.074469
+visibility_range_begin_margin = 0.5
+visibility_range_end = 19.908192
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_v0hqt")
+surface_material_override/0 = ExtResource("2_ev6av")

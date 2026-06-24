@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://bk5yshqvhkm0d"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Log_3.Log_3.mesh" id="1_gepu6"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Log.material" id="2_h5d7f"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Log_3.Log_3_LOD0.mesh" id="3_u84e2"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_kv5v5"]
+points = PackedVector3Array(-0.6339487, 0.060264356, -0.41998756, -0.6004922, 0.024701308, 0.44032377, -0.67125076, 0.052178096, 0.43897456, -0.68471026, 0.12858501, 0.009746492, -0.6653542, 0.13143171, -0.4198189, -0.45141208, 0.30091316, -0.41602415, -0.56729203, 0.03439657, -0.41880697, -0.549346, 0.018801637, 0.44142008, -0.70996284, 0.16753109, 0.43964916, -0.70457906, 0.12767738, 0.43922752, -0.44666922, 0.0060121417, 0.3612244, -0.6704816, 0.16901632, -0.41939726, -0.45102754, 0.3379202, 0.4306261, -0.41526368, 0.31720945, -0.4149279, 0.22207612, 0.04425686, -0.39646012, -0.51909417, 0.028826952, -0.41771072, -0.4893551, 0.32063374, 0.42952985, -0.31438148, 0.28333792, 0.43804693, 0.15682954, 0.013974634, 0.411821, 0.39974165, 0.02305105, 0.40794194, -0.68996584, 0.17087287, 0.010168105, -0.3348912, 0.3090819, 0.4364447, -0.3897547, 0.3482343, 0.43290293, 0.04184687, 0.012654427, -0.3622231, 0.48267782, 0.0060121417, 0.3612244, -0.049806, 0.4182052, 0.01337257, -0.042755783, 0.4267453, -0.31887862, -0.3575801, 0.3269047, -0.4128197, 0.2150259, 0.14009556, -0.39603847, 0.4508878, 0.2368419, -0.38102815, 0.49985468, 0.2227322, -0.378161, 0.5327985, 0.18366235, -0.37630582, 0.4807551, 0.103212304, -0.37723342, 0.5633067, 0.03703698, -0.34071952, 0.17413461, 0.025650205, -0.39688176, 0.3964088, 0.08881381, 0.40676135, 0.36705422, 0.15498914, 0.40617108, 0.47011566, 0.2008663, 0.397654, 0.22412705, 0.37129664, 0.39908755, 0.18964511, 0.41313067, 0.39782262, 0.5439507, 0.016284995, 0.36232066, 0.5824064, 0.0336127, 0.3632483, 0.1372171, 0.4274879, 0.39807564, -0.0542925, 0.4059108, 0.34427452, 0.5056231, 0.027300464, -0.34173143, 0.14683104, 0.40838617, -0.38440126, 0.19900262, 0.3941527, -0.38313633, 0.30847335, 0.37125537, -0.34080383, 0.4410174, 0.23564547, 0.39546144, 0.5899694, 0.047103554, 0.011770338, 0.59958327, 0.053333275, -0.3397919, 0.52510726, 0.14521135, -0.37529388, 0.5129297, 0.1262334, -0.37546253, 0.26745385, 0.3633754, 0.36173034)
+
+[node name="Log_3" type="Node3D" unique_id=1048983974]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1470437206]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.6388826
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_gepu6")
+surface_material_override/0 = ExtResource("2_h5d7f")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=439615134]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=304285576]
+shape = SubResource("ConvexPolygonShape3D_kv5v5")
+
+[node name="Log_3_LOD0" type="Node3D" parent="." unique_id=402520349]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Log_3_LOD0" unique_id=1262000253]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.6388826
+visibility_range_begin_margin = 0.5
+visibility_range_end = 40.927162
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_u84e2")
+surface_material_override/0 = ExtResource("2_h5d7f")

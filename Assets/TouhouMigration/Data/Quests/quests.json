@@ -1,0 +1,199 @@
+{
+  "quests": {
+    "main_001": {
+      "id": "main_001",
+      "type": "main",
+      "title": "初到幻想乡",
+      "description": "刚刚苏醒的妹红，需要熟悉周围的环境",
+      "objectives": [
+        { "type": "explore", "description": "探索城镇", "required": 1 },
+        { "type": "talk", "description": "与灵梦对话", "npc_id": "reimu", "required": 1 }
+      ],
+      "rewards": { "exp": 100, "coins": 50, "items": { "health_potion_small": 3 } },
+      "prerequisites": [],
+      "next_quest": "main_002"
+    },
+    "main_002": {
+      "id": "main_002",
+      "type": "main",
+      "title": "初次战斗",
+      "description": "附近的妖怪们变得活跃起来，需要进行第一次战斗训练",
+      "objectives": [
+        { "type": "enter_dungeon", "description": "进入竹林地下城", "required": 1 },
+        { "type": "kill", "description": "击败 10 个敌人", "required": 10 },
+        { "type": "complete_dungeon", "description": "完成第1层", "required": 1 }
+      ],
+      "rewards": { "exp": 200, "coins": 100, "items": { "health_potion_medium": 2 } },
+      "prerequisites": ["main_001"],
+      "next_quest": "main_003"
+    },
+    "main_003": {
+      "id": "main_003",
+      "type": "main",
+      "title": "农场之道",
+      "description": "战斗之余，也要学会经营农场来维持生活",
+      "objectives": [
+        { "type": "visit", "description": "前往农场", "location": "farm", "required": 1 },
+        { "type": "plant", "description": "种植 5 个作物", "required": 5 }
+      ],
+      "rewards": { "exp": 150, "coins": 80, "items": { "bamboo": 10 } },
+      "prerequisites": ["main_002"],
+      "next_quest": "main_004"
+    },
+    "main_004": {
+      "id": "main_004",
+      "type": "main",
+      "title": "夜路的焦痕",
+      "description": "人之里外的夜路反复有人迷失。妹红去处理眼前的麻烦，路边却留下了一块没人承认的旧路标。",
+      "objectives": [
+        { "type": "talk", "description": "向慧音询问夜路上的失踪传闻", "npc_id": "keine", "required": 1 },
+        { "type": "kill", "description": "清理夜路附近的妖怪", "required": 8 },
+        { "type": "inspect", "description": "查看竹林入口旁被擦过字的旧路标", "trace_id": "old_bamboo_road_sign", "required": 1 }
+      ],
+      "rewards": { "exp": 260, "coins": 160, "items": { "old_bamboo_road_sign": 1 } },
+      "prerequisites": ["main_003"],
+      "next_quest": "main_005"
+    },
+    "main_005": {
+      "id": "main_005",
+      "type": "main",
+      "title": "留白的旧稿",
+      "description": "妹红把夜路的事带到人之里。阿求的旧稿、小铃的缺页和寺子屋的空座彼此对不上，但没有人把它当成异变。",
+      "objectives": [
+        { "type": "talk", "description": "把旧路标的事告诉阿求", "npc_id": "akyuu", "required": 1 },
+        { "type": "inspect", "description": "查看阿求案上的被划掉条目", "trace_id": "crossed_out_entry", "required": 1 },
+        { "type": "talk", "description": "向小铃询问铃奈庵缺页", "npc_id": "kosuzu", "required": 1 },
+        { "type": "inspect", "description": "查看铃奈庵倒放的缺页书册", "trace_id": "beizi_book_missing_page", "required": 1 },
+        { "type": "inspect", "description": "查看寺子屋后排磨损的坐垫", "trace_id": "worn_back_cushion", "required": 1 }
+      ],
+      "rewards": { "exp": 300, "coins": 180, "items": { "thin_page_revisited": 1 } },
+      "prerequisites": ["main_004"],
+      "next_quest": ""
+    },
+    "side_001": {
+      "id": "side_001",
+      "type": "side",
+      "title": "收集竹子",
+      "description": "河童需要一些竹子来制作道具",
+      "objectives": [
+        { "type": "collect", "description": "收集竹子", "item_id": "bamboo", "required": 20 }
+      ],
+      "rewards": { "exp": 50, "coins": 100, "items": { "health_potion_small": 5 } },
+      "prerequisites": [],
+      "next_quest": ""
+    },
+    "side_002": {
+      "id": "side_002",
+      "type": "side",
+      "title": "魔法水晶研究",
+      "description": "魔理沙想要研究魔法水晶",
+      "objectives": [
+        { "type": "collect", "description": "收集魔法水晶", "item_id": "magic_crystal", "required": 5 },
+        { "type": "talk", "description": "将水晶交给魔理沙", "npc_id": "marisa", "required": 1 }
+      ],
+      "rewards": { "exp": 150, "coins": 200, "items": { "speed_amulet": 1 } },
+      "prerequisites": ["main_001"],
+      "next_quest": ""
+    },
+    "side_003": {
+      "id": "side_003",
+      "type": "side",
+      "title": "料理大师",
+      "description": "制作美味的食物",
+      "objectives": [
+        { "type": "craft", "description": "制作烤鱼", "item_id": "grilled_fish", "required": 3 }
+      ],
+      "rewards": { "exp": 80, "coins": 50, "items": { "rice_ball": 10 } },
+      "prerequisites": ["main_003"],
+      "next_quest": ""
+    },
+    "side_004": {
+      "id": "side_004",
+      "type": "side",
+      "title": "慧音的便当",
+      "description": "慧音要给寺子屋孩子们准备便当，请你做3份正餐料理。",
+      "objectives": [
+        { "type": "craft_tier", "description": "制作正餐料理 ×3", "tier": "meal", "required": 3 },
+        { "type": "deliver", "description": "交付给慧音：任意正餐 ×3", "item_id": "meal_any", "required": 3, "npc_id": "keine" }
+      ],
+      "rewards": { "exp": 220, "coins": 180, "items": { "seed_pumpkin": 6, "seed_moon_herb": 4 } },
+      "prerequisites": ["main_003"],
+      "next_quest": ""
+    },
+    "side_005": {
+      "id": "side_005",
+      "type": "side",
+      "title": "魔理沙的赌约",
+      "description": "魔理沙要你拿出一份够硬的力量料理，证明妹红不是只会烧烤。",
+      "objectives": [
+        { "type": "craft_stat", "description": "制作主属性为力且力值≥5的料理", "stat": "atk", "required_stat": 5, "required": 1 },
+        { "type": "deliver", "description": "交付给魔理沙：力值≥5料理 ×1", "item_id": "atk_5_plus_any", "required": 1, "npc_id": "marisa" }
+      ],
+      "rewards": { "exp": 260, "coins": 240, "items": { "seed_fire_eggplant": 3, "spice": 10 } },
+      "prerequisites": ["side_004"],
+      "next_quest": ""
+    },
+    "side_006": {
+      "id": "side_006",
+      "type": "side",
+      "title": "咲夜的茶会",
+      "description": "咲夜要举办小型茶会，要求三种不同饮品。",
+      "objectives": [
+        { "type": "craft_tier", "description": "制作饮品 ×3", "tier": "drink", "required": 3 },
+        { "type": "deliver_variety", "description": "交付给咲夜：3种不同饮品", "item_id": "drink_any", "required": 3, "unique_required": 3, "npc_id": "sakuya" }
+      ],
+      "rewards": { "exp": 280, "coins": 260, "items": { "reishi_tea": 2, "moon_fish": 1 } },
+      "prerequisites": ["side_005"],
+      "next_quest": ""
+    },
+    "side_007": {
+      "id": "side_007",
+      "type": "side",
+      "title": "迷途之宴",
+      "description": "恋恋想要“不会被忘记的味道”，需要一份宴席级料理。",
+      "objectives": [
+        { "type": "craft_tier", "description": "制作宴席料理 ×1", "tier": "feast", "required": 1 },
+        { "type": "deliver", "description": "交付给恋恋：任意宴席 ×1", "item_id": "feast_any", "required": 1, "npc_id": "koishi" }
+      ],
+      "rewards": { "exp": 420, "coins": 380, "items": { "spirit_crystal": 3, "hourai_branch": 1 } },
+      "prerequisites": ["side_006"],
+      "next_quest": ""
+    },
+    "daily_001": {
+      "id": "daily_001",
+      "type": "daily",
+      "title": "每日狩猎",
+      "description": "每天击败一定数量的敌人",
+      "objectives": [
+        { "type": "kill", "description": "击败 50 个敌人", "required": 50 }
+      ],
+      "rewards": { "exp": 100, "coins": 150 },
+      "prerequisites": ["main_002"],
+      "next_quest": ""
+    },
+    "daily_002": {
+      "id": "daily_002",
+      "type": "daily",
+      "title": "每日采集",
+      "description": "收集材料",
+      "objectives": [
+        { "type": "collect", "description": "收集任意材料", "required": 30 }
+      ],
+      "rewards": { "exp": 80, "coins": 100 },
+      "prerequisites": ["main_001"],
+      "next_quest": ""
+    },
+    "daily_003": {
+      "id": "daily_003",
+      "type": "daily",
+      "title": "地下城探险",
+      "description": "完成一次地下城探险",
+      "objectives": [
+        { "type": "complete_dungeon", "description": "完成任意层数的地下城", "required": 1 }
+      ],
+      "rewards": { "exp": 150, "coins": 200, "items": { "health_potion_medium": 3 } },
+      "prerequisites": ["main_002"],
+      "next_quest": ""
+    }
+  }
+}

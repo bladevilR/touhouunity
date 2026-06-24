@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bo8sfydnvtdf1"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Sword_1.Sword_1.mesh" id="1_68v17"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Forge.material" id="2_6ism0"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Sword_1.Sword_1_LOD0.mesh" id="3_e5fce"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jv7tw"]
+points = PackedVector3Array(0.08675403, 0.026987564, 0.15453178, 0.082694866, 0.030604139, 0.1602717, 0.016559355, 0.03177527, 0.3435462, 0.02343785, 0.015178234, 0.3435462, 0.08675403, 0.0033637444, 0.15453178, 0.08675403, 0.023969453, 0.1305651, 0.025594816, 0.01723158, -0.5574191, -7.450581e-09, 0.017205786, -0.67151254, -7.450581e-09, 0.041531254, 0.24365151, -7.450581e-09, 0.040401395, 0.33226782, 0.017799184, 0.03301347, 0.33226782, -7.450581e-09, 0.03865244, 0.3435462, -7.450581e-09, 0.034107212, 0.35019237, 0.013349384, 0.028561112, 0.35019237, 0.018903136, 0.015178234, 0.35019237, 0.016559355, -0.0014239615, 0.3435462, 0.082694866, -0.0002528308, 0.1602717, 0.025594816, 0.013119726, -0.5574191, 0.08675403, 0.006381857, 0.1305651, -7.450581e-09, 0.013145522, -0.67151254, -0.025611807, 0.01723158, -0.5574191, -0.08271187, 0.030604139, 0.1602717, -0.017816171, 0.03301347, 0.33226782, -0.016576342, 0.03177527, 0.3435462, -0.013366379, 0.028561112, 0.35019237, -7.450581e-09, 0.024578232, 0.35724145, 0.0064878687, 0.02187483, 0.35724145, 0.0092732385, 0.015178234, 0.35724145, 0.013349384, 0.0017901985, 0.35019237, -7.450581e-09, -0.0037559038, 0.35019237, -7.450581e-09, -0.008301129, 0.3435462, 0.017799184, -0.0026621614, 0.33226782, -7.450581e-09, -0.010050086, 0.33226782, -7.450581e-09, -0.011174784, 0.24365151, -0.08271187, -0.0002528308, 0.1602717, -0.025611807, 0.013119726, -0.5574191, -0.08675405, 0.023969453, 0.1305651, -0.08675405, 0.026987564, 0.15453178, -0.023454845, 0.015178234, 0.3435462, -0.018920131, 0.015178234, 0.35019237, -0.009290226, 0.015178234, 0.35724145, -0.006504856, 0.02187483, 0.35724145, 0.0064878687, 0.008476478, 0.35724145, -7.450581e-09, 0.005773074, 0.35724145, -0.013366379, 0.0017901985, 0.35019237, -0.016576342, -0.0014239615, 0.3435462, -0.017816171, -0.0026621614, 0.33226782, -0.08675405, 0.0033637444, 0.15453178, -0.08675405, 0.006381857, 0.1305651, -0.006504856, 0.008476478, 0.35724145)
+
+[node name="Sword_1" type="RigidBody3D" unique_id=390852633]
+freeze_mode = 1
+continuous_cd = true
+angular_damp = 0.05
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=603756920]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 3.3663313
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_68v17")
+surface_material_override/0 = ExtResource("2_6ism0")
+
+[node name="MeshCollider" type="CollisionShape3D" parent="." unique_id=1467246376]
+shape = SubResource("ConvexPolygonShape3D_jv7tw")
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=495682298]
+attenuation_model = 2
+max_db = 0.0
+max_distance = 500.0
+
+[node name="Sword_1_LOD0" type="Node3D" parent="." unique_id=800261105]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.6293944e-08, 0, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Sword_1_LOD0" unique_id=1545260402]
+layers = 1024
+gi_mode = 2
+visibility_range_begin = 3.3663313
+visibility_range_begin_margin = 0.5
+visibility_range_end = 18.24589
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_e5fce")
+surface_material_override/0 = ExtResource("2_6ism0")

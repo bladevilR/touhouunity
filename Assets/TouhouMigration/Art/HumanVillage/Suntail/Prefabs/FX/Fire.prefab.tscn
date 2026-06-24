@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cmd4xgq4t66oi"]
+
+[ext_resource type="AudioStream" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Audio/Fire/Fire_1.wav" id="1_lhy8p"]
+[ext_resource type="AnimationLibrary" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Animations/Fire Light.library.res" id="2_t5vrd"]
+[ext_resource type="AnimationNodeBlendTree" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Animations/Fire Light.controller.res" id="3_wa6so"]
+[ext_resource type="Script" path="res://addons/unidot_importer/runtime/anim_tree.gd" id="4_1l8ee"]
+
+[node name="Fire" type="Node3D" unique_id=594603689]
+transform = Transform3D(1.5495514, 0, 0, 0, -6.773304e-08, 1.5495514, 0, -1.5495514, -6.773304e-08, 0, 0, 0)
+
+[node name="ParticleSystem" type="Node" parent="." unique_id=1903249225]
+
+[node name="ParticleSystemRenderer" type="Node" parent="." unique_id=790871610]
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=244360061]
+stream = ExtResource("1_lhy8p")
+max_db = 0.0
+autoplay = true
+max_distance = 13.0
+
+[node name="Sparks" type="Node3D" parent="." unique_id=1740879852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.005000055, 0.015, 0.0886)
+
+[node name="ParticleSystem" type="Node" parent="Sparks" unique_id=1396347606]
+
+[node name="ParticleSystemRenderer" type="Node" parent="Sparks" unique_id=201774389]
+
+[node name="Fire Smoke" type="Node3D" parent="." unique_id=1595934664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.007999957, 0.0110001415, 0.11400004)
+
+[node name="ParticleSystem" type="Node" parent="Fire Smoke" unique_id=2130926996]
+
+[node name="ParticleSystemRenderer" type="Node" parent="Fire Smoke" unique_id=78113380]
+
+[node name="Fire Light" type="Node3D" parent="." unique_id=34128209]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.006899953, -0.00040009618, 0.21400002)
+
+[node name="Light" type="OmniLight3D" parent="Fire Light" unique_id=1687133864]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+light_color = Color(1, 0.62316257, 0.28773582, 1)
+light_energy = 1.5
+light_indirect_energy = 0.0
+light_bake_mode = 0
+light_cull_mask = 512
+shadow_bias = 0.01
+omni_range = 3.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Fire Light" unique_id=371394853]
+libraries/ = ExtResource("2_t5vrd")
+
+[node name="AnimationTree" type="AnimationTree" parent="Fire Light" unique_id=1700350400]
+deterministic = false
+root_motion_track = NodePath("%GeneralSkeleton:Root")
+tree_root = ExtResource("3_wa6so")
+anim_player = NodePath("../AnimationPlayer")
+script = ExtResource("4_1l8ee")
+metadata/guid_fileid_to_animation_name = {
+"6ac151734095a8c47838affda596e7dd:7400000": "Fire Light Animation"
+}

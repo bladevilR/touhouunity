@@ -1,0 +1,44 @@
+{
+  "resources": [
+    {
+      "id": "spirit",
+      "display_name_en": "Spirit",
+      "archetype": "barrier",
+      "storage": "meter",
+      "decay": "encounter",
+      "tags": ["base", "faith", "generic"]
+    },
+    {
+      "id": "momentum",
+      "display_name_en": "Momentum",
+      "archetype": "inversion",
+      "storage": "meter",
+      "decay": "turn_end",
+      "tags": ["tempo", "generic"]
+    },
+    {
+      "id": "ember",
+      "display_name_en": "Ember",
+      "archetype": "fire",
+      "storage": "meter",
+      "decay": "encounter",
+      "tags": ["fire", "burn", "ash"]
+    },
+    {
+      "id": "fate",
+      "display_name_en": "Fate",
+      "archetype": "blood",
+      "storage": "meter",
+      "decay": "encounter",
+      "tags": ["blood", "night", "fate_lock"]
+    },
+    {
+      "id": "seal",
+      "display_name_en": "Seal",
+      "archetype": "mechanism",
+      "storage": "counter",
+      "decay": "boss_phase",
+      "tags": ["mechanism", "clause", "verdict"]
+    }
+  ]
+}

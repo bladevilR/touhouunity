@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://g34ea3og7jq0"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Case_and_food_3.Case_and_food_3.mesh" id="1_aamil"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Case_and_food_3.material" id="2_ykfqc"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Case_and_food_3.Case_and_food_3_LOD0.mesh" id="3_vyghv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mccjc"]
+size = Vector3(0.64482385, 0.5035917, 0.8024718)
+
+[node name="Case_and_food_3" type="Node3D" unique_id=1053753564]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=52784200]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.9642525
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_aamil")
+surface_material_override/0 = ExtResource("2_ykfqc")
+
+[node name="BoxCollider" type="StaticBody3D" parent="." unique_id=724712968]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoxCollider" unique_id=1952702475]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009424488, 0.25379592, 0.018309157)
+shape = SubResource("BoxShape3D_mccjc")
+
+[node name="Case_and_food_3_LOD0" type="Node3D" parent="." unique_id=890533540]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Case_and_food_3_LOD0" unique_id=1680654001]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.9642525
+visibility_range_begin_margin = 0.5
+visibility_range_end = 29.88655
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_vyghv")
+surface_material_override/0 = ExtResource("2_ykfqc")

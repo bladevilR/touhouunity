@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bxlbsjkx6ss1n"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Candles_4.Candles_4.mesh" id="1_enpxa"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Candles.material" id="2_2u7xp"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Candles_4.Candles_4_LOD0.mesh" id="3_d7r4o"]
+[ext_resource type="PackedScene" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Prefabs/FX/Candle Fire.prefab.tscn" id="4_qtqt8"]
+
+[node name="Candles_4" type="Node3D" unique_id=1498636131]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1000269016]
+layers = 512
+gi_mode = 2
+visibility_range_end = 2.3848116
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_enpxa")
+surface_material_override/0 = ExtResource("2_2u7xp")
+
+[node name="Candles_4_LOD0" type="Node3D" parent="." unique_id=1127899053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0097, -0.0049)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Candles_4_LOD0" unique_id=345980614]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 2.3848116
+visibility_range_begin_margin = 0.5
+visibility_range_end = 11.13409
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_d7r4o")
+surface_material_override/0 = ExtResource("2_2u7xp")
+
+[node name="Candle Fire" parent="." unique_id=141390447 instance=ExtResource("4_qtqt8")]
+transform = Transform3D(1.17, 0, 0, 0, -5.1142322e-08, 1.17, 0, -1.17, -5.1142322e-08, 0.0008, 0.2104, 0.129)
+
+[editable path="Candle Fire"]

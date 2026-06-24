@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://dgij5fq0iix3a"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Doors And Windows/extracted/Wooden_Door_1_W.Wooden_Door_1_W.mesh" id="1_7thl4"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Wooden_Planks.material" id="2_pp4bj"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Metal.material" id="3_37fue"]
+[ext_resource type="AnimationLibrary" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Animations/Door.library.res" id="4_ykxlw"]
+[ext_resource type="AnimationNodeBlendTree" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Animations/Door.controller.res" id="5_l6l0x"]
+[ext_resource type="Script" path="res://addons/unidot_importer/runtime/anim_tree.gd" id="6_chrfi"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Doors And Windows/extracted/Wooden_Door_1_W.Wooden_Door_1_Glass.mesh" id="7_57355"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Window.material" id="8_awrn2"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Doors And Windows/extracted/Wooden_Door_1_W.Wooden_Door_1_W_LOD0.mesh" id="9_a4cqr"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_bhmsj"]
+points = PackedVector3Array(-1.1345701, -0.39641476, -0.008157212, -1.1343448, -0.3656869, -0.011829663, -1.1249948, -0.9868589, 0.011624359, -1.1251074, -0.9868589, 0.06860948, -1.1338942, -0.39641476, 0.077320464, -1.132993, 0.56233686, 0.07494313, -1.133331, 0.56361717, 0.0067100152, -1.1324297, 0.5373705, 0.002647251, -0.92086977, 0.03462869, -0.0668455, -0.96333945, -0.9729887, -0.002160646, -0.8203844, -0.97896355, -0.011421613, -0.6241451, -0.98493844, -0.012769956, -0.16137177, -0.98387146, -0.015200514, -0.916589, 0.01798445, -0.0668455, -1.1336689, -0.3656869, 0.08209289, -0.15934402, -0.9836581, 0.04173138, -0.44266313, -0.98067063, 0.06193874, -0.95736897, -0.98387146, 0.068627216, -0.8998039, 0.013716638, 0.11439983, -0.91647637, 0.01798445, 0.11439983, -0.92086977, 0.03462869, 0.11439983, -1.1328803, 0.5360902, 0.077480145, -1.1243188, 1.1762538, 0.06837884, -1.1243188, 1.1762538, 0.011872739, -0.916589, 0.05127293, -0.0668455, -0.8999165, 0.013716638, -0.0668455, 0.015153527, -0.37528932, -0.018677816, 0.009971499, -0.9729887, -0.002160646, 0.009971499, -0.9729887, 0.05484222, -0.8832441, 0.01798445, -0.0668455, -0.88313144, 0.01798445, 0.11439983, -0.91647637, 0.05127293, 0.11439983, -0.9580448, 1.1762538, 0.06837884, -0.44356436, 1.1931114, 0.06163714, -0.9626636, 1.190124, 0.054469652, -0.8998039, 0.055754125, 0.11439983, -0.96255094, 1.190124, -0.0020364523, -0.8999165, 0.055754125, -0.0668455, -0.83108634, 0.7998375, -0.033740196, 0.015378833, -0.34306777, -0.014189262, 0.016280055, -0.34306777, 0.069390096, -0.8788507, 0.03462869, -0.0668455, -0.2644481, 0.7998375, -0.033740196, 0.0150408745, 0.5341696, -0.011811923, 0.015491486, 0.5634038, -0.008547522, 0.015942097, -0.37528932, 0.07315125, -0.1431222, -0.37486255, 0.0818445, -0.87873805, 0.03462869, 0.11439983, -0.88313144, 0.05127293, 0.11439983, 0.00918293, 1.1762538, 0.05459384, -0.16035789, 1.1922579, 0.04306198, -0.44356436, 1.1926847, 0.005131036, -0.16137177, 1.1916177, -0.013426382, -0.81937057, 1.1762538, -0.011847407, -0.8832441, 0.05127293, -0.0668455, 0.015829444, 0.56233686, 0.056580864, 0.00918293, 1.1762538, -0.001912266, 0.015378833, 0.5333161, 0.059738822)
+
+[node name="Wooden_Door_1_W" type="Node3D" unique_id=445638575]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=264163497]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 13.828359
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_7thl4")
+surface_material_override/0 = ExtResource("2_pp4bj")
+surface_material_override/1 = ExtResource("3_37fue")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1729189842]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=847611732]
+shape = SubResource("ConvexPolygonShape3D_bhmsj")
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=1815641501]
+attenuation_model = 2
+max_db = 0.0
+max_distance = 500.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=648628750]
+libraries/ = ExtResource("4_ykxlw")
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=546221051]
+deterministic = false
+root_motion_track = NodePath("%GeneralSkeleton:Root")
+tree_root = ExtResource("5_l6l0x")
+anim_player = NodePath("../AnimationPlayer")
+script = ExtResource("6_chrfi")
+metadata/guid_fileid_to_animation_name = {
+"0dde66135994ba34bae6ec3887c57d4a:7400000": "OpenDoor",
+"629480c43ec3b6143a716bdb426f189e:0": "Idle",
+"eb8d46d814a814849a45fff3abfef196:7400000": "CloseDoor"
+}
+
+[node name="Wooden_Door_1_Glass" type="Node3D" parent="." unique_id=1667803120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.54679596, 0.53903747, 0.00057990686)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Wooden_Door_1_Glass" unique_id=1088174773]
+layers = 1024
+cast_shadow = 0
+gi_mode = 2
+visibility_range_begin = 13.828359
+visibility_range_begin_margin = 0.5
+visibility_range_end = 213.14645
+visibility_range_end_margin = 0.5
+mesh = ExtResource("7_57355")
+surface_material_override/0 = ExtResource("8_awrn2")
+
+[node name="Wooden_Door_1_W_LOD0" type="Node3D" parent="." unique_id=1177385360]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Wooden_Door_1_W_LOD0" unique_id=709423645]
+layers = 1024
+gi_mode = 2
+visibility_range_begin = 13.828359
+visibility_range_begin_margin = 0.5
+visibility_range_end = 213.14645
+visibility_range_end_margin = 0.5
+mesh = ExtResource("9_a4cqr")
+surface_material_override/0 = ExtResource("2_pp4bj")
+surface_material_override/1 = ExtResource("3_37fue")

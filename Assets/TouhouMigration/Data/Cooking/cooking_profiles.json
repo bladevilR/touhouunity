@@ -1,0 +1,624 @@
+{
+  "source": "scripts/data/CookingDatabase.gd::DISH_COMBAT_PROFILES",
+  "dish_profiles": [
+    {
+      "id": "bamboo_cold_noodles",
+      "tier": "meal",
+      "main_stat": "spd",
+      "stats": {
+        "atk": 1,
+        "def": 0,
+        "spd": 5,
+        "spi": 1
+      },
+      "buff_duration": 780.0,
+      "special_effects": [
+        "afterimage_step"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "bamboo_leaf_wine",
+      "tier": "drink",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 300.0,
+      "special_effects": [],
+      "drink_effects": [
+        "attack_up_10",
+        "risk_taken_up_10"
+      ]
+    },
+    {
+      "id": "bamboo_rice",
+      "tier": "meal",
+      "main_stat": "spd",
+      "stats": {
+        "atk": 0,
+        "def": 1,
+        "spd": 3,
+        "spi": 0
+      },
+      "buff_duration": 720.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "bamboo_taketori_feast",
+      "tier": "feast",
+      "main_stat": "spd",
+      "stats": {
+        "atk": 3,
+        "def": 2,
+        "spd": 4,
+        "spi": 1
+      },
+      "buff_duration": 1080.0,
+      "special_effects": [
+        "dash_bonus_100"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "chili_shochu",
+      "tier": "drink",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 3,
+        "def": 0,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 180.0,
+      "special_effects": [
+        "fire_trail_visual"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "dango",
+      "tier": "snack",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 1,
+        "spi": 1
+      },
+      "buff_duration": 480.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "eel_rice",
+      "tier": "meal",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 3,
+        "def": 1,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 900.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "eternal_night_banquet",
+      "tier": "feast",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 2,
+        "spd": 3,
+        "spi": 6
+      },
+      "buff_duration": 1200.0,
+      "special_effects": [
+        "tracking_bullets"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "fairy_meat_pie",
+      "tier": "meal",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 5,
+        "def": 1,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 720.0,
+      "special_effects": [
+        "heavy_armor_break"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "ginseng_chicken_soup",
+      "tier": "meal",
+      "main_stat": "def",
+      "stats": {
+        "atk": 1,
+        "def": 5,
+        "spd": 0,
+        "spi": 1
+      },
+      "buff_duration": 780.0,
+      "special_effects": [
+        "high_hp_guard"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "ginseng_tonic",
+      "tier": "drink",
+      "main_stat": "def",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 180.0,
+      "special_effects": [
+        "drink_regen_3"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "green_tea",
+      "tier": "drink",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 0,
+        "spi": 1
+      },
+      "buff_duration": 540.0,
+      "special_effects": [
+        "drink_focus"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "grilled_bamboo_shoot",
+      "tier": "snack",
+      "main_stat": "spd",
+      "stats": {
+        "atk": 0,
+        "def": 1,
+        "spd": 3,
+        "spi": 0
+      },
+      "buff_duration": 480.0,
+      "special_effects": [
+        "dash_distance_15"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "grilled_fish",
+      "tier": "snack",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 1,
+        "def": 1,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 480.0,
+      "special_effects": [
+        "regen_1"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "herb_salad",
+      "tier": "meal",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 1,
+        "spd": 1,
+        "spi": 2
+      },
+      "buff_duration": 600.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "honey_skewer",
+      "tier": "snack",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 2,
+        "def": 1,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 540.0,
+      "special_effects": [
+        "kill_heal_3_percent"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "hourai_hotpot",
+      "tier": "feast",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 4,
+        "def": 3,
+        "spd": 0,
+        "spi": 3
+      },
+      "buff_duration": 1200.0,
+      "special_effects": [
+        "berserk_burn"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "impatiens_tea",
+      "tier": "drink",
+      "main_stat": "spd",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 480.0,
+      "special_effects": [
+        "jump_boost_20"
+      ],
+      "drink_effects": [
+        "speed_up_8"
+      ]
+    },
+    {
+      "id": "kaguya_elixir_feast",
+      "tier": "feast",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 1,
+        "def": 4,
+        "spd": 1,
+        "spi": 5
+      },
+      "buff_duration": 1200.0,
+      "special_effects": [
+        "rebirth_once"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "miso_soup",
+      "tier": "meal",
+      "main_stat": "def",
+      "stats": {
+        "atk": 0,
+        "def": 2,
+        "spd": 0,
+        "spi": 1
+      },
+      "buff_duration": 600.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "mokou_full_course",
+      "tier": "feast",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 8,
+        "def": 0,
+        "spd": 2,
+        "spi": 1
+      },
+      "buff_duration": 1200.0,
+      "special_effects": [
+        "flame_combo_rush"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "mokou_yakitori",
+      "tier": "feast",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 4,
+        "def": 1,
+        "spd": 2,
+        "spi": 1
+      },
+      "buff_duration": 900.0,
+      "special_effects": [
+        "flame_fist_bonus"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "moon_herb_dango",
+      "tier": "snack",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 1,
+        "spi": 3
+      },
+      "buff_duration": 540.0,
+      "special_effects": [
+        "skill_cd_10"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "moon_herb_dew",
+      "tier": "drink",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 600.0,
+      "special_effects": [
+        "night_vision"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "moon_herb_soup",
+      "tier": "meal",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 1,
+        "spd": 0,
+        "spi": 5
+      },
+      "buff_duration": 780.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "moon_reishi_boil",
+      "tier": "meal",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 2,
+        "spd": 0,
+        "spi": 6
+      },
+      "buff_duration": 840.0,
+      "special_effects": [
+        "spirit_pulse"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "moon_viewing_dango",
+      "tier": "feast",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 1,
+        "spd": 1,
+        "spi": 4
+      },
+      "buff_duration": 900.0,
+      "special_effects": [
+        "spirit_charge_bonus"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "mushroom_stew",
+      "tier": "meal",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 2,
+        "spd": 0,
+        "spi": 2
+      },
+      "buff_duration": 720.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "phantom_koi_broth",
+      "tier": "drink",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 0,
+        "spi": 1
+      },
+      "buff_duration": 300.0,
+      "special_effects": [
+        "reveal_collectibles"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "phoenix_hotpot",
+      "tier": "feast",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 4,
+        "def": 3,
+        "spd": 1,
+        "spi": 3
+      },
+      "buff_duration": 1200.0,
+      "special_effects": [
+        "phoenix_regen"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "phoenix_roast_chicken",
+      "tier": "meal",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 5,
+        "def": 0,
+        "spd": 2,
+        "spi": 1
+      },
+      "buff_duration": 780.0,
+      "special_effects": [
+        "combo_damage_up"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "pufferfish_sashimi",
+      "tier": "feast",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 4,
+        "def": 0,
+        "spd": 2,
+        "spi": 1
+      },
+      "buff_duration": 900.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "pumpkin_congee",
+      "tier": "snack",
+      "main_stat": "def",
+      "stats": {
+        "atk": 0,
+        "def": 3,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 540.0,
+      "special_effects": [
+        "hitstun_resist_20"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "reishi_stew",
+      "tier": "meal",
+      "main_stat": "def",
+      "stats": {
+        "atk": 0,
+        "def": 5,
+        "spd": 0,
+        "spi": 2
+      },
+      "buff_duration": 780.0,
+      "special_effects": [
+        "kill_heal_8_percent"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "reishi_tea",
+      "tier": "drink",
+      "main_stat": "spi",
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "spd": 0,
+        "spi": 2
+      },
+      "buff_duration": 480.0,
+      "special_effects": [
+        "skill_cd_15"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "rice_ball",
+      "tier": "snack",
+      "main_stat": "spd",
+      "stats": {
+        "atk": 0,
+        "def": 1,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 480.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "senbei",
+      "tier": "snack",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 1,
+        "def": 0,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 480.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "spicy_beast_skewer",
+      "tier": "meal",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 5,
+        "def": 0,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 780.0,
+      "special_effects": [],
+      "drink_effects": []
+    },
+    {
+      "id": "spicy_stir_meat",
+      "tier": "snack",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 4,
+        "def": 1,
+        "spd": 0,
+        "spi": 0
+      },
+      "buff_duration": 540.0,
+      "special_effects": [
+        "light_shockwave"
+      ],
+      "drink_effects": []
+    },
+    {
+      "id": "tempura",
+      "tier": "meal",
+      "main_stat": "atk",
+      "stats": {
+        "atk": 3,
+        "def": 0,
+        "spd": 1,
+        "spi": 0
+      },
+      "buff_duration": 720.0,
+      "special_effects": [],
+      "drink_effects": []
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+namespace TouhouMigration.Runtime.Data
+{
+    public enum MigrationSceneId
+    {
+        Bootstrap,
+        TitleScreen,
+        BambooHomeVerticalSlice,
+        HumanVillageVerticalSlice
+    }
+}

@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://p4v4egg4hnpk"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Candles_1.Candles_1.mesh" id="1_vuvxi"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Candles.material" id="2_u452n"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Candles_1.Candles_1_LOD0.mesh" id="3_c52jf"]
+[ext_resource type="PackedScene" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Prefabs/FX/Candle Fire.prefab.tscn" id="4_i5ig7"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_umatb"]
+points = PackedVector3Array(-0.10456267, -0.0011993125, -2.0861626e-07, -0.096620455, -0.0011993125, -0.040005155, -0.096620455, -0.0011993125, 0.03998428, -0.10456267, 0.012749813, -2.0861626e-07, -0.096620455, 0.012749813, -0.040005155, -0.07396057, -0.0011993125, -0.073912166, -0.07396057, -0.0011993125, 0.07389129, -0.096620455, 0.012749813, 0.03998428, -0.09811474, 0.3522598, -2.0861626e-07, -0.07396057, 0.012749813, -0.073912166, -0.09148257, 0.3522598, -0.016002186, -0.040042385, -0.0011993125, -0.09658505, -0.040042385, -0.0011993125, 0.09656418, -0.07396057, 0.012749813, 0.07389129, -0.09148257, 0.3522598, 0.01598131, -0.0872863, 0.43054074, 0.0068344027, -0.088616826, 0.43507665, -0.0036425963, -0.040042385, 0.012749813, -0.09658505, -0.08216889, 0.44541654, -0.011970997, -2.425164e-05, -0.0011993125, -0.10452465, -2.425164e-05, -0.0011993125, 0.10452423, -0.040042385, 0.012749813, 0.09656418, -0.07895516, 0.4340524, 0.013280213, -0.08628329, 0.43410116, 0.006261438, -0.087511465, 0.4382469, -0.0033356547, -0.08159574, 0.44775766, -0.010968313, -2.425164e-05, 0.012749813, -0.10452465, -0.0010886714, 0.48770288, -0.013751268, -0.0717089, 0.44634324, -0.013301082, 0.040014356, -0.0011993125, -0.09658505, 0.040014356, -0.0011993125, 0.09656418, -2.425164e-05, 0.012749813, 0.10452423, 0.00083547086, 0.47390008, 0.013730392, -0.009174176, 0.4796553, 0.010394946, -0.008396335, 0.48263046, 0.00951504, -0.07864811, 0.4373202, 0.0121547505, -0.07615082, 0.45468345, 0.00044997782, -0.07580283, 0.45468345, -0.00083918124, -0.0005564615, 0.49706733, -0.000859648, -0.009665452, 0.48819062, -0.008287676, -0.001006797, 0.490044, -0.012605347, 0.040014356, 0.012749813, -0.09658505, 0.07962309, 0.44634324, -0.013075992, 0.07393253, -0.0011993125, -0.073912166, 0.07393253, -0.0011993125, 0.07389129, 0.040014356, 0.012749813, 0.09656418, 0.081403956, 0.43054074, 0.012318455, 0.07088256, 0.4340524, 0.013055116, 0.080892205, 0.43410116, 0.011274844, 0.0007535964, 0.47741175, 0.012564011, 0.00030326098, 0.49706733, 0.00083877146, -0.0009863228, 0.49706733, 0.00040905178, 0.0007126555, 0.49706733, -0.0004299283, 0.008143134, 0.49136087, -0.009535909, 0.07393253, 0.012749813, -0.073912166, 0.07925464, 0.4485868, -0.011991456, 0.08758578, 0.44541654, -0.0061595365, 0.0914136, 0.3522598, -0.016002186, 0.09659241, -0.0011993125, -0.040005155, 0.09659241, -0.0011993125, 0.03998428, 0.07393253, 0.012749813, 0.07389129, 0.0914136, 0.3522598, 0.01598131, 0.088322684, 0.43507665, 0.0043583885, 0.08721733, 0.4382469, 0.0039900616, 0.07567245, 0.45468345, 0.00083877146, 0.07610232, 0.45468345, -0.0004299283, 0.08654183, 0.44775766, -0.005647965, 0.09659241, 0.012749813, -0.040005155, 0.09804577, 0.3522598, -2.0861626e-07, 0.10453464, -0.0011993125, -2.0861626e-07, 0.09659241, 0.012749813, 0.03998428, 0.10453464, 0.012749813, -2.0861626e-07)
+
+[node name="Candles_1" type="Node3D" unique_id=43206363]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1126946545]
+layers = 512
+gi_mode = 2
+visibility_range_end = 3.184847
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_vuvxi")
+surface_material_override/0 = ExtResource("2_u452n")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=2029122291]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=218761651]
+shape = SubResource("ConvexPolygonShape3D_umatb")
+
+[node name="Candles_1_LOD0" type="Node3D" parent="." unique_id=1998998612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4414062e-06, 1.5258789e-07, 1.8189894e-14)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Candles_1_LOD0" unique_id=202629452]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 3.184847
+visibility_range_begin_margin = 0.5
+visibility_range_end = 17.661303
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_c52jf")
+surface_material_override/0 = ExtResource("2_u452n")
+
+[node name="Candle Fire" parent="." unique_id=141390447 instance=ExtResource("4_i5ig7")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.49461, 0)
+
+[node name="Candle Fire (1)" parent="." unique_id=37537741 instance=ExtResource("4_i5ig7")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.075, 0.4503, 5e-05)
+
+[node name="Candle Fire (2)" parent="." unique_id=1831348428 instance=ExtResource("4_i5ig7")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.07506, 0.45113, -0.00045)
+
+[editable path="Candle Fire"]
+[editable path="Candle Fire (1)"]
+[editable path="Candle Fire (2)"]

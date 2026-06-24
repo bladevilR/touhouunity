@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://fwvogauu3gqy"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Stone_4.Stone_4.mesh" id="1_wo1v8"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Nature/Stone_4.material" id="2_eia4m"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Nature/extracted/Stone_4.Stone_4_LOD0.mesh" id="3_lf3ak"]
+
+[node name="Stone_4" type="Node3D" unique_id=1924809733]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1934133489]
+gi_mode = 2
+visibility_range_end = 5.868482
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_wo1v8")
+surface_material_override/0 = ExtResource("2_eia4m")
+
+[node name="Stone_4_LOD0" type="Node3D" parent="." unique_id=250537463]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Stone_4_LOD0" unique_id=516416380]
+gi_mode = 2
+visibility_range_begin = 5.868482
+visibility_range_begin_margin = 0.5
+visibility_range_end = 41.10539
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_lf3ak")
+surface_material_override/0 = ExtResource("2_eia4m")

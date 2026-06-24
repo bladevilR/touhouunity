@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://djis1hf3v56da"]
+
+[node name="Smoke" type="Node3D" unique_id=554464923]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+
+[node name="ParticleSystem" type="Node" parent="." unique_id=800458432]
+
+[node name="ParticleSystemRenderer" type="Node" parent="." unique_id=1937391138]

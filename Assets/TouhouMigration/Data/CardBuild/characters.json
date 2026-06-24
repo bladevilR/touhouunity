@@ -1,0 +1,328 @@
+{
+  "characters": [
+    {
+      "id": "fujiwara_no_mokou",
+      "display_name_zh": "藤原妹红",
+      "display_name_en": "Fujiwara no Mokou",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["fire"],
+      "production_tier": "mvp",
+      "identity": "蓬莱不死、凤凰火、竹林游击、藤原旧史与自伤换爆发的核心角色。"
+    },
+    {
+      "id": "marisa_kirisame",
+      "display_name_zh": "雾雨魔理沙",
+      "display_name_en": "Marisa Kirisame",
+      "roles": ["main", "partner", "pack"],
+      "archetypes": ["star", "equipment", "information"],
+      "production_tier": "mvp",
+      "identity": "星弹经济、装备过载与高风险爆发的代表。"
+    },
+    {
+      "id": "reimu_hakurei",
+      "display_name_zh": "博丽灵梦",
+      "display_name_en": "Reimu Hakurei",
+      "roles": ["main", "partner", "event", "pack"],
+      "archetypes": ["barrier", "mechanism", "information"],
+      "production_tier": "mvp",
+      "identity": "结界、防御、规则封印与新手稳定性的轴心。"
+    },
+    {
+      "id": "sakuya_izayoi",
+      "display_name_zh": "十六夜咲夜",
+      "display_name_en": "Sakuya Izayoi",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["time", "equipment", "mechanism"],
+      "production_tier": "mvp",
+      "identity": "保留、延迟、额外行动与窗口操作的高上限角色。"
+    },
+    {
+      "id": "youmu_konpaku",
+      "display_name_zh": "魂魄妖梦",
+      "display_name_en": "Youmu Konpaku",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["time", "barrier", "mechanism"],
+      "production_tier": "mvp",
+      "identity": "近战窗口、斩击节奏与半灵协同的操作型角色。"
+    },
+    {
+      "id": "alice_margatroid",
+      "display_name_zh": "爱丽丝·玛格特洛依德",
+      "display_name_en": "Alice Margatroid",
+      "roles": ["main", "partner", "pack"],
+      "archetypes": ["summon", "equipment", "information"],
+      "production_tier": "mvp",
+      "identity": "召唤物阵列、装备安装与自动战斗轮椅的核心。"
+    },
+    {
+      "id": "patchouli_knowledge",
+      "display_name_zh": "帕秋莉·诺蕾姬",
+      "display_name_en": "Patchouli Knowledge",
+      "roles": ["main", "partner", "pack"],
+      "archetypes": ["star", "information", "poison"],
+      "production_tier": "mvp",
+      "identity": "多元素法术、检索与状态叠层的纯卡牌法师。"
+    },
+    {
+      "id": "nitori_kawashiro",
+      "display_name_zh": "河城荷取",
+      "display_name_en": "Nitori Kawashiro",
+      "roles": ["main", "partner", "vendor", "pack"],
+      "archetypes": ["equipment", "information", "mechanism"],
+      "production_tier": "mvp",
+      "identity": "道具工程、齿轮经济与局外 build 改装入口。"
+    },
+    {
+      "id": "hieda_no_akyuu",
+      "display_name_zh": "稗田阿求",
+      "display_name_en": "Hieda no Akyuu",
+      "roles": ["partner", "event", "pack"],
+      "archetypes": ["information", "mechanism"],
+      "production_tier": "mvp",
+      "identity": "图鉴、情报、预测掉落与规则文字读取。"
+    },
+    {
+      "id": "kosuzu_motoori",
+      "display_name_zh": "本居小铃",
+      "display_name_en": "Kosuzu Motoori",
+      "roles": ["partner", "event", "pack"],
+      "archetypes": ["information", "poison", "inversion"],
+      "production_tier": "mvp",
+      "identity": "妖魔书、诅咒污染与高收益危险抽牌。"
+    },
+    {
+      "id": "keine_kamishirasawa",
+      "display_name_zh": "上白泽慧音",
+      "display_name_en": "Keine Kamishirasawa",
+      "roles": ["partner", "boss", "event", "pack"],
+      "archetypes": ["mechanism", "time", "information"],
+      "production_tier": "phase2",
+      "identity": "历史改写、回合回溯与关卡规则修订。"
+    },
+    {
+      "id": "kaguya_houraisan",
+      "display_name_zh": "蓬莱山辉夜",
+      "display_name_en": "Kaguya Houraisan",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["mechanism", "time", "barrier"],
+      "production_tier": "phase2",
+      "identity": "难题、不可解条件与机制胜利路线。"
+    },
+    {
+      "id": "eirin_yagokoro",
+      "display_name_zh": "八意永琳",
+      "display_name_en": "Eirin Yagokoro",
+      "roles": ["partner", "boss", "vendor", "pack"],
+      "archetypes": ["poison", "information", "equipment"],
+      "production_tier": "phase2",
+      "identity": "药毒两面、治疗转化与长线战斗控制。"
+    },
+    {
+      "id": "reisen_udongein_inaba",
+      "display_name_zh": "铃仙·优昙华院·因幡",
+      "display_name_en": "Reisen Udongein Inaba",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["information", "time", "inversion"],
+      "production_tier": "phase2",
+      "identity": "幻视、瞄准扰动、错位弹幕与读牌惩罚。"
+    },
+    {
+      "id": "remilia_scarlet",
+      "display_name_zh": "蕾米莉亚·斯卡蕾特",
+      "display_name_en": "Remilia Scarlet",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["blood", "mechanism", "barrier"],
+      "production_tier": "phase2",
+      "identity": "命运、吸血、低血爆发与boss规则压迫感。"
+    },
+    {
+      "id": "flandre_scarlet",
+      "display_name_zh": "芙兰朵露·斯卡蕾特",
+      "display_name_en": "Flandre Scarlet",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["blood", "inversion", "fire"],
+      "production_tier": "phase2",
+      "identity": "破坏、过量伤害、手牌炸裂与极端风险收益。"
+    },
+    {
+      "id": "hong_meiling",
+      "display_name_zh": "红美铃",
+      "display_name_en": "Hong Meiling",
+      "roles": ["main", "partner", "pack"],
+      "archetypes": ["barrier", "fire", "time"],
+      "production_tier": "phase2",
+      "identity": "近身防反、气功弹与低复杂度动作爽感。"
+    },
+    {
+      "id": "cirno",
+      "display_name_zh": "琪露诺",
+      "display_name_en": "Cirno",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["ice", "inversion", "barrier"],
+      "production_tier": "phase2",
+      "identity": "冻结、慢速弹幕、简单粗暴的控制与反制。"
+    },
+    {
+      "id": "letty_whiterock",
+      "display_name_zh": "蕾蒂·霍瓦特洛克",
+      "display_name_en": "Letty Whiterock",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["ice", "poison", "mechanism"],
+      "production_tier": "phase3",
+      "identity": "寒冬环境、减速场与长时间压制。"
+    },
+    {
+      "id": "kogasa_tatara",
+      "display_name_zh": "多多良小伞",
+      "display_name_en": "Kogasa Tatara",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["inversion", "equipment", "time"],
+      "production_tier": "phase3",
+      "identity": "惊吓触发、反转收益与奇袭窗口。"
+    },
+    {
+      "id": "rumia",
+      "display_name_zh": "露米娅",
+      "display_name_en": "Rumia",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["blood", "poison", "inversion"],
+      "production_tier": "phase3",
+      "identity": "黑暗、吞噬、视野惩罚与低血猎杀。"
+    },
+    {
+      "id": "aya_shameimaru",
+      "display_name_zh": "射命丸文",
+      "display_name_en": "Aya Shameimaru",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["information", "time", "equipment"],
+      "production_tier": "phase2",
+      "identity": "高速移动、拍照揭示与情报换节奏。"
+    },
+    {
+      "id": "sanae_kochiya",
+      "display_name_zh": "东风谷早苗",
+      "display_name_en": "Sanae Kochiya",
+      "roles": ["main", "partner", "event", "pack"],
+      "archetypes": ["barrier", "mechanism", "summon"],
+      "production_tier": "phase2",
+      "identity": "奇迹、信仰资源、神明伙伴与中等随机性。"
+    },
+    {
+      "id": "suwako_moriya",
+      "display_name_zh": "洩矢诹访子",
+      "display_name_en": "Suwako Moriya",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["mechanism", "poison", "summon"],
+      "production_tier": "phase3",
+      "identity": "地形、诅咒、土著神规则与场地胜利。"
+    },
+    {
+      "id": "tenshi_hinanawi",
+      "display_name_zh": "比那名居天子",
+      "display_name_en": "Tenshi Hinanawi",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["barrier", "mechanism", "equipment"],
+      "production_tier": "phase2",
+      "identity": "天界耐久、地形重压与硬吃机制的坦克路线。"
+    },
+    {
+      "id": "toyosatomimi_no_miko",
+      "display_name_zh": "丰聪耳神子",
+      "display_name_en": "Toyosatomimi no Miko",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["mechanism", "barrier", "information"],
+      "production_tier": "phase3",
+      "identity": "号令、听牌、领导者光环与多伙伴联动。"
+    },
+    {
+      "id": "byakuren_hijiri",
+      "display_name_zh": "圣白莲",
+      "display_name_en": "Byakuren Hijiri",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["barrier", "fire", "blood"],
+      "production_tier": "phase2",
+      "identity": "肉身强化、护盾燃烧与混合近战法术。"
+    },
+    {
+      "id": "yuyuko_saigyouji",
+      "display_name_zh": "西行寺幽幽子",
+      "display_name_en": "Yuyuko Saigyouji",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["poison", "mechanism", "summon"],
+      "production_tier": "phase2",
+      "identity": "即死倒计时、幽灵召唤与死亡收益。"
+    },
+    {
+      "id": "satori_komeiji",
+      "display_name_zh": "古明地觉",
+      "display_name_en": "Satori Komeiji",
+      "roles": ["partner", "boss", "event", "pack"],
+      "archetypes": ["information", "mechanism", "summon"],
+      "production_tier": "phase3",
+      "identity": "读心、复制敌方意图与记忆牌。"
+    },
+    {
+      "id": "koishi_komeiji",
+      "display_name_zh": "古明地恋",
+      "display_name_en": "Koishi Komeiji",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["information", "inversion", "time"],
+      "production_tier": "phase3",
+      "identity": "无意识触发、不可预测行动与隐藏手牌。"
+    },
+    {
+      "id": "yuuka_kazami",
+      "display_name_zh": "风见幽香",
+      "display_name_en": "Yuuka Kazami",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["poison", "mechanism", "fire"],
+      "production_tier": "phase3",
+      "identity": "花田场地、持续成长与慢热压制。"
+    },
+    {
+      "id": "ran_yakumo",
+      "display_name_zh": "八云蓝",
+      "display_name_en": "Ran Yakumo",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["summon", "information", "mechanism"],
+      "production_tier": "phase3",
+      "identity": "式神算法、自动连锁与召唤物增幅。"
+    },
+    {
+      "id": "chen",
+      "display_name_zh": "橙",
+      "display_name_en": "Chen",
+      "roles": ["partner", "boss", "pack"],
+      "archetypes": ["summon", "time", "inversion"],
+      "production_tier": "phase3",
+      "identity": "高速召唤物、突进窗口与连携追击。"
+    },
+    {
+      "id": "mamizou_futatsuiwa",
+      "display_name_zh": "二岩猯藏",
+      "display_name_en": "Mamizou Futatsuiwa",
+      "roles": ["partner", "boss", "event", "pack"],
+      "archetypes": ["summon", "inversion", "information"],
+      "production_tier": "phase3",
+      "identity": "变化、伪装牌、临时复制与卡组欺骗。"
+    },
+    {
+      "id": "hata_no_kokoro",
+      "display_name_zh": "秦心",
+      "display_name_en": "Hata no Kokoro",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["inversion", "mechanism", "barrier"],
+      "production_tier": "phase3",
+      "identity": "情绪面具、状态切换与规则人格。"
+    },
+    {
+      "id": "seija_kijin",
+      "display_name_zh": "鬼人正邪",
+      "display_name_en": "Seija Kijin",
+      "roles": ["main", "partner", "boss", "pack"],
+      "archetypes": ["inversion", "mechanism", "blood"],
+      "production_tier": "mvp",
+      "identity": "反转胜负、倒置资源与专门破解常规答案的角色。"
+    }
+  ]
+}

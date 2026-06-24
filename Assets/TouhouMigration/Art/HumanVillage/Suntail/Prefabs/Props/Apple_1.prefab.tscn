@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://b107nx3idkxh2"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Apple_1.Apple_1.mesh" id="1_b7pfa"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Food.material" id="2_kx3x5"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Props/extracted/Apple_1.Apple_1_LOD0.mesh" id="3_k8mcg"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_n6pdf"]
+points = PackedVector3Array(-0.00041291118, 0.12632582, 0.1011903, -0.06780523, 0.07843297, 0.06704801, -0.0006112382, 0.0768438, 0.094742745, 0.07122366, 0.12460604, 0.07149187, 0.06765373, 0.16305093, 0.06714721, 0.00036057085, 0.16466188, 0.09502049, -0.06693259, 0.16627282, 0.06714721, -0.07202965, 0.12802385, 0.07149187, -0.09569035, 0.07908606, -0.00016524643, -0.06962986, 0.019677138, -0.00016524643, -0.04920194, 0.019677138, 0.04915358, 0.00010274351, 0.019677138, 0.069587365, 0.06638442, 0.0752764, 0.066849634, 0.10091357, 0.12388765, -0.00016524643, 0.095519006, 0.16237608, -0.00016524643, 0.014699787, 0.2222857, -0.004371032, 0.0031371862, 0.22043529, 0.0073337555, -0.094797865, 0.1669259, -0.00014540553, -0.101699725, 0.12874223, -0.00016524643, -0.042855397, 0.1864749, 0.043578923, -0.060982704, 0.18691029, -0.00014540553, -0.06780523, 0.07843297, -0.06735867, -0.07202965, 0.12802385, -0.07180253, -0.04920194, 0.019677138, -0.049464233, -0.030142486, -0.00011132071, -0.030399315, -0.04265707, -0.00011132071, -0.00016524643, -0.030142486, -0.00011132071, 0.030088663, 0.00010274351, -0.00011132071, 0.042626664, 0.049427256, 0.019677138, 0.04915358, 0.09407121, 0.07462331, -0.00016524643, 0.07122366, 0.12460604, -0.07180253, 0.06765373, 0.16305093, -0.06745787, 0.06638442, 0.0752764, -0.067160286, 0.0031371862, 0.22043529, -0.016075827, -0.008425415, 0.21860665, -0.004371032, -0.06693259, 0.16627282, -0.06745787, -0.00041291118, 0.12632582, -0.10148111, -0.0006112382, 0.0768438, -0.0950534, 0.00010274351, 0.019677138, -0.06989802, 0.00010274351, -0.00011132071, -0.042937323, 0.030347973, -0.00011132071, 0.030088663, 0.042882398, -0.00011132071, -0.00016524643, 0.06985518, 0.019677138, -0.00016524643, 0.049427256, 0.019677138, -0.049464233, 0.00036057085, 0.16466188, -0.09533113, 0.030347973, -0.00011132071, -0.030399315)
+
+[node name="Apple_1" type="RigidBody3D" unique_id=1301044213]
+freeze_mode = 1
+continuous_cd = true
+angular_damp = 0.05
+
+[node name="MeshCollider" type="CollisionShape3D" parent="." unique_id=369703719]
+shape = SubResource("ConvexPolygonShape3D_n6pdf")
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=457457982]
+layers = 1024
+gi_mode = 2
+visibility_range_end = 4.4099355
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_b7pfa")
+surface_material_override/0 = ExtResource("2_kx3x5")
+
+[node name="AudioSource" type="AudioStreamPlayer3D" parent="." unique_id=847003210]
+attenuation_model = 2
+max_db = 0.0
+max_distance = 500.0
+
+[node name="Apple_1_LOD0" type="Node3D" parent="." unique_id=1468948391]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Apple_1_LOD0" unique_id=375006987]
+layers = 1024
+gi_mode = 2
+visibility_range_begin = 4.4099355
+visibility_range_begin_margin = 0.5
+visibility_range_end = 25.763693
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_k8mcg")
+surface_material_override/0 = ExtResource("2_kx3x5")

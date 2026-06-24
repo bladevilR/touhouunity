@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cjsyhgtxtat4y"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Stairs/extracted/Wooden_Platform_Cover.Wooden_Platform_Cover.mesh" id="1_24agr"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Building Modules/Wooden_Planks.material" id="2_j8qmx"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Building Modules/Stairs/extracted/Wooden_Platform_Cover.Wooden_Platform_Cover_LOD0.mesh" id="3_b0ioo"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_jtuea"]
+data = PackedVector3Array(1, 0.081099994, -0.040799998, 1, 0.081099994, 0.040799998, 0.66819996, 0.0744, 0.036599997, 0.66819996, 0.0744, 0.036599997, 0.66819996, 0.075399995, -0.0451, 1, 0.081099994, -0.040799998, 0.33429998, 0.0792, -0.0427, 0.66819996, 0.075399995, -0.0451, 0.66819996, 0.0744, 0.036599997, 0.66819996, 0.0744, 0.036599997, 0.3344, 0.0819, 0.0389, 0.33429998, 0.0792, -0.0427, 0, 0.081099994, -0.040799998, 0.33429998, 0.0792, -0.0427, 0.3344, 0.0819, 0.0389, 0.3344, 0.0819, 0.0389, 0, 0.081099994, 0.040799998, 0, 0.081099994, -0.040799998, 0.6691, -0.1413, 0.033999998, 1, -0.1346, 0.040799998, 1, -0.1346, -0.040799998, 1, -0.1346, -0.040799998, 0.6691, -0.14029999, -0.0477, 0.6691, -0.1413, 0.033999998, 0.6691, -0.1413, 0.033999998, 0.6691, -0.14029999, -0.0477, 0.3304, -0.1364, -0.0354, 0.3304, -0.1364, -0.0354, 0.3304, -0.1336, 0.0462, 0.6691, -0.1413, 0.033999998, 0, -0.1346, 0.040799998, 0.3304, -0.1336, 0.0462, 0.3304, -0.1364, -0.0354, 0.3304, -0.1364, -0.0354, 0, -0.1346, -0.040799998, 0, -0.1346, 0.040799998, 1, -0.1346, 0.040799998, 0.6691, -0.1413, 0.033999998, 0.66819996, 0.0744, 0.036599997, 0.66819996, 0.0744, 0.036599997, 1, 0.081099994, 0.040799998, 1, -0.1346, 0.040799998, 0.66819996, 0.0744, 0.036599997, 0.6691, -0.1413, 0.033999998, 0.3304, -0.1336, 0.0462, 0.3304, -0.1336, 0.0462, 0.3344, 0.0819, 0.0389, 0.66819996, 0.0744, 0.036599997, 0, 0.081099994, 0.040799998, 0.3344, 0.0819, 0.0389, 0.3304, -0.1336, 0.0462, 0.3304, -0.1336, 0.0462, 0, -0.1346, 0.040799998, 0, 0.081099994, 0.040799998, 0, 0.081099994, -0.040799998, 0, -0.1346, -0.040799998, 0.3304, -0.1364, -0.0354, 0.3304, -0.1364, -0.0354, 0.33429998, 0.0792, -0.0427, 0, 0.081099994, -0.040799998, 0.66819996, 0.075399995, -0.0451, 0.33429998, 0.0792, -0.0427, 0.3304, -0.1364, -0.0354, 0.3304, -0.1364, -0.0354, 0.6691, -0.14029999, -0.0477, 0.66819996, 0.075399995, -0.0451, 0.66819996, 0.075399995, -0.0451, 0.6691, -0.14029999, -0.0477, 1, -0.1346, -0.040799998, 1, -0.1346, -0.040799998, 1, 0.081099994, -0.040799998, 0.66819996, 0.075399995, -0.0451, 1, -0.1346, -0.040799998, 1, -0.1346, 0.040799998, 1, 0.081099994, 0.040799998, 1, 0.081099994, 0.040799998, 1, 0.081099994, -0.040799998, 1, -0.1346, -0.040799998, 0, -0.1346, 0.040799998, 0, -0.1346, -0.040799998, 0, 0.081099994, -0.040799998, 0, 0.081099994, -0.040799998, 0, 0.081099994, 0.040799998, 0, -0.1346, 0.040799998)
+
+[node name="Wooden_Platform_Cover" type="Node3D" unique_id=203500978]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1740717221]
+layers = 512
+gi_mode = 2
+visibility_range_end = 5.129861
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_24agr")
+surface_material_override/0 = ExtResource("2_j8qmx")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1237577345]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=1247728828]
+shape = SubResource("ConcavePolygonShape3D_jtuea")
+
+[node name="Wooden_Platform_Cover_LOD0" type="Node3D" parent="." unique_id=1835999150]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Wooden_Platform_Cover_LOD0" unique_id=2029323591]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 5.129861
+visibility_range_begin_margin = 0.5
+visibility_range_end = 107.61248
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_b0ioo")
+surface_material_override/0 = ExtResource("2_j8qmx")

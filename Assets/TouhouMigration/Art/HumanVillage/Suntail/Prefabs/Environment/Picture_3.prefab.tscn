@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cvdbip3e6s8h1"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Picture_3.Picture_3.mesh" id="1_io1n8"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Picture_3.material" id="2_hwd8i"]
+
+[node name="Picture_3" type="Node3D" unique_id=299825635]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=1384365422]
+layers = 512
+gi_mode = 2
+visibility_range_end = 27.633854
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_io1n8")
+surface_material_override/0 = ExtResource("2_hwd8i")

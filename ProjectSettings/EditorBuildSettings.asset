@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/Bootstrap.unity
+    guid: d8bd2d623fd8a4b04b93b9b9a07a0f93
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/TitleScreen.unity
+    guid: f7747a6579e24407b8681fec1a01265c
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/BambooHomeVerticalSlice.unity
+    guid: 6709a599155ba402a9cea44ac48a9e5f
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/HumanVillageVerticalSlice.unity
+    guid: c3171c3c31d3b44bc9946781a4faf797
+  m_configObjects: {}

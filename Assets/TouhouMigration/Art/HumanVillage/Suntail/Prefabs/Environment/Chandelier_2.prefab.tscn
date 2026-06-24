@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://osvpt3eo8g51"]
+
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chandelier_2.Chandelier_2.mesh" id="1_75sxx"]
+[ext_resource type="Material" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Materials/Props/Chandelier.material" id="2_2jy8s"]
+[ext_resource type="ArrayMesh" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Models/Environment/extracted/Chandelier_2.Chandelier_2_LOD0.mesh" id="3_s1exs"]
+[ext_resource type="PackedScene" path="res://assets/unity_imports/Suntail_Village/Assets/Suntail Village/Prefabs/FX/Candle Fire.prefab.tscn" id="4_1eori"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ww0yf"]
+points = PackedVector3Array(-0.038579285, -0.8562551, -0.64383787, -0.008049965, -1.0320785, -0.5681453, -0.21708763, -0.9636636, -0.5041851, -0.39370364, -0.9636636, -0.38610464, -0.038579285, -0.8416451, -0.64383787, 0.02538091, -0.8562551, -0.64383787, -0.005148411, -1.0320785, -0.5681453, -0.57523966, -1.0320785, -0.00095558167, -0.5117841, -0.9636636, -0.20936248, -0.65093225, -0.8562551, -0.031484902, -0.39370364, -0.87892574, -0.38610464, -0.31801108, -0.581084, -0.34863684, -0.023693085, -0.71186835, -0.60801005, 0.02538091, -0.8416451, -0.64383787, 0.37659448, -0.9636636, -0.38610464, 0.19985229, -0.9636636, -0.5041851, 0.5620412, -1.0320785, -0.00095558167, -0.57523966, -1.0320785, 0.0019459724, -0.65093225, -0.8562551, 0.032475293, -0.65093225, -0.8416451, -0.031484902, -0.361282, -0.581084, -0.3053659, -0.30375564, -0.45684886, -0.3141967, -0.04387778, -0.0027308464, -0.12496525, 0.010494709, -0.71186835, -0.60801005, 0.30443418, -0.581084, -0.35292608, 0.37659448, -0.87892574, -0.38610464, 0.63786, -0.8562551, -0.031484902, 0.49467486, -0.9636636, -0.20936248, 0.5620412, -1.0320785, 0.0019459724, -0.39370364, -0.9636636, 0.3843196, -0.5117841, -0.9636636, 0.20757747, -0.008049965, -1.0320785, 0.5691356, -0.65093225, -0.8416451, 0.032475293, -0.61510444, -0.71186835, -0.016598701, -0.32684186, -0.45684886, -0.29111046, -0.1165427, -0.0027308464, -0.052300394, 0.058811784, -0.0027308464, -0.12496525, 0.29017878, -0.45684886, -0.3186121, 0.3478313, -0.581084, -0.30965516, 0.63786, -0.8416451, -0.031484902, 0.63786, -0.8562551, 0.032475293, 0.49467486, -0.9636636, 0.20757747, 0.37659448, -0.9636636, 0.3843196, -0.005148411, -1.0320785, 0.5691356, -0.39370364, -0.87892574, 0.3843196, -0.21708763, -0.9636636, 0.50227386, -0.038579285, -0.8562551, 0.6449544, -0.61510444, -0.71186835, 0.017589092, -0.3568666, -0.581084, 0.31707937, -0.1165427, -0.0027308464, 0.050515354, 0.1314767, -0.0027308464, -0.052300394, 0.31339115, -0.45684886, -0.29539973, 0.601906, -0.71186835, -0.016598701, 0.63786, -0.8416451, 0.032475293, 0.02538091, -0.8562551, 0.6449544, 0.19985229, -0.9636636, 0.50227386, 0.37659448, -0.87892574, 0.3843196, -0.31359568, -0.581084, 0.3603503, -0.038579285, -0.8416451, 0.6449544, -0.32255262, -0.45684886, 0.30282396, -0.29934025, -0.45684886, 0.32603633, -0.04387778, -0.0027308464, 0.12305409, 0.1314767, -0.0027308464, 0.050515354, 0.601906, -0.71186835, 0.017589092, 0.35212058, -0.581084, 0.31279016, 0.02538091, -0.8416451, 0.6449544, 0.30884963, -0.581084, 0.35606104, -0.023693085, -0.71186835, 0.6090004, 0.058811784, -0.0027308464, 0.12305409, 0.29459417, -0.45684886, 0.32162094, 0.31768042, -0.45684886, 0.2985347, 0.010494709, -0.71186835, 0.6090004)
+
+[node name="Chandelier_2" type="Node3D" unique_id=1605586641]
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="." unique_id=713220195]
+layers = 512
+gi_mode = 2
+visibility_range_end = 4.792051
+visibility_range_end_margin = 0.5
+mesh = ExtResource("1_75sxx")
+surface_material_override/0 = ExtResource("2_2jy8s")
+
+[node name="MeshCollider" type="StaticBody3D" parent="." unique_id=1066340401]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshCollider" unique_id=427077448]
+shape = SubResource("ConvexPolygonShape3D_ww0yf")
+
+[node name="Chandelier_2_LOD0" type="Node3D" parent="." unique_id=1081323604]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0517577e-07, 0)
+
+[node name="MeshRenderer" type="MeshInstance3D" parent="Chandelier_2_LOD0" unique_id=1653404211]
+layers = 512
+gi_mode = 2
+visibility_range_begin = 4.792051
+visibility_range_begin_margin = 0.5
+visibility_range_end = 31.326595
+visibility_range_end_margin = 0.5
+mesh = ExtResource("3_s1exs")
+surface_material_override/0 = ExtResource("2_2jy8s")
+
+[node name="Candle Fire" parent="." unique_id=141390447 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, 0.5606, -0.6912, -0.0004)
+
+[node name="Candle Fire (1)" parent="." unique_id=767512857 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, -0.006, -0.6912, 0.566)
+
+[node name="Candle Fire (2)" parent="." unique_id=1675667882 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, -0.5733, -0.6912, -0.0005)
+
+[node name="Candle Fire (3)" parent="." unique_id=1908788046 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, -0.0076, -0.6912, -0.5664)
+
+[node name="Candle Fire (4)" parent="." unique_id=1978776752 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, 0.2721, -0.4369, -0.2788)
+
+[node name="Candle Fire (5)" parent="." unique_id=141666910 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, -0.2864, -0.4369, -0.2752)
+
+[node name="Candle Fire (6)" parent="." unique_id=937714102 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, -0.2834, -0.4369, 0.287)
+
+[node name="Candle Fire (7)" parent="." unique_id=1931901170 instance=ExtResource("4_1eori")]
+transform = Transform3D(2.0443962, 0, 0, 0, -8.93634e-08, 2.0443962, 0, -2.0443962, -8.93634e-08, 0.2773, -0.4369, 0.2823)
+
+[editable path="Candle Fire"]
+[editable path="Candle Fire (1)"]
+[editable path="Candle Fire (2)"]
+[editable path="Candle Fire (3)"]
+[editable path="Candle Fire (4)"]
+[editable path="Candle Fire (5)"]
+[editable path="Candle Fire (6)"]
+[editable path="Candle Fire (7)"]
