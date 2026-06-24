@@ -35,8 +35,11 @@ the cooking jump-boost (`GetModifiedJumpHeight`). Verified by compile gate; dash
 play-validation. **E1.4 DONE** — `MigrationGlobalUiController` sets the player health runtime i-frame to
 0.75s (ticked each frame); 38/38 regression. Snowball's local 0.75s cooldown left as redundant-but-harmless.
 E1 **swim model done** (`MigrationSwimState`: slowed horizontal + buoyant clamped vertical, TDD;
-water-volume detection wired during integration). E1's remaining items (Animator/locomotion,
-animation-event attack windows, split Player concerns) are heavier asset/integration work for a fresh pass. **E2.1 game-state mode machine DONE**
+water-volume detection wired during integration). E1 **locomotion params done** (`MigrationLocomotion.Resolve`
+→ normalized speed + move/run/grounded/dash flags for an Animator driver, TDD). E1's remaining items — the
+**Mecanim humanoid AnimatorController setup** (player model + clips → controller, driven by the locomotion
+params), animation-event attack windows, and splitting Player concerns — are heavier asset/integration
+work for a fresh pass. **E2.1 game-state mode machine DONE**
 (`MigrationGameStateMachine` + `MigrationGameStateMode` Menu/Home/Overworld/Combat/Dialogue/Cutscene/Sleeping,
 ChangeMode/Push/Pop, TDD) — game-loop foundation. **Next:** E2 scene-flow driving the mode machine, or E1
 Animator integration. Pure-logic milestones (i-frames, dash, save orch, game-state) are TDD-tested; live
