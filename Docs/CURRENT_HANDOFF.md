@@ -37,9 +37,10 @@ play-validation. **E1.4 DONE** — `MigrationGlobalUiController` sets the player
 E1 **swim model done** (`MigrationSwimState`: slowed horizontal + buoyant clamped vertical, TDD;
 water-volume detection wired during integration). E1 **locomotion params done** (`MigrationLocomotion.Resolve`
 → normalized speed + move/run/grounded/dash flags for an Animator driver, TDD). E1's remaining items — the
-**Mecanim humanoid AnimatorController setup** (player model + clips → controller, driven by the locomotion
-params), animation-event attack windows, and splitting Player concerns — are heavier asset/integration
-work for a fresh pass. **E2.1 game-state mode machine DONE**
+**Mecanim humanoid AnimatorController setup** (player model + clips → controller). The live
+`MigrationPlayerController` now exposes `CurrentLocomotion` each frame as the driver seam, so what remains
+is the AnimatorController asset + a component that pushes those params onto it. Plus animation-event attack
+windows and splitting Player concerns — heavier asset/integration work for a fresh pass. **E2.1 game-state mode machine DONE**
 (`MigrationGameStateMachine` + `MigrationGameStateMode` Menu/Home/Overworld/Combat/Dialogue/Cutscene/Sleeping,
 ChangeMode/Push/Pop, TDD) — game-loop foundation. **Next:** E2 scene-flow driving the mode machine, or E1
 Animator integration. Pure-logic milestones (i-frames, dash, save orch, game-state) are TDD-tested; live

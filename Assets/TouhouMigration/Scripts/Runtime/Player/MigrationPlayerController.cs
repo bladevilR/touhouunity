@@ -23,6 +23,9 @@ namespace TouhouMigration.Runtime.Player
         private readonly MigrationDashState dashState = new MigrationDashState();
         private Vector3 dashDirection;
 
+        // Animator-facing locomotion state, recomputed each Update for a Mecanim driver to read (E1.5).
+        public MigrationLocomotionParams CurrentLocomotion { get; private set; }
+
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
@@ -84,6 +87,14 @@ namespace TouhouMigration.Runtime.Player
             velocity.y = verticalVelocity;
 
             characterController.Move(velocity * Time.deltaTime);
+
+            float horizontalSpeed = new Vector3(horizontalVelocity.x, 0f, horizontalVelocity.z).magnitude;
+            CurrentLocomotion = MigrationLocomotion.Resolve(
+                horizontalSpeed,
+                GetModifiedWalkSpeed(),
+                GetModifiedRunSpeed(),
+                characterController.isGrounded,
+                dashState.IsDashing);
         }
 
         public void BindCookingBuffs(CookingBuffService buffs)
