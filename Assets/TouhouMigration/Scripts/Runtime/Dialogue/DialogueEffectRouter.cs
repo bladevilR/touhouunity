@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Social;
 
 namespace TouhouMigration.Runtime.Dialogue
@@ -8,11 +9,19 @@ namespace TouhouMigration.Runtime.Dialogue
     {
         private readonly SocialBondService bondService;
         private readonly QuestDeliveryService questDeliveryService;
+        private InventoryService inventoryService;
 
         public DialogueEffectRouter(SocialBondService bondService, QuestDeliveryService questDeliveryService)
         {
             this.bondService = bondService;
             this.questDeliveryService = questDeliveryService;
+        }
+
+        // Optional inventory routing for dialogue give/take-item effects (non-breaking; existing
+        // callers that never bind an inventory keep their current behavior).
+        public void BindInventory(InventoryService inventory)
+        {
+            inventoryService = inventory;
         }
 
         public bool Apply(string npcId, Dictionary<string, object> effects)
@@ -75,6 +84,12 @@ namespace TouhouMigration.Runtime.Dialogue
                     return questDeliveryService != null && questDeliveryService.UnlockNpc(Convert.ToString(value) ?? string.Empty);
                 case "quest_progress":
                     return ApplyQuestProgress(value);
+                case "give_item":
+                case "add_item":
+                    return ApplyInventoryChange(value, give: true);
+                case "take_item":
+                case "remove_item":
+                    return ApplyInventoryChange(value, give: false);
                 default:
                     return false;
             }
@@ -133,6 +148,38 @@ namespace TouhouMigration.Runtime.Dialogue
 
             questDeliveryService.UpdateQuestProgress(questId, objectiveIndex, amount);
             return true;
+        }
+
+        private bool ApplyInventoryChange(object value, bool give)
+        {
+            if (inventoryService == null)
+            {
+                return false;
+            }
+
+            string itemId;
+            int amount;
+            if (value is Dictionary<string, object> dictionary)
+            {
+                itemId = dictionary.TryGetValue("item_id", out object rawItemId)
+                    ? Convert.ToString(rawItemId) ?? string.Empty
+                    : string.Empty;
+                amount = dictionary.TryGetValue("amount", out object rawAmount) ? ToInt(rawAmount, 1) : 1;
+            }
+            else
+            {
+                itemId = Convert.ToString(value) ?? string.Empty;
+                amount = 1;
+            }
+
+            if (string.IsNullOrWhiteSpace(itemId) || amount <= 0)
+            {
+                return false;
+            }
+
+            return give
+                ? inventoryService.AddItem(itemId, amount)
+                : inventoryService.RemoveItem(itemId, amount);
         }
 
         private static int ToInt(object value, int fallback = 0)

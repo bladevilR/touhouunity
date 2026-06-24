@@ -15,7 +15,7 @@ migration**, driven autonomously against the north-star roadmap
 
 ## Current State
 
-- Compiles green; full smoke suite **41/41 via `MigrationSmokeTestRunner.RunAll`** (one command).
+- Compiles green; full smoke suite **42/42 via `MigrationSmokeTestRunner.RunAll`** (one command).
   Under git, pushed to `git@github.com:bladevilR/touhouunity.git` (`main`).
 - **Phase 0 (foundation) COMPLETE**: M58 closed; git + GitHub live; first real play-mode validation
   (scenes runtime-clean); master one-command test runner; save-orchestration logic. Deferred as

@@ -236,6 +236,7 @@ namespace TouhouMigration.Runtime.UI
             }
             itemUseService = new ItemUseService(inventoryService, itemDatabase, cookingBuffService, playerHealthRuntime);
             dialogueEffectRouter = new DialogueEffectRouter(socialBondService, questDeliveryService);
+            dialogueEffectRouter.BindInventory(inventoryService);
             if (dialogueFacade != null)
             {
                 dialogueFacade.ActionRequested += OnDialogueActionRequested;
