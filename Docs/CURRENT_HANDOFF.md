@@ -55,8 +55,10 @@ migration**, driven autonomously against the north-star roadmap
   runs every `*SmokeTests` suite in one Unity launch. First full-suite baseline: **35/35 suites
   pass, 0 compile errors**. (Full asmdef restructure + NUnit Test Runner migration deferred as
   optional polish — the bespoke smoke pattern works and the aggregator gives one-command regression.)
-- NEXT — Wire the deferred save orchestration (cooking/buffs/quest/bond/inventory persisted by
-  one runtime owner).
+- DONE (logic) — Save orchestration: `MigrationSaveOrchestrator.Capture/Apply` bridges the 5
+  gameplay services (Inventory/Cooking/CookingBuff/SocialBond/QuestDelivery) and `MigrationSaveData`;
+  bond state round-trips through capture→apply (TDD). Pending: hook it into a runtime global save
+  owner + player scalar fields (fold into E2/E7 save UI).
 - NEXT — Generated-asset/build-determinism hygiene (BuildInitialProject churns ~44 assets;
   gitignore builder-generated assets).
 Then proceed to E1 (player/combat execution core) per the roadmap.
