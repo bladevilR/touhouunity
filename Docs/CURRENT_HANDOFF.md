@@ -28,7 +28,9 @@ migration**, driven autonomously against the north-star roadmap
   windows → (5) swim → (6) split Player concerns. **E1.1 i-frames DONE** (opt-in invulnerability window
   in `MigrationPlayerHealthRuntime`: a landed hit blocks further damage until it ticks down; default 0 =
   off, live player sets 0.75; 37/37 regression). Wiring 0.75 into the live player + reconciling the
-  snowball's local cooldown is deferred to player integration. **In progress: E1.2 dash execution.**
+  snowball's local cooldown is deferred to player integration. **E1.2 dash state machine DONE** (pure
+`MigrationDashState`: cooldown + active window). **In progress: E1.3** — wire dash + i-frames into the
+live `MigrationPlayerController` and integrate movement/Animator.
 
 ## M58 — Done
 
