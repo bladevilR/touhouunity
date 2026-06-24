@@ -34,7 +34,12 @@ dashes on LeftControl in move/facing direction (buff-modified cooldown/distance)
 the cooking jump-boost (`GetModifiedJumpHeight`). Verified by compile gate; dash motion to be confirmed by
 play-validation. **E1.4 DONE** — `MigrationGlobalUiController` sets the player health runtime i-frame to
 0.75s (ticked each frame); 38/38 regression. Snowball's local 0.75s cooldown left as redundant-but-harmless.
-**In progress: E1.5** — Animator / movement-animation integration (player Mecanim humanoid + locomotion).
+E1's remaining items (Animator/locomotion, animation-event attack windows, swim, split concerns) are
+heavier asset/integration work for a fresh pass. **E2.1 game-state mode machine DONE**
+(`MigrationGameStateMachine` + `MigrationGameStateMode` Menu/Home/Overworld/Combat/Dialogue/Cutscene/Sleeping,
+ChangeMode/Push/Pop, TDD) — game-loop foundation. **Next:** E2 scene-flow driving the mode machine, or E1
+Animator integration. Pure-logic milestones (i-frames, dash, save orch, game-state) are TDD-tested; live
+integration (controller dash, owner i-frame) is play-validated.
 
 ## M58 — Done
 
