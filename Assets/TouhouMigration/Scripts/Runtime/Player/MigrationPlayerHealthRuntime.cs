@@ -9,15 +9,29 @@ namespace TouhouMigration.Runtime.Player
 
         private CookingBuffService cookingBuffService;
 
+        // Opt-in general player i-frame window. Default 0 = disabled (no behavior change to existing
+        // callers); the live player sets a real duration. A landed hit starts the window; damage while
+        // it is active is blocked. The window counts down in Tick, independent of cooking buffs.
+        private float invulnerabilitySeconds;
+        private float invulnerabilityRemaining;
+
         public float MaxHp { get; private set; } = 100f;
         public float CurrentHp { get; private set; } = 100f;
         public bool IsDead { get; private set; }
         public bool RebirthUsed { get; private set; }
 
+        public bool IsInvulnerable => invulnerabilityRemaining > 0f;
+        public float InvulnerabilityRemainingSeconds => invulnerabilityRemaining;
+
         public void BindCookingBuffs(CookingBuffService buffs)
         {
             cookingBuffService = buffs;
             SyncBuffHpRatio();
+        }
+
+        public void SetInvulnerabilityDuration(float seconds)
+        {
+            invulnerabilitySeconds = Math.Max(0f, seconds);
         }
 
         public void SetHealth(float currentHp, float maxHp)
@@ -39,11 +53,20 @@ namespace TouhouMigration.Runtime.Player
                 return result;
             }
 
+            if (IsInvulnerable)
+            {
+                result.BlockedByInvulnerability = true;
+                return result;
+            }
+
             SyncBuffHpRatio();
             float reduction = Clamp(cookingBuffService?.GetDamageReduction() ?? 0f, 0f, 0.9f);
             float finalDamage = rawDamage * (1f - reduction);
             result.DamageApplied = finalDamage;
             result.WasLethal = finalDamage + 0.001f >= CurrentHp;
+
+            // A landed hit opens the i-frame window (both the rebirth and the normal path count as a hit).
+            invulnerabilityRemaining = invulnerabilitySeconds;
 
             if (result.WasLethal &&
                 !RebirthUsed &&
@@ -84,7 +107,17 @@ namespace TouhouMigration.Runtime.Player
         public PlayerHealthResult Tick(float delta)
         {
             PlayerHealthResult result = NewResult();
-            if (delta <= 0f || IsDead || cookingBuffService == null)
+            if (delta <= 0f || IsDead)
+            {
+                return result;
+            }
+
+            if (invulnerabilityRemaining > 0f)
+            {
+                invulnerabilityRemaining = Math.Max(0f, invulnerabilityRemaining - delta);
+            }
+
+            if (cookingBuffService == null)
             {
                 return result;
             }
