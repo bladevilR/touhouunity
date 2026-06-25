@@ -25,6 +25,7 @@ namespace TouhouMigration.Runtime.Save
         public QuestRuntimeSnapshot quests = new QuestRuntimeSnapshot();
         public float play_time;
         public int total_kills;
+        public int humanity = 100;
 
         public int SaveSchema => save_schema;
         public string GameVersion => version;
@@ -117,6 +118,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => total_kills;
             set => total_kills = Math.Max(0, value);
+        }
+
+        public int Humanity
+        {
+            get => humanity;
+            set => humanity = Math.Clamp(value, 0, 100);
         }
 
         public static MigrationSaveData CreateDefault()

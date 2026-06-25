@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:15 CST
+Last updated: 2026-06-25 09:20 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:15 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.1, shop economy service (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E8.1, humanity save persistence (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,34 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E8.1: Humanity Save Persistence
+
+- Date: 2026-06-25 09:20 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Persist the E5.2 humanity stat. `HumanityService` was added but never saved, so humanity reset to 100 on load — a correctness gap for the dialogue humanity effects.
+
+Completed:
+
+- `MigrationSaveData.humanity` scalar (default 100) + `Humanity` property (clamped 0..100).
+- `MigrationSaveOrchestrator` now threads `HumanityService` (6th ctor param): Capture stores `humanity.Humanity` → `data.Humanity`; Apply restores via `humanity.Set(data.Humanity)`. The owner passes `humanityService` into the orchestrator.
+
+TDD (red -> green):
+
+- Extended `SaveOrchestratorSmokeTests` with `TestHumanityRoundTripsThroughSaveData` (adjust 100→70, capture, restore into a fresh service). RED on the missing 6-arg ctor + `MigrationSaveData.Humanity` (CS1729 / CS1061); GREEN at full regression 45/45 suites, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Save/MigrationSaveData.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/Save/MigrationSaveOrchestrator.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/SaveOrchestratorSmokeTests.cs`
+
+Known follow-ups:
+
+- `save_schema` left at 3 (the `humanity` field defaults to 100, backward-compatible with old saves); bump on the next deliberate schema revision.
+- Player scalars still pending in the owner save path: coins/scene/position (per the orchestrator's caller-responsibility note).
 
 ### E4.1: Shop Economy Service
 

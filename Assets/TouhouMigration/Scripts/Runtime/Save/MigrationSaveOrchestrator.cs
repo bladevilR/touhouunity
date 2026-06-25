@@ -1,13 +1,15 @@
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Inventory;
+using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Social;
 
 namespace TouhouMigration.Runtime.Save
 {
     // Single runtime owner that bridges the live gameplay services and the persisted save record.
     // Capture() pulls each service's snapshot into a MigrationSaveData; Apply() pushes them back into
-    // the live services. Player scalar fields (name/level/hp/coins/scene/position) remain the caller's
-    // responsibility. Missing services and missing snapshot sections are tolerated.
+    // the live services. Service-owned stats are handled here (snapshots + the humanity scalar); the
+    // remaining player scalars (name/level/hp/coins/scene/position) stay the caller's responsibility.
+    // Missing services and missing snapshot sections are tolerated.
     public sealed class MigrationSaveOrchestrator
     {
         private readonly InventoryService inventory;
@@ -15,19 +17,22 @@ namespace TouhouMigration.Runtime.Save
         private readonly CookingBuffService cookingBuffs;
         private readonly SocialBondService bonds;
         private readonly QuestDeliveryService quests;
+        private readonly HumanityService humanity;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
             CookingService cooking,
             CookingBuffService cookingBuffs,
             SocialBondService bonds,
-            QuestDeliveryService quests)
+            QuestDeliveryService quests,
+            HumanityService humanity)
         {
             this.inventory = inventory;
             this.cooking = cooking;
             this.cookingBuffs = cookingBuffs;
             this.bonds = bonds;
             this.quests = quests;
+            this.humanity = humanity;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -52,6 +57,10 @@ namespace TouhouMigration.Runtime.Save
             if (quests != null)
             {
                 data.quests = quests.CreateSnapshot();
+            }
+            if (humanity != null)
+            {
+                data.Humanity = humanity.Humanity;
             }
             return data;
         }
@@ -81,6 +90,10 @@ namespace TouhouMigration.Runtime.Save
             if (quests != null && data.quests != null)
             {
                 quests.LoadSnapshot(data.quests);
+            }
+            if (humanity != null)
+            {
+                humanity.Set(data.Humanity);
             }
         }
     }

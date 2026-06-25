@@ -301,7 +301,7 @@ namespace TouhouMigration.Runtime.UI
 
             saveService = new MigrationSaveService(null);
             saveOrchestrator = new MigrationSaveOrchestrator(
-                inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService);
+                inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService, humanityService);
             gameState = new MigrationGameStateMachine(MigrationGameStateMode.Overworld);
             gameState.ModeChanged += OnGameStateModeChanged;
             ApplyWorldTimeScaleForMode(gameState.CurrentMode);
