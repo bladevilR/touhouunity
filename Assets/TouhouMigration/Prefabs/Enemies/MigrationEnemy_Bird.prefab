@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1471407673595638074
+--- !u!1 &1370612775877389989
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,343 +8,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8905308901180564539}
-  - component: {fileID: 3076747284284523351}
-  - component: {fileID: 4911955921518472544}
-  - component: {fileID: 8257615895905067799}
-  - component: {fileID: 368646187708156719}
-  - component: {fileID: 2235799936758309406}
-  - component: {fileID: 3686973704305138357}
-  - component: {fileID: 1382801439824671743}
-  - component: {fileID: 2482163599754135981}
-  - component: {fileID: 248443014247121920}
-  - component: {fileID: 6500651987026969344}
-  - component: {fileID: 6441872646895939234}
-  - component: {fileID: 6590611638619971632}
-  - component: {fileID: 898929664850849879}
-  - component: {fileID: 1735465317900140945}
-  m_Layer: 0
-  m_Name: MigrationEnemy_Bird
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8905308901180564539
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8389630992012594618}
-  - {fileID: 4171787940612781397}
-  - {fileID: 166594709473083485}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3076747284284523351
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!136 &4911955921518472544
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &8257615895905067799
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &368646187708156719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4badfdd731eb4a63821971440d5cd78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatTargetBehaviour
-  maxHp: 40
---- !u!114 &2235799936758309406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c12748cd1a9574a0bb4ec4764e9e4194, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatDefeatHandler
-  disableCollidersOnDefeat: 1
-  disableRenderersOnDefeat: 1
-  defeatDelaySeconds: 0.45
-  deathFeedbackEnabled: 1
-  deathFeedbackRadius: 0.45
-  deathFeedbackColor: {r: 1, g: 0.35, b: 0.12, a: 1}
-  deathFeedbackPrefab: {fileID: 2673541704461150768, guid: 36386ef076494487bb98f76db72c273d, type: 3}
---- !u!114 &3686973704305138357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a832edcc4311c4385bfd20831cbd5d17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatHurtFeedback
-  flashDurationSeconds: 0.16
-  flashColor: {r: 1, g: 0.15, b: 0.1, a: 1}
-  knockbackDistance: 0.08
---- !u!114 &1382801439824671743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1cfd3bc109443bc9c7392bb117c75e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatDefeatRewardHandler
-  experienceReward: 11
-  coinReward: 11
-  questCounterId: enemy_killed
---- !u!114 &2482163599754135981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f760c9bd81d0405fa13493841f83e9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatLootDropHandler
-  guaranteedItemId: 
-  guaranteedAmount: 1
-  notifyQuestKillObjectives: 1
-  useGodotLootTables: 1
-  forceGodotLootTables: 0
-  enemyType: beast
-  elementalGroup: 
---- !u!114 &248443014247121920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a07501909d13424d9008ef87cd3e201b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationDamageNumberPresenter
-  displaySeconds: 0.45
-  verticalOffset: 1.35
-  textColor: {r: 1, g: 0.92, b: 0.35, a: 1}
---- !u!114 &6500651987026969344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bb49185d5c340bfb476f2b630a10618, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatRewardPresentation
-  displaySeconds: 0.8
-  rewardColor: {r: 1, g: 0.86, b: 0.32, a: 1}
-  lootColor: {r: 0.42, g: 1, b: 0.58, a: 1}
---- !u!114 &6441872646895939234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9f092a2a4243430c8bca0d1a2b651ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationSimpleEnemyController
-  target: {fileID: 368646187708156719}
-  damageSource: {fileID: 4132617043668481440}
-  lootDropHandler: {fileID: 2482163599754135981}
-  chaseRange: 10
-  attackRange: 8
-  moveSpeed: 2.2
-  attackCooldown: 1
-  attackWindupSeconds: 0.5
-  attackActiveSeconds: 0.12
-  attackRecoverySeconds: 0.28
-  currentVariantId: bird
-  canMelee: 1
-  canShoot: 1
-  projectileSpeed: 8
-  rangedMinDistance: 5
-  projectileSpawnHeight: 1.5
-  currentAttackDamage: 11
-  projectilePrefab: {fileID: 7066421114862354080, guid: 2b3fec7532c254bfdad89adb0eedb89f, type: 3}
-  projectilePool: {fileID: 0}
-  stunRemainingSeconds: 0
---- !u!114 &6590611638619971632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8af50ec542af841958985acaf34a8de2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationEnemyVisualSource
-  variantId: bird
-  godotScenePath: res://scenes/monsters/BirdMonster.tscn
-  unityModelAssetPath: Assets/TouhouMigration/Art/Enemies/Bird/Models/Bird.fbx
-  primaryTextureAssetPath: Assets/TouhouMigration/Art/Enemies/Bird/Textures/Bird.png
-  textureAssetPaths:
-  - Assets/TouhouMigration/Art/Enemies/Bird/Textures/Bird.png
-  usesFallbackVisual: 0
---- !u!114 &898929664850849879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cb6e0ff84ec24a8b8b453a9c52db0ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationEnemyAnimationSource
-  variantId: bird
-  animatorControllerAssetPath: Assets/TouhouMigration/Animations/Enemies/Bird/Bird_Enemy.controller
-  idleClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Fly Idle.fbx
-  moveClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Fly Forward
-    In Place.fbx
-  attackClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Bite
-    Attack.fbx
-  projectileClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Projectile
-    Attack.fbx
-  takeDamageClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Take
-    Damage.fbx
-  dieClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Die.fbx
-  usesFallbackAnimations: 0
---- !u!114 &1735465317900140945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471407673595638074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5db22e27b4df7434e973f573a82cf38e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationEnemyAnimationBridge
-  controller: {fileID: 6441872646895939234}
-  target: {fileID: 368646187708156719}
-  animationSource: {fileID: 0}
-  animator: {fileID: 7349451145136193119}
---- !u!1 &2886934933564934549
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4171787940612781397}
-  - component: {fileID: 5611570729700795536}
-  - component: {fileID: 8603588865540539609}
-  - component: {fileID: 274101710683112896}
-  - component: {fileID: 9118163550182445172}
-  - component: {fileID: 4132617043668481440}
+  - component: {fileID: 3855019478459250646}
+  - component: {fileID: 5752012848274699244}
+  - component: {fileID: 1148344434393551809}
+  - component: {fileID: 2223715434606711619}
+  - component: {fileID: 269545903967422527}
+  - component: {fileID: 3408050970551343532}
   m_Layer: 0
   m_Name: EnemyDamageSourceMarker
   m_TagString: Untagged
@@ -352,36 +21,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4171787940612781397
+--- !u!4 &3855019478459250646
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2886934933564934549}
+  m_GameObject: {fileID: 1370612775877389989}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.2, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8905308901180564539}
+  m_Father: {fileID: 6342278057402412774}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5611570729700795536
+--- !u!33 &5752012848274699244
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2886934933564934549}
+  m_GameObject: {fileID: 1370612775877389989}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!135 &8603588865540539609
+--- !u!135 &1148344434393551809
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2886934933564934549}
+  m_GameObject: {fileID: 1370612775877389989}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -396,13 +65,13 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &274101710683112896
+--- !u!23 &2223715434606711619
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2886934933564934549}
+  m_GameObject: {fileID: 1370612775877389989}
   m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -445,13 +114,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &9118163550182445172
+--- !u!54 &269545903967422527
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2886934933564934549}
+  m_GameObject: {fileID: 1370612775877389989}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -472,13 +141,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4132617043668481440
+--- !u!114 &3408050970551343532
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2886934933564934549}
+  m_GameObject: {fileID: 1370612775877389989}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a470518d1535420c90bc33d88e7bc69, type: 3}
@@ -488,7 +157,7 @@ MonoBehaviour:
   requiresActiveWindow: 1
   visibleWhenInactive: 0
   windowActive: 0
---- !u!1 &4635371666777086445
+--- !u!1 &2450290095027006725
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -496,9 +165,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8389630992012594618}
-  - component: {fileID: 152647224470100360}
-  - component: {fileID: 2138100571872225334}
+  - component: {fileID: 5907106026159408468}
+  - component: {fileID: 1768112567409461522}
+  - component: {fileID: 2066285857942318446}
   m_Layer: 0
   m_Name: DeathFeedback
   m_TagString: Untagged
@@ -506,28 +175,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &8389630992012594618
+--- !u!4 &5907106026159408468
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635371666777086445}
+  m_GameObject: {fileID: 2450290095027006725}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8905308901180564539}
+  m_Father: {fileID: 6342278057402412774}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!198 &152647224470100360
+--- !u!198 &1768112567409461522
 ParticleSystem:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635371666777086445}
+  m_GameObject: {fileID: 2450290095027006725}
   serializedVersion: 8
   lengthInSec: 0.45
   simulationSpeed: 1
@@ -5302,14 +4971,14 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &2138100571872225334
+--- !u!199 &2066285857942318446
 ParticleSystemRenderer:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4635371666777086445}
+  m_GameObject: {fileID: 2450290095027006725}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -5382,7 +5051,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!1 &8069119553759015232
+--- !u!1 &7991604289005105945
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5390,7 +5059,338 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 166594709473083485}
+  - component: {fileID: 6342278057402412774}
+  - component: {fileID: 504891422785956880}
+  - component: {fileID: 851189604823718253}
+  - component: {fileID: 1904466648271734242}
+  - component: {fileID: 272529245915859010}
+  - component: {fileID: 6309152995485396478}
+  - component: {fileID: 1966610935347904330}
+  - component: {fileID: 5119284041320701172}
+  - component: {fileID: 3371276013649732112}
+  - component: {fileID: 3222338056299965116}
+  - component: {fileID: 5816563443794398727}
+  - component: {fileID: 1507775052545689536}
+  - component: {fileID: 7831488044017311750}
+  - component: {fileID: 9207731825187022833}
+  - component: {fileID: 7469247889048312642}
+  m_Layer: 0
+  m_Name: MigrationEnemy_Bird
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6342278057402412774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5907106026159408468}
+  - {fileID: 3855019478459250646}
+  - {fileID: 4913869881290608012}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &504891422785956880
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!136 &851189604823718253
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1904466648271734242
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &272529245915859010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4badfdd731eb4a63821971440d5cd78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatTargetBehaviour
+  maxHp: 40
+--- !u!114 &6309152995485396478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12748cd1a9574a0bb4ec4764e9e4194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatDefeatHandler
+  disableCollidersOnDefeat: 1
+  disableRenderersOnDefeat: 1
+  defeatDelaySeconds: 0.45
+  deathFeedbackEnabled: 1
+  deathFeedbackRadius: 0.45
+  deathFeedbackColor: {r: 1, g: 0.35, b: 0.12, a: 1}
+  deathFeedbackPrefab: {fileID: 2673541704461150768, guid: 36386ef076494487bb98f76db72c273d, type: 3}
+--- !u!114 &1966610935347904330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a832edcc4311c4385bfd20831cbd5d17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatHurtFeedback
+  flashDurationSeconds: 0.16
+  flashColor: {r: 1, g: 0.15, b: 0.1, a: 1}
+  knockbackDistance: 0.08
+--- !u!114 &5119284041320701172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1cfd3bc109443bc9c7392bb117c75e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatDefeatRewardHandler
+  experienceReward: 11
+  coinReward: 11
+  questCounterId: enemy_killed
+--- !u!114 &3371276013649732112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f760c9bd81d0405fa13493841f83e9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatLootDropHandler
+  guaranteedItemId: 
+  guaranteedAmount: 1
+  notifyQuestKillObjectives: 1
+  useGodotLootTables: 1
+  forceGodotLootTables: 0
+  enemyType: beast
+  elementalGroup: 
+--- !u!114 &3222338056299965116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07501909d13424d9008ef87cd3e201b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationDamageNumberPresenter
+  displaySeconds: 0.45
+  verticalOffset: 1.35
+  textColor: {r: 1, g: 0.92, b: 0.35, a: 1}
+--- !u!114 &5816563443794398727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb49185d5c340bfb476f2b630a10618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationCombatRewardPresentation
+  displaySeconds: 0.8
+  rewardColor: {r: 1, g: 0.86, b: 0.32, a: 1}
+  lootColor: {r: 0.42, g: 1, b: 0.58, a: 1}
+--- !u!114 &1507775052545689536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9f092a2a4243430c8bca0d1a2b651ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationSimpleEnemyController
+  target: {fileID: 272529245915859010}
+  damageSource: {fileID: 3408050970551343532}
+  lootDropHandler: {fileID: 3371276013649732112}
+  chaseRange: 10
+  attackRange: 8
+  moveSpeed: 2.2
+  attackCooldown: 1
+  attackWindupSeconds: 0.5
+  attackActiveSeconds: 0.12
+  attackRecoverySeconds: 0.28
+  currentVariantId: bird
+  canMelee: 1
+  canShoot: 1
+  projectileSpeed: 8
+  rangedMinDistance: 5
+  projectileSpawnHeight: 1.5
+  currentAttackDamage: 11
+  projectilePrefab: {fileID: 7066421114862354080, guid: 2b3fec7532c254bfdad89adb0eedb89f, type: 3}
+  projectilePool: {fileID: 0}
+  stunRemainingSeconds: 0
+--- !u!114 &7831488044017311750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af50ec542af841958985acaf34a8de2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationEnemyVisualSource
+  variantId: bird
+  godotScenePath: res://scenes/monsters/BirdMonster.tscn
+  unityModelAssetPath: Assets/TouhouMigration/Art/Enemies/Bird/Models/Bird.fbx
+  primaryTextureAssetPath: Assets/TouhouMigration/Art/Enemies/Bird/Textures/Bird.png
+  textureAssetPaths:
+  - Assets/TouhouMigration/Art/Enemies/Bird/Textures/Bird.png
+  usesFallbackVisual: 0
+--- !u!114 &9207731825187022833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb6e0ff84ec24a8b8b453a9c52db0ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationEnemyAnimationSource
+  variantId: bird
+  animatorControllerAssetPath: Assets/TouhouMigration/Animations/Enemies/Bird/Bird_Enemy.controller
+  idleClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Fly Idle.fbx
+  moveClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Fly Forward
+    In Place.fbx
+  attackClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Bite
+    Attack.fbx
+  projectileClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Projectile
+    Attack.fbx
+  takeDamageClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Take
+    Damage.fbx
+  dieClipPath: Assets/TouhouMigration/Animations/Enemies/Bird/Clips/Bird@Die.fbx
+  usesFallbackAnimations: 0
+--- !u!114 &7469247889048312642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7991604289005105945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5db22e27b4df7434e973f573a82cf38e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TouhouMigration.Runtime.Combat.MigrationEnemyAnimationBridge
+  controller: {fileID: 1507775052545689536}
+  target: {fileID: 272529245915859010}
+  animationSource: {fileID: 0}
+  animator: {fileID: 7423940007695681647}
+--- !u!1 &8900551801026761163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4913869881290608012}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -5398,29 +5398,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &166594709473083485
+--- !u!4 &4913869881290608012
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069119553759015232}
+  m_GameObject: {fileID: 8900551801026761163}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5971088221754518436}
-  m_Father: {fileID: 8905308901180564539}
+  - {fileID: 3970926578885407748}
+  m_Father: {fileID: 6342278057402412774}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &6149428228349955151
+--- !u!1001 &3499624368389116911
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 166594709473083485}
+    m_TransformParent: {fileID: 4913869881290608012}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6a436c1f9c2ea4cd7ad67005b28c0f45, type: 3}
       propertyPath: m_LocalScale.x
@@ -5488,26 +5488,26 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a436c1f9c2ea4cd7ad67005b28c0f45, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7349451145136193119}
+      addedObject: {fileID: 7423940007695681647}
   m_SourcePrefab: {fileID: 100100000, guid: 6a436c1f9c2ea4cd7ad67005b28c0f45, type: 3}
---- !u!4 &5971088221754518436 stripped
+--- !u!4 &3970926578885407748 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a436c1f9c2ea4cd7ad67005b28c0f45, type: 3}
-  m_PrefabInstance: {fileID: 6149428228349955151}
+  m_PrefabInstance: {fileID: 3499624368389116911}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6455419363246879006 stripped
+--- !u!1 &4346044025685372606 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6a436c1f9c2ea4cd7ad67005b28c0f45, type: 3}
-  m_PrefabInstance: {fileID: 6149428228349955151}
+  m_PrefabInstance: {fileID: 3499624368389116911}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &7349451145136193119
+--- !u!95 &7423940007695681647
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6455419363246879006}
+  m_GameObject: {fileID: 4346044025685372606}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 094201b41922c429eaa6dbe0c2833070, type: 2}

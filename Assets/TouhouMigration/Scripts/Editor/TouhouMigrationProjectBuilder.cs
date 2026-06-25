@@ -99,7 +99,8 @@ namespace TouhouMigration.Editor
         private const string LoadingScreenScenePath = ScenesRoot + "/LoadingScreen.unity";
         private const string WorldScenePath = ScenesRoot + "/World.unity";
         private const string LoadingScreenBackgroundPath = Root + "/Art/UI/Backgrounds/loading_screen_bg.png";
-        private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
+        private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.fbx";
+        private const string MokouLocomotionControllerPath = Root + "/Animations/Characters/MokouLocomotion.controller";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
         private const string EnemyArtRoot = Root + "/Art/Enemies";
@@ -3036,6 +3037,47 @@ namespace TouhouMigration.Editor
             {
                 capsuleRenderer.enabled = false;
             }
+
+            // The FBX imports with white non-URP Standard materials (embedded textures don't carry over),
+            // so give the character a clean URP placeholder material until Codex/image2 supplies the real
+            // skin/outfit textures (TODO(codex/image2): Mokou textures). Keeps her readable, not white.
+            Shader charShader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            Material placeholder = new Material(charShader) { color = new Color(0.82f, 0.42f, 0.40f, 1f) };
+            foreach (Renderer renderer in visual.GetComponentsInChildren<Renderer>())
+            {
+                Material[] mats = renderer.sharedMaterials;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    mats[i] = placeholder;
+                }
+
+                renderer.sharedMaterials = mats;
+            }
+
+            // Drive the rigged Humanoid visual with the locomotion blend tree so it animates (idle/run)
+            // instead of standing in a static bind pose. The FBX prefab's Animator already carries the
+            // avatar from import; we just assign the controller and bind the locomotion bridge.
+            Animator animator = visual.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = visual.AddComponent<Animator>();
+            }
+
+            RuntimeAnimatorController locomotion = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(MokouLocomotionControllerPath);
+            if (locomotion != null)
+            {
+                animator.runtimeAnimatorController = locomotion;
+            }
+
+            animator.applyRootMotion = false;
+
+            MigrationLocomotionAnimatorBridge bridge = player.GetComponent<MigrationLocomotionAnimatorBridge>();
+            if (bridge == null)
+            {
+                bridge = player.AddComponent<MigrationLocomotionAnimatorBridge>();
+            }
+
+            bridge.BindAnimator(animator);
         }
 
         private static void CreateAnimationImportMarkers(Transform parent)
