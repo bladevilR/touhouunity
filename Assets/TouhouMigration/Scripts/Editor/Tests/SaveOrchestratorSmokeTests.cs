@@ -23,6 +23,7 @@ namespace TouhouMigration.Editor.Tests
             TestHomeStorageRoundTripsThroughSaveData();
             TestMetaProgressionRoundTripsThroughSaveData();
             TestNpcRelationshipRoundTripsThroughSaveData();
+            TestNpcMemoryRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -160,6 +161,31 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(80, restored.GetRelationshipValue("reimu", "marisa"), "Apply restores modified relationship values.");
             AssertEqual(2, restored.GetNpcFaction("reimu"), "Apply restores faction membership.");
             AssertEqual(60, restored.GetFactionReputation(2), "Apply restores faction reputation.");
+        }
+
+        private static void TestNpcMemoryRoundTripsThroughSaveData()
+        {
+            MigrationNpcMemorySystem source = new MigrationNpcMemorySystem();
+            source.AddMemory("keine", NpcMemoryType.FirstMeeting);
+            source.AddMemory("keine", NpcMemoryType.GiftReceived);
+            source.AddMemory("keine", NpcMemoryType.GiftReceived);
+            int sourceImpression = (int)source.GetImpression("keine");
+            int sourceTrust = source.GetRelationshipAspect("keine", "trust");
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+
+            MigrationNpcMemorySystem restored = new MigrationNpcMemorySystem();
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+
+            AssertEqual(3, restored.GetMemoryCount("keine"), "Apply restores the memory count.");
+            AssertEqual(2, restored.GetMemoryCountOfType("keine", NpcMemoryType.GiftReceived), "Apply restores memories by type.");
+            AssertEqual(true, restored.HasFirstMeetingMemory("keine"), "Apply restores the notable first-meeting memory.");
+            AssertEqual(sourceImpression, (int)restored.GetImpression("keine"), "Apply restores the impression.");
+            AssertEqual(sourceTrust, restored.GetRelationshipAspect("keine", "trust"), "Apply restores relationship aspects.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()

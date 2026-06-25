@@ -27,6 +27,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly MigrationHomeStorage homeStorage;
         private readonly MigrationMetaProgression meta;
         private readonly MigrationNpcRelationshipNetwork relationships;
+        private readonly MigrationNpcMemorySystem npcMemory;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -40,7 +41,8 @@ namespace TouhouMigration.Runtime.Save
             MigrationCompanionRoster companions = null,
             MigrationHomeStorage homeStorage = null,
             MigrationMetaProgression meta = null,
-            MigrationNpcRelationshipNetwork relationships = null)
+            MigrationNpcRelationshipNetwork relationships = null,
+            MigrationNpcMemorySystem npcMemory = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -54,6 +56,7 @@ namespace TouhouMigration.Runtime.Save
             this.homeStorage = homeStorage;
             this.meta = meta;
             this.relationships = relationships;
+            this.npcMemory = npcMemory;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -114,6 +117,10 @@ namespace TouhouMigration.Runtime.Save
             {
                 data.NpcRelationships = relationships.CreateSnapshot();
             }
+            if (npcMemory != null)
+            {
+                data.NpcMemory = npcMemory.CreateSnapshot();
+            }
             return data;
         }
 
@@ -171,6 +178,10 @@ namespace TouhouMigration.Runtime.Save
             if (relationships != null && data.npc_relationships != null)
             {
                 relationships.LoadSnapshot(data.npc_relationships);
+            }
+            if (npcMemory != null && data.npc_memory != null)
+            {
+                npcMemory.LoadSnapshot(data.npc_memory);
             }
         }
     }

@@ -336,6 +336,99 @@ namespace TouhouMigration.Runtime.Social
             return false;
         }
 
+        // Snapshot every NPC's memories + relationship aspects + impression for save/load (flat entry
+        // lists for JsonUtility safety). Personalities + memory weights are static catalog data and are
+        // not persisted; notable memories are rebuilt from the restored memory weights.
+        public NpcMemorySnapshot CreateSnapshot()
+        {
+            NpcMemorySnapshot snapshot = new NpcMemorySnapshot();
+            foreach (KeyValuePair<string, NpcRecord> pair in npcs)
+            {
+                NpcRecord record = pair.Value;
+                snapshot.npcs.Add(new NpcAspectEntry
+                {
+                    npcId = pair.Key,
+                    trust = record.Aspects.TryGetValue("trust", out double trust) ? trust : 50.0,
+                    affection = record.Aspects.TryGetValue("affection", out double affection) ? affection : 50.0,
+                    respect = record.Aspects.TryGetValue("respect", out double respect) ? respect : 50.0,
+                    familiarity = record.Aspects.TryGetValue("familiarity", out double familiarity) ? familiarity : 0.0,
+                    impression = (int)record.Impression,
+                });
+
+                foreach (Memory memory in record.Memories)
+                {
+                    snapshot.memories.Add(new NpcMemoryEntry
+                    {
+                        npcId = pair.Key,
+                        type = (int)memory.Type,
+                        weight = memory.Weight,
+                        isPositive = memory.IsPositive,
+                        topic = memory.Topic,
+                    });
+                }
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(NpcMemorySnapshot snapshot)
+        {
+            npcs.Clear();
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            if (snapshot.npcs != null)
+            {
+                foreach (NpcAspectEntry aspect in snapshot.npcs)
+                {
+                    if (string.IsNullOrEmpty(aspect.npcId))
+                    {
+                        continue;
+                    }
+
+                    NpcRecord record = new NpcRecord();
+                    record.Aspects["trust"] = aspect.trust;
+                    record.Aspects["affection"] = aspect.affection;
+                    record.Aspects["respect"] = aspect.respect;
+                    record.Aspects["familiarity"] = aspect.familiarity;
+                    record.Impression = (NpcImpression)aspect.impression;
+                    npcs[aspect.npcId] = record;
+                }
+            }
+
+            if (snapshot.memories != null)
+            {
+                foreach (NpcMemoryEntry entry in snapshot.memories)
+                {
+                    if (string.IsNullOrEmpty(entry.npcId))
+                    {
+                        continue;
+                    }
+
+                    if (!npcs.TryGetValue(entry.npcId, out NpcRecord record))
+                    {
+                        record = new NpcRecord();
+                        npcs[entry.npcId] = record;
+                    }
+
+                    Memory memory = new Memory
+                    {
+                        Type = (NpcMemoryType)entry.type,
+                        Weight = entry.weight,
+                        IsPositive = entry.isPositive,
+                        Topic = entry.topic,
+                    };
+                    record.Memories.Add(memory);
+                    if (memory.Weight >= NotableWeight)
+                    {
+                        record.NotableMemories.Add(memory);
+                    }
+                }
+            }
+        }
+
         private static bool IsPositiveMemory(NpcMemoryType type, NpcMemoryContext context)
         {
             switch (type)
@@ -483,5 +576,34 @@ namespace TouhouMigration.Runtime.Social
 
             return record;
         }
+    }
+
+    // Persisted NPC memory state: per-NPC memories (flat) + relationship aspects + impression.
+    [Serializable]
+    public sealed class NpcMemorySnapshot
+    {
+        public List<NpcMemoryEntry> memories = new List<NpcMemoryEntry>();
+        public List<NpcAspectEntry> npcs = new List<NpcAspectEntry>();
+    }
+
+    [Serializable]
+    public sealed class NpcMemoryEntry
+    {
+        public string npcId;
+        public int type;
+        public double weight;
+        public bool isPositive;
+        public string topic;
+    }
+
+    [Serializable]
+    public sealed class NpcAspectEntry
+    {
+        public string npcId;
+        public double trust;
+        public double affection;
+        public double respect;
+        public double familiarity;
+        public int impression;
     }
 }
