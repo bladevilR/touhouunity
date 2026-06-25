@@ -1,5 +1,22 @@
 # Current Handoff — Resume Point
 
+Last updated: 2026-06-25 (session 5)
+
+## Session 5 (production phase — life-sim consumers + E5 hook, all green, all pushed)
+
+Continuing autonomously toward "complete all migration." Three committed+pushed slices on top of `9e0b7ea`:
+
+- **E4 fishing consumer (`6d6c90e`): `MigrationFishingSpotInteractor`.** Mirrors the bed/farm-plot interactor pattern (proximity + interact key → owner-exposed `Fishing` service → weighted catch into inventory). Placed on a dock+water prop in Misty Lake via a new optional `decorate` hook on `CreateNatureLocationScene` (existing callers unaffected). Fishing-level boost passes 0 (TODO until player progression tracks it). Service logic already TDD-covered; interactor exercised by play-validation.
+- **E4 shop consumer (`763cf3d`): `MigrationShopController` (scoped IMGUI modal) + `MigrationShopInteractor`.** Modal mirrors `MigrationGiftSelectionController` (Bind/OpenForShop/Close/IsOpen + OnGUI): a shopkeeper interactor opens it for a shop id; it draws that shop's catalog with buy/sell buttons against the live `MigrationShop` (open-hours + per-shop price/buy_rate gated, coins via progress service). Owner wiring: builds a `MigrationShopService`, binds the controller (hour from world clock), gates `OpenShop` like `OpenCooking`, includes it in `BlocksGameplayInput` + Escape-close. Builder adds the controller to the GlobalUI object and places `town_general`/`town_blacksmith` interactors on the two shop props in every village scene. New `ShopControllerSmokeTests`.
+- **E5 portrait hook (`49cc8c8`): `MigrationPortraitCatalog` + dialogue portrait slot.** Resolves a speaker (npc id + expression) → Resources key `Portraits/<npc>/<expression>` with normalization/fallback grounded in the dialogue data (neutral/happy/sad/surprised/angry; mad→angry, upset→sad, surprise/shocked→surprised; unknown→neutral; blank speaker = narration). `RuneDialogueController` resolves `PortraitResourceKey`+`PortraitTexture` per line and renders it in the reserved left region, **drawn only when the texture exists so layout is unchanged until art lands**. Per the division of labor the **PNGs are Codex/image2's job** — `Assets/TouhouMigration/Resources/Portraits/<npc>/<expression>.png`, documented in `Resources/Portraits/README.md` (35 npc ids × 5 expressions). New `PortraitCatalogSmokeTests`.
+
+**Verified:** regression **72/72** (was 70; +ShopController +PortraitCatalog); 29 scenes play-validated 0 errors (the fishing/shop scene changes; portrait slice is null-guarded, no scene change). Tree clean, pushed.
+
+**Reusable seam learned this session:** rebuilding location scenes via `BuildLocationScenes` re-serializes **every** scene non-deterministically (symmetric full-file churn). Only the scene(s) you actually changed show a net content delta — keep just those, `git checkout --` the rest (the same hygiene as the `BuildInitialProject` generated-dir revert).
+
+**Life-sim scene-interactor layer is now broad:** cooking, NPC (dialogue/gift), bed (sleep), farm-plot (plant/water/harvest), **fishing (cast)**, **shop (buy/sell)**. Remaining E4 is the uGUI/UITK production-UI reskin of the IMGUI shells (deferred). Next candidates: **E8 player position/scene save scalars** (completes save parity), **E5 NPC spawning into the remaining locations + hour schedules**, **E7 audio manager hooks** (mirror the portrait division-of-labor: wire the manager + clip-path slots, stub the audio art for Codex).
+
+## (session 4)
 Last updated: 2026-06-25 (session 4)
 
 ## Objective & Ownership
