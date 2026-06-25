@@ -41,7 +41,23 @@ namespace TouhouMigration.Runtime.Economy
                 return ShopTransactionResult.Fail(itemId, quantity, "unknown_item");
             }
 
-            int totalCost = Math.Max(0, definition.Price) * quantity;
+            return Buy(itemId, quantity, definition.Price);
+        }
+
+        // Buy at an explicit unit price (e.g. a shop's catalog price), bypassing the item's base price.
+        public ShopTransactionResult Buy(string itemId, int quantity, int unitPrice)
+        {
+            if (inventory == null || progress == null)
+            {
+                return ShopTransactionResult.Fail(itemId, quantity, "shop_unconfigured");
+            }
+
+            if (string.IsNullOrWhiteSpace(itemId) || quantity <= 0)
+            {
+                return ShopTransactionResult.Fail(itemId, quantity, "invalid_request");
+            }
+
+            int totalCost = Math.Max(0, unitPrice) * quantity;
             if (progress.Coins < totalCost)
             {
                 return ShopTransactionResult.Fail(itemId, quantity, "insufficient_funds");
