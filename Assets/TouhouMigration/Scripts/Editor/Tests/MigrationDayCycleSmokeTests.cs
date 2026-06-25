@@ -21,6 +21,7 @@ namespace TouhouMigration.Editor.Tests
             TestSleepAdvancesOneDayAndRestoresFatigue();
             TestSleepRunsDailyQuestReset();
             TestNaturalMidnightCrossingRunsDailyReset();
+            TestSleepDecaysNpcMemories();
             TestNullServicesAreSafe();
             Debug.Log("Migration day cycle smoke tests passed.");
         }
@@ -73,6 +74,26 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(startDay + 1, clock.Day, "Advancing past midnight rolls the day.");
             AssertEqual(1, cycle.DailyResetsRun, "Crossing midnight runs the day reset once.");
             AssertEqual(clock.Day, cycle.LastResetDay, "The natural day-reset uses the new day.");
+            cycle.Detach();
+        }
+
+        private static void TestSleepDecaysNpcMemories()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            memory.AddMemory("youmu", NpcMemoryType.RepeatedVisit);
+            AssertEqual(1, memory.GetMemoryCount("youmu"), "A memory exists before sleeping.");
+
+            GameClock clock = new GameClock();
+            clock.SetTime(22, 0);
+            MigrationDayCycle cycle = new MigrationDayCycle(clock, null, null, null, null, memory);
+
+            // A RepeatedVisit (weight 15) decays 2.0/day under the default personality -> forgotten after 6 days.
+            for (int i = 0; i < 6; i++)
+            {
+                cycle.Sleep();
+            }
+
+            AssertEqual(0, memory.GetMemoryCount("youmu"), "Sleeping six days decays the memory until it is forgotten.");
             cycle.Detach();
         }
 
