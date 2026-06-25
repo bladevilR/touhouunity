@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:48 CST
+Last updated: 2026-06-25 09:54 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:48 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E8.2, story flag save persistence (session 2). Session-2 slices (10): E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects), E5.4 (narrative events), E8.2 (story flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E5.5, story flags gate dialogue (session 2). Session-2 slices (11): E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects), E5.4 (narrative events), E8.2 (story flag save), E5.5 (story flags gate dialogue). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,29 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.5: Story Flags Gate Dialogue (seen_events context)
+
+- Date: 2026-06-25 09:54 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Make the dialogue `event` / `event_not_seen` conditions (already implemented in `DialogueDatabase.ConditionsPass`) actually fire. `BuildDialogueContext` never populated `seen_events`, so event-gated lines were inert.
+
+Completed:
+
+- `MigrationGlobalUiController.BuildDialogueContext` now adds `["seen_events"] = storyFlagService.CreateSnapshot()`. This closes the story-flag loop: dialogue `event` fx fire (E5.4) → persist across save/load (E8.2) → gate dialogue lines via the `event` / `event_not_seen` conditions.
+
+Verification:
+
+- Owner-only wiring (no new pure-logic; the condition logic already exists in `DialogueDatabase`) — gated by full regression `MigrationSmokeTestRunner.RunAll` = 49/49 suites, 0 compile errors (`DialogueSmokeTests` + `GlobalUiSmokeTests` cover the paths). Consistent with the E2.5 owner-wiring rhythm.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+
+Known follow-ups:
+
+- `time_of_day` is still hardcoded `"afternoon"` in the context — surface it from the live world clock; add weather / `is_full_moon` context for those conditions (the conditions already exist).
 
 ### E8.2: Story Flag Save Persistence
 

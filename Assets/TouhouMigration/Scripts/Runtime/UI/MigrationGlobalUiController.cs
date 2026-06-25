@@ -539,7 +539,10 @@ namespace TouhouMigration.Runtime.UI
                 ["time_of_day"] = "afternoon",
                 ["active_quests"] = activeQuestIds,
                 ["completed_quests"] = completedQuestIds,
-                ["started_quests"] = startedQuestIds
+                ["started_quests"] = startedQuestIds,
+                // E5.5: fired narrative events (E5.4 story flags) drive the dialogue `event` /
+                // `event_not_seen` conditions, which read the context's "seen_events" list.
+                ["seen_events"] = storyFlagService != null ? storyFlagService.CreateSnapshot() : new List<string>()
             };
         }
     }
