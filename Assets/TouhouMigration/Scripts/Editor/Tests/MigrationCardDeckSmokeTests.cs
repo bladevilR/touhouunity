@@ -12,6 +12,7 @@ namespace TouhouMigration.Editor.Tests
         public static void RunAll()
         {
             TestDrawMovesCardsToHand();
+            TestDrawTakesFromFrontLikeGodot();
             TestDiscardThenReshuffleOnEmptyDraw();
             TestDrawStopsWhenExhausted();
             TestDiscardFromHand();
@@ -28,6 +29,15 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(2, drawn, "Draw returns the number of cards drawn.");
             AssertEqual(2, deck.HandCount, "Drawn cards land in the hand.");
             AssertEqual(1, deck.DrawPileCount, "Drawing reduces the draw pile.");
+        }
+
+        private static void TestDrawTakesFromFrontLikeGodot()
+        {
+            // Godot CardDeckController.draw() pops from the front of the deck, so the first card
+            // listed is drawn first. Match that order for fidelity.
+            MigrationCardDeck deck = new MigrationCardDeck(new List<string> { "first", "second", "third" });
+            deck.Draw(1, max => 0);
+            AssertEqual("first", deck.Hand[0], "Draw takes from the front of the deck (Godot pop_front order).");
         }
 
         private static void TestDiscardThenReshuffleOnEmptyDraw()

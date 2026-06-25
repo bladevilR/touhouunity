@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 11:53 CST
+Last updated: 2026-06-25 11:59 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 11:53 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E6.1, CardBuild runtime deck — draw/hand/discard/reshuffle (session 2; first E6 combat run-loop logic). Earlier session-2 work: E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,32 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E6.2: Card Deck Draws From The Front (Godot pop_front fidelity)
+
+- Date: 2026-06-25 11:59 CST (session 2)
+- Status: Complete (correction)
+- Owner: Claude
+- Goal: Verify-first follow-up to E6.1 — the Godot `CardDeckController.draw()` pops from the **front** of the deck; E6.1 drew from the back. Correct the draw order for fidelity.
+
+Completed:
+
+- `MigrationCardDeck.Draw` now pops `drawPile[0]` (front) instead of the last index, matching Godot's `pop_front` draw order. Count / reshuffle / discard semantics unchanged.
+
+TDD (red -> green):
+
+- Extended `MigrationCardDeckSmokeTests`: `TestDrawTakesFromFrontLikeGodot` (deck `[first, second, third]`, `Draw(1)` -> `Hand[0]` == `"first"`).
+- RED: genuine assertion failure (back-draw yielded `"third"`, 0 compile errors).
+- GREEN: full regression 60/60 suites passed, 0 compile errors (extended in place).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/CardBuild/MigrationCardDeck.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationCardDeckSmokeTests.cs`
+
+Known follow-ups:
+
+- Cooldowns (`put_on_cooldown` / `tick_cooldowns` -> return to discard), retain/exhaust piles, the per-turn run loop — all grounded in `CardDeckController.gd`.
 
 ### E6.1: CardBuild Runtime Deck (draw / hand / discard / reshuffle)
 

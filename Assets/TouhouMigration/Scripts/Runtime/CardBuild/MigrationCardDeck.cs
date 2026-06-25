@@ -50,9 +50,9 @@ namespace TouhouMigration.Runtime.CardBuild
                     ReshuffleDiscardIntoDraw(randomIndex);
                 }
 
-                int top = drawPile.Count - 1;
-                string card = drawPile[top];
-                drawPile.RemoveAt(top);
+                // Draw from the front of the deck to match Godot CardDeckController.draw (pop_front).
+                string card = drawPile[0];
+                drawPile.RemoveAt(0);
                 hand.Add(card);
                 drawn++;
             }
