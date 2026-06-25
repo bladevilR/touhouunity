@@ -11,7 +11,7 @@ Standing goal: **complete all migration**, driven autonomously, user reviews fin
 **▶ CURRENT FOCUS:** migrate all formal game scenes (E3) — **DONE (session 4): all 29 formal scenes are built Unity-native + play-validated runtime-clean, and the canonical NPC cast is spawned into Human Village.** The user's explicit top priority (实装所有场景) is complete at blockout grade. **Next per roadmap (E6 cardbuild stays deprioritized): E4 life-sim closure (shop/cooking/farming/fishing UIs + day-loop into the scenes), E5 dialogue breadth (portraits, all 35 NPCs), E7 presentation (URP/audio/VFX/textured materials + Godot-faithful location fidelity), E8 save/content parity + final QA.** Session-1 "asset promotion blocker" resolved (E3.2).
 
 - North-star roadmap: `Docs/superpowers/plans/2026-06-25-migration-completion-roadmap.md` (Phase 0 → E1…E8; all locations incl. PureNature/AngryMesh variants are in scope).
-- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit: `d7ad55e` (session-4 E8 save parity: + meta-progression). **E3 complete (29 scenes + NPC cast); E4 day-loop + E8 save (5 services) added.**
+- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit: `fe44648` (session-4 E4 day-cycle drives memory-decay + weather). **E3 complete (29 scenes + NPC cast); E4 day-loop (drives 5 daily systems) + E8 save (5 services) added.**
 
 ## Verified State
 
@@ -52,7 +52,7 @@ Standing goal: **complete all migration**, driven autonomously, user reviews fin
 ## Done (session 4 — E4 day-loop closure, pure-logic TDD, all green)
 
 After E3, started closing the life-sim loop with testable orchestrators (no Unity scene work):
-- **Day cycle (`dd18fc4`): `MigrationDayCycle` (`Runtime/Foundation`).** Subscribes to `GameClock.DayStarted` and fans the per-day resets to the already-logic-complete services — farming `AdvanceDay`, quest `ResetDailyQuests`, bond `StartNewDay` — for every new day (sleep OR natural midnight). `Sleep()` advances the clock exactly one day to `WakeHour` (firing the resets) + `fatigue.SleepFullRecovery()`. All deps optional/null-safe. Closes the handoff's "GameClock/day-start not wired" + "sleep day-loop" gaps. `MigrationDayCycleSmokeTests` (4).
+- **Day cycle (`dd18fc4`→`fe44648`): `MigrationDayCycle` (`Runtime/Foundation`).** Subscribes to `GameClock.DayStarted` and fans the per-day work to the already-logic-complete services — **farming `AdvanceDay`, quest `ResetDailyQuests`, bond `StartNewDay`, NPC-memory `DecayAllMemories`, weather `UpdateForDate`** — for every new day (sleep OR natural midnight). `Sleep()` advances the clock exactly one day to `WakeHour` (firing all of the above) + `fatigue.SleepFullRecovery()`. All 7 deps optional/null-safe. Closes the handoff's "GameClock/day-start not wired", "sleep day-loop", and S2 "memory-decay day-tick driver" gaps. `MigrationDayCycleSmokeTests` (6).
 - **Fatigue driver (`62478e5`): `MigrationFatigueDriver` (`Runtime/Player`).** The accrual half — adds activity fatigue each game hour (`GameClock.HourChanged`) via the Godot per-hour rates, scaled by `CurrentActivity` (Idle/Active/Farming/Mining). Pairs with the day-cycle's sleep recovery to form the full fatigue loop. `MigrationFatigueDriverSmokeTests` (4).
 - **Still owner-wiring (deferred):** construct both in `MigrationGlobalUiController` (or a world owner), forward `Sleep()` from a bed interaction/HUD, and set the driver's activity from the game-state mode — MonoBehaviour work gated via `GlobalUiSmokeTests` + play-mode.
 
