@@ -1,5 +1,6 @@
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Foundation;
+using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Social;
@@ -22,6 +23,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly MigrationFatigueSystem fatigue;
         private readonly GameClock clock;
         private readonly MigrationCompanionRoster companions;
+        private readonly MigrationHomeStorage homeStorage;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -32,7 +34,8 @@ namespace TouhouMigration.Runtime.Save
             HumanityService humanity,
             MigrationFatigueSystem fatigue = null,
             GameClock clock = null,
-            MigrationCompanionRoster companions = null)
+            MigrationCompanionRoster companions = null,
+            MigrationHomeStorage homeStorage = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -43,6 +46,7 @@ namespace TouhouMigration.Runtime.Save
             this.fatigue = fatigue;
             this.clock = clock;
             this.companions = companions;
+            this.homeStorage = homeStorage;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -91,6 +95,10 @@ namespace TouhouMigration.Runtime.Save
             {
                 data.Companions = companions.CreateSnapshot();
             }
+            if (homeStorage != null)
+            {
+                data.HomeStorage = homeStorage.CreateSnapshot();
+            }
             return data;
         }
 
@@ -136,6 +144,10 @@ namespace TouhouMigration.Runtime.Save
             if (companions != null && data.companions != null)
             {
                 companions.LoadSnapshot(data.companions);
+            }
+            if (homeStorage != null && data.home_storage != null)
+            {
+                homeStorage.LoadSnapshot(data.home_storage);
             }
         }
     }

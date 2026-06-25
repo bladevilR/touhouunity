@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TouhouMigration.Runtime.Cooking;
+using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Social;
 
@@ -30,6 +31,7 @@ namespace TouhouMigration.Runtime.Save
         public double fatigue;
         public MigrationCalendarSnapshot calendar = new MigrationCalendarSnapshot();
         public CompanionRosterSnapshot companions = new CompanionRosterSnapshot();
+        public HomeStorageSnapshot home_storage = new HomeStorageSnapshot();
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -153,6 +155,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => companions;
             set => companions = value ?? new CompanionRosterSnapshot();
+        }
+
+        public HomeStorageSnapshot HomeStorage
+        {
+            get => home_storage;
+            set => home_storage = value ?? new HomeStorageSnapshot();
         }
 
         public static MigrationSaveData CreateDefault()

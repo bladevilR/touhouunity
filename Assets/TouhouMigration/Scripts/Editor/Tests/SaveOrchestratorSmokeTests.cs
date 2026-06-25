@@ -1,5 +1,6 @@
 using System;
 using TouhouMigration.Runtime.Foundation;
+using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Save;
 using TouhouMigration.Runtime.Social;
@@ -18,6 +19,7 @@ namespace TouhouMigration.Editor.Tests
             TestFatigueRoundTripsThroughSaveData();
             TestCalendarRoundTripsThroughSaveData();
             TestCompanionRosterRoundTripsThroughSaveData();
+            TestHomeStorageRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -92,6 +94,27 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, restored.IsRecruited("marisa"), "Apply restores recruited companions.");
             AssertEqual(true, restored.IsRecruited("keine"), "Apply restores all recruited companions.");
             AssertEqual("keine", restored.ActiveCompanionId, "Apply restores the active party member.");
+        }
+
+        private static void TestHomeStorageRoundTripsThroughSaveData()
+        {
+            MigrationHomeStorage source = new MigrationHomeStorage();
+            source.StoreItem("wood", 12);
+            source.StoreItem("mushroom", 5);
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+            AssertEqual(2, data.home_storage.itemIds.Count, "Capture stores the home storage entries.");
+
+            MigrationHomeStorage restored = new MigrationHomeStorage();
+            AssertEqual(0, restored.GetStoredAmount("wood"), "A fresh storage box is empty.");
+
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+            AssertEqual(12, restored.GetStoredAmount("wood"), "Apply restores stored item amounts.");
+            AssertEqual(5, restored.GetStoredAmount("mushroom"), "Apply restores all stored items.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()
