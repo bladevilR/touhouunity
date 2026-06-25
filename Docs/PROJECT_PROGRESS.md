@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:26 CST
+Last updated: 2026-06-25 09:31 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:26 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E2.5, menu mode world-time/HUD gate (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.2, farm plot crop growth (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,33 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.2: Farm Plot Crop Growth
+
+- Date: 2026-06-25 09:31 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: First farming life-sim slice (Godot `FarmPlot`/`CropData` intent) — a deterministic crop-growth core. No farming existed in Unity.
+
+Completed:
+
+- New `MigrationFarmPlot` (`Runtime/Farming/`): `Plant(cropId, growthDays, needsWaterDaily)`; `Water()`; `AdvanceDay()` grows one day unless the crop needs water and was not watered that day (the watered flag clears daily, per Godot `is_watered_today`); `IsReadyToHarvest` at full growth; `GrowthProgress` 0..1; `Harvest()` clears a ready plot. Free of UnityEngine → unit-testable.
+
+TDD (red -> green):
+
+- New `FarmPlotSmokeTests` (4 cases: plant initializes state; daily watering gates growth; reaches harvest then harvest clears; cannot plant on an occupied plot / harvest an unready or empty plot).
+- RED: focused run failed to compile on the missing `Farming` namespace (CS0234).
+- GREEN: full regression 46/46 suites passed, 0 compile errors (45 prior + new farm-plot suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Farming/MigrationFarmPlot.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/FarmPlotSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Harvest yield (`min_yield`/`max_yield` + RNG) and inventory payout; quality tiers, fertilizer, multi-harvest regrow, soil memory (all in Godot `FarmPlot`).
+- A `FarmingManager` owning multiple plots + tilling; a `CropDatabase` (crops.json) for crop defs; calendar-day integration so plots advance on day change (ties to E2 day-loop).
 
 ### E2.5: Menu Mode Drives World-Time / HUD Gate
 
