@@ -416,7 +416,22 @@ Next recommended milestone:
 
 ## Milestone Log
 
-### E4 day-loop: Day-Cycle Orchestrator + Fatigue Driver
+### E8 save parity batch: 6 services now persist
+
+- Date: 2026-06-25 (session 4)
+- Status: Complete (6 round-trip-tested save services; owner-wiring deferred)
+- Owner: Claude
+- Goal: Extend `MigrationSaveOrchestrator` toward full save parity, additively (no schema bump).
+
+Completed (`d3cd74b`→`2634ae4`): each adds an optional, null-safe orchestrator param + a `MigrationSaveData` snapshot + a round-trip test in `SaveOrchestratorSmokeTests`:
+
+- **fatigue** (`MigrationFatigueSystem.LoadFatigue`), **calendar** (`GameClock` via `MigrationCalendarSnapshot` + `SetDate`/`SetTime`), **companion roster** (`CompanionRosterSnapshot`), **home storage** (`HomeStorageSnapshot`), **meta-progression** (`MetaProgressionSnapshot`), **NPC relationships** (`NpcRelationshipSnapshot` — values/factions/reputations).
+- All additive: Godot `save_schema` stays 3, so the `SaveInventorySmokeTests` parity assertion still passes. The orchestrator is now 12-arg (params 7-12 optional). Regression held 70/70.
+- Catalog-style data (upgrade catalog, predefined relationships) is rebuilt at startup, not persisted.
+
+Deferred: NPC memory save (per-NPC weighted memories — most complex); fishing/cooking levels; player position/coins/scene scalars; and the owner-wiring to pass the live services into `SaveGame/LoadGame` (currently 6-arg).
+
+### E4 day-loop: Day-Cycle Orchestrator (5 daily systems) + Fatigue Driver
 
 - Date: 2026-06-25 (session 4)
 - Status: Complete (2 pure-logic slices; owner-wiring deferred)
