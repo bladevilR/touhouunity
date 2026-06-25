@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestWeightedSelectionByRoll();
             TestCatchAddsFishToInventory();
             TestNoFishRegisteredFails();
+            TestFishingLevelBoostsRarePlus();
             Debug.Log("Fishing service smoke tests passed.");
         }
 
@@ -63,6 +64,25 @@ namespace TouhouMigration.Editor.Tests
             MigrationFishCatchResult result = fishing.Catch(max => 0);
             AssertEqual(false, result.Success, "Catching with no registered fish should fail.");
             AssertEqual("no_fish", result.FailureReason, "Failure reason should be no_fish.");
+        }
+
+        private static void TestFishingLevelBoostsRarePlus()
+        {
+            // Godot roll_fish: rare+ fish gain fishing_level * 2 weight; common/uncommon are unaffected.
+            AssertEqual(50, MigrationFishingService.RarityWeight(MigrationFishRarity.Common, 5), "Common is not boosted by fishing level.");
+            AssertEqual(30, MigrationFishingService.RarityWeight(MigrationFishRarity.Uncommon, 5), "Uncommon is not boosted by fishing level.");
+            AssertEqual(25, MigrationFishingService.RarityWeight(MigrationFishRarity.Rare, 5), "Rare weight gains level*2 (15 + 10).");
+            AssertEqual(11, MigrationFishingService.RarityWeight(MigrationFishRarity.Legendary, 3), "Legendary weight gains level*2 (5 + 6).");
+
+            MigrationFishingService fishing = new MigrationFishingService(null);
+            fishing.RegisterFish(new MigrationFishDefinition("carp", MigrationFishRarity.Common, string.Empty)); // 50
+            fishing.RegisterFish(new MigrationFishDefinition("koi", MigrationFishRarity.Rare, string.Empty));     // 15 (+ level*2)
+            AssertEqual(65, fishing.TotalWeight(0), "Total weight at level 0 is 50 + 15.");
+            AssertEqual(75, fishing.TotalWeight(5), "Total weight at level 5 is 50 + 25.");
+
+            // The same roll lands differently once the rare band widens with fishing level.
+            AssertEqual("carp", fishing.Catch(max => 70, 0).FishId, "At level 0 (total 65) a roll of 70 wraps into the common band.");
+            AssertEqual("koi", fishing.Catch(max => 70, 5).FishId, "At level 5 (total 75) a roll of 70 lands in the widened rare band.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

@@ -26,19 +26,38 @@ namespace TouhouMigration.Runtime.Fishing
 
         public static int RarityWeight(MigrationFishRarity rarity)
         {
+            return RarityWeight(rarity, 0);
+        }
+
+        // Godot roll_fish: rare and legendary fish gain fishing_level * 2 weight; common/uncommon don't.
+        public static int RarityWeight(MigrationFishRarity rarity, int fishingLevel)
+        {
+            int baseWeight;
             switch (rarity)
             {
                 case MigrationFishRarity.Common:
-                    return CommonWeight;
+                    baseWeight = CommonWeight;
+                    break;
                 case MigrationFishRarity.Uncommon:
-                    return UncommonWeight;
+                    baseWeight = UncommonWeight;
+                    break;
                 case MigrationFishRarity.Rare:
-                    return RareWeight;
+                    baseWeight = RareWeight;
+                    break;
                 case MigrationFishRarity.Legendary:
-                    return LegendaryWeight;
+                    baseWeight = LegendaryWeight;
+                    break;
                 default:
-                    return CommonWeight;
+                    baseWeight = CommonWeight;
+                    break;
             }
+
+            if (rarity == MigrationFishRarity.Rare || rarity == MigrationFishRarity.Legendary)
+            {
+                baseWeight += Math.Max(0, fishingLevel) * 2;
+            }
+
+            return baseWeight;
         }
 
         public void RegisterFish(MigrationFishDefinition definition)
@@ -51,10 +70,15 @@ namespace TouhouMigration.Runtime.Fishing
 
         public int TotalWeight()
         {
+            return TotalWeight(0);
+        }
+
+        public int TotalWeight(int fishingLevel)
+        {
             int total = 0;
             foreach (MigrationFishDefinition definition in fish)
             {
-                total += RarityWeight(definition.Rarity);
+                total += RarityWeight(definition.Rarity, fishingLevel);
             }
 
             return total;
@@ -63,7 +87,12 @@ namespace TouhouMigration.Runtime.Fishing
         // nextInt(maxExclusive) -> a value in [0, maxExclusive), e.g. System.Random.Next(max).
         public MigrationFishCatchResult Catch(Func<int, int> nextInt)
         {
-            int total = TotalWeight();
+            return Catch(nextInt, 0);
+        }
+
+        public MigrationFishCatchResult Catch(Func<int, int> nextInt, int fishingLevel)
+        {
+            int total = TotalWeight(fishingLevel);
             if (fish.Count == 0 || total <= 0 || nextInt == null)
             {
                 return MigrationFishCatchResult.Fail("no_fish");
@@ -73,7 +102,7 @@ namespace TouhouMigration.Runtime.Fishing
             int cumulative = 0;
             foreach (MigrationFishDefinition definition in fish)
             {
-                cumulative += RarityWeight(definition.Rarity);
+                cumulative += RarityWeight(definition.Rarity, fishingLevel);
                 if (roll < cumulative)
                 {
                     if (!string.IsNullOrWhiteSpace(definition.ItemId))
