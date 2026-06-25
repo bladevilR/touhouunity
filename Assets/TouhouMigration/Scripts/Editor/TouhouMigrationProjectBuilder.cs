@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using TouhouMigration.Runtime.Bootstrap;
@@ -68,6 +69,12 @@ namespace TouhouMigration.Editor
         private const string MeadowsMushroomRoot = MeadowsArtRoot + "/Mushroom";
         private const string MeadowsMountainsRoot = MeadowsArtRoot + "/Mountains";
         private const string MeadowsMaterialsRoot = MeadowsArtRoot + "/Materials";
+        private const string LocationsArtRoot = Root + "/Art/Locations";
+        private const string ClassicScenePath = ScenesRoot + "/PureNatureClassic.unity";
+        private const string JungleScenePath = ScenesRoot + "/PureNatureJungle.unity";
+        private const string IslandsScenePath = ScenesRoot + "/PureNatureIslands.unity";
+        private const string MountainsScenePath = ScenesRoot + "/PureNatureMountains.unity";
+        private const string FantasyForestScenePath = ScenesRoot + "/PureNatureFantasyForest.unity";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -100,6 +107,7 @@ namespace TouhouMigration.Editor
             CreateBambooHomeVerticalSlice();
             CreateHumanVillageVerticalSlice();
             CreatePureNatureMeadowsScene();
+            CreatePureNatureVariantScenes();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
@@ -114,6 +122,7 @@ namespace TouhouMigration.Editor
             EnsureFolders();
             AssetDatabase.Refresh();
             CreatePureNatureMeadowsScene();
+            CreatePureNatureVariantScenes();
             RegisterBuildScenes();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -1532,6 +1541,250 @@ namespace TouhouMigration.Editor
             go.transform.position += shift;
         }
 
+        // ----- Generic PureNature variant scenes (reuse the proven meadow recipe) -----------------
+
+        private readonly struct LocationPropSlot
+        {
+            public LocationPropSlot(string category, string materialKey, float x, float z, float yaw, float height, bool collider)
+            {
+                Category = category;
+                MaterialKey = materialKey;
+                X = x;
+                Z = z;
+                Yaw = yaw;
+                Height = height;
+                Collider = collider;
+            }
+
+            public string Category { get; }      // sub-folder under the art root to discover meshes from
+            public string MaterialKey { get; }   // which flat material to apply
+            public float X { get; }
+            public float Z { get; }
+            public float Yaw { get; }
+            public float Height { get; }
+            public bool Collider { get; }
+        }
+
+        // Shared grove layout (mirrors the validated meadow placement). Slots whose category has no
+        // promoted meshes are simply skipped, so each pack ships whatever species it actually has.
+        private static readonly LocationPropSlot[] LocationGroveLayout =
+        {
+            new LocationPropSlot("Trees", "tree", -30f, -10f, 20f, 16f, true),
+            new LocationPropSlot("Trees", "tree", 35f, -25f, -35f, 17f, true),
+            new LocationPropSlot("Trees", "tree", -48f, 12f, 60f, 16f, true),
+            new LocationPropSlot("Trees", "tree", 20f, 5f, 0f, 18f, true),
+            new LocationPropSlot("Trees", "tree", -14f, 25f, 120f, 17f, true),
+            new LocationPropSlot("Trees", "tree", 45f, 18f, -20f, 18f, true),
+            new LocationPropSlot("Trees", "tree", -55f, -20f, 200f, 15f, true),
+            new LocationPropSlot("Trees", "tree", 30f, 30f, -60f, 17f, true),
+            new LocationPropSlot("Trees", "tree", 52f, 0f, 0f, 19f, true),
+            new LocationPropSlot("Trees", "tree", -8f, -18f, 0f, 5f, false),
+            new LocationPropSlot("Trees", "tree", 10f, -12f, 45f, 5.5f, false),
+            new LocationPropSlot("Rocks", "rock", -22f, -28f, 10f, 3f, true),
+            new LocationPropSlot("Rocks", "rock", 18f, -30f, -15f, 2.8f, true),
+            new LocationPropSlot("Rocks", "rock", -40f, 20f, 30f, 3.5f, true),
+            new LocationPropSlot("Rocks", "rock", 60f, 28f, 30f, 10f, true),
+            new LocationPropSlot("Mushroom", "mushroom", -6f, -8f, 0f, 2.2f, false),
+            new LocationPropSlot("Mushroom", "mushroom", 6f, -2f, 90f, 2.4f, false),
+            new LocationPropSlot("Plants", "grass", -16f, -6f, 0f, 2f, false),
+            new LocationPropSlot("Plants", "grass", 14f, 8f, 0f, 2f, false),
+            new LocationPropSlot("Plants", "flower", -10f, 2f, 0f, 1.8f, false),
+            new LocationPropSlot("Plants", "flower", 22f, -4f, 0f, 1.8f, false),
+            new LocationPropSlot("Plants", "flower", 4f, 14f, 0f, 2.4f, false),
+            new LocationPropSlot("Plants", "flower", -20f, 8f, 0f, 1.6f, false),
+            new LocationPropSlot("Plants", "flower", 26f, 6f, 0f, 2f, false),
+            new LocationPropSlot("Mountains", "mountain", -90f, 150f, 20f, 90f, false),
+            new LocationPropSlot("Mountains", "mountain", 95f, 165f, -30f, 90f, false),
+        };
+
+        private static void CreatePureNatureVariantScenes()
+        {
+            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureClassic, ClassicScenePath, LocationsArtRoot + "/PureNatureClassic",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.85f, 0.45f, 0.45f), new Color(0.34f, 0.46f, 0.24f, 1f), new Color(0.20f, 0.42f, 0.22f, 1f));
+            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureJungle, JungleScenePath, LocationsArtRoot + "/PureNatureJungle",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.30f, 0.75f, 0.40f, 0.45f), new Color(0.18f, 0.38f, 0.16f, 1f), new Color(0.12f, 0.34f, 0.14f, 1f));
+            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureIslands, IslandsScenePath, LocationsArtRoot + "/PureNatureIslands",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.35f, 0.80f, 0.85f, 0.45f), new Color(0.44f, 0.50f, 0.30f, 1f), new Color(0.22f, 0.46f, 0.24f, 1f));
+            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureMountains, MountainsScenePath, LocationsArtRoot + "/PureNatureMountains",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.62f, 0.75f, 0.45f), new Color(0.34f, 0.40f, 0.30f, 1f), new Color(0.22f, 0.40f, 0.24f, 1f));
+            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureFantasyForest, FantasyForestScenePath, LocationsArtRoot + "/PureNatureFantasyForest",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.78f, 0.45f, 0.85f, 0.45f), new Color(0.26f, 0.42f, 0.28f, 1f), new Color(0.18f, 0.40f, 0.26f, 1f));
+        }
+
+        private static void CreatePureNatureVariantScene(
+            string sceneName,
+            string scenePath,
+            string artRoot,
+            MigrationSceneId returnTo,
+            Color portalColor,
+            Color terrainColor,
+            Color treeColor)
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = sceneName;
+
+            GameObject root = new GameObject(sceneName);
+            CreateWorldSimulation(root.transform);
+
+            EnsureAssetFolder(artRoot + "/Materials");
+
+            if (!CreateLocationTerrain(root.transform, artRoot + "/Terrain/terrain.obj", artRoot + "/Materials/Terrain.mat", terrainColor, sceneName + "Terrain"))
+            {
+                CreateBlockoutGround(root.transform, sceneName + "BlockoutGround", new Vector3(12f, 1f, 12f));
+            }
+
+            CreateLocationSetDressing(root.transform, artRoot, treeColor);
+
+            float playerGroundY = SampleGroundY(0f, 0f, 0f);
+            CreateMigrationPlayer(root.transform, new Vector3(0f, playerGroundY + 2f, 0f));
+            CreateFollowCamera(root.transform, new Vector3(0f, 32f, -62f), Quaternion.Euler(26f, 0f, 0f));
+            CreateGlobalUi(root.transform);
+
+            float portalGroundY = SampleGroundY(-16f, -10f, 0f);
+            CreatePortal(root.transform, "BambooHomeReturnPortal", new Vector3(-16f, portalGroundY + 2f, -10f), returnTo, portalColor);
+
+            EditorSceneManager.SaveScene(scene, scenePath);
+        }
+
+        private static bool CreateLocationTerrain(Transform parent, string terrainObjPath, string materialPath, Color color, string name)
+        {
+            Material terrainMaterial = EnsureSimpleMaterial(materialPath, color);
+            GameObject terrain = InstantiateAssetPrefab(terrainObjPath, name, parent, Vector3.zero, Quaternion.identity, Vector3.one);
+            if (terrain == null)
+            {
+                return false;
+            }
+
+            ApplyMaterialToRenderers(terrain, terrainMaterial);
+            AddMeshColliders(terrain);
+            CenterGroundOnPlane(terrain);
+            Physics.SyncTransforms();
+
+            float originSurface = SampleGroundY(0f, 0f, float.NaN);
+            if (!float.IsNaN(originSurface))
+            {
+                terrain.transform.position += new Vector3(0f, -originSurface, 0f);
+                Physics.SyncTransforms();
+            }
+
+            return true;
+        }
+
+        private static void CreateLocationSetDressing(Transform parent, string artRoot, Color treeColor)
+        {
+            GameObject setDressing = new GameObject("SetDressing");
+            setDressing.transform.SetParent(parent);
+            Transform p = setDressing.transform;
+
+            var materials = new Dictionary<string, Material>
+            {
+                ["tree"] = EnsureSimpleMaterial(artRoot + "/Materials/Tree.mat", treeColor),
+                ["grass"] = EnsureSimpleMaterial(artRoot + "/Materials/Grass.mat", new Color(0.30f, 0.55f, 0.26f, 1f)),
+                ["flower"] = EnsureSimpleMaterial(artRoot + "/Materials/Flower.mat", new Color(0.62f, 0.46f, 0.72f, 1f)),
+                ["rock"] = EnsureSimpleMaterial(artRoot + "/Materials/Rock.mat", new Color(0.45f, 0.45f, 0.43f, 1f)),
+                ["mushroom"] = EnsureSimpleMaterial(artRoot + "/Materials/Mushroom.mat", new Color(0.72f, 0.27f, 0.22f, 1f)),
+                ["mountain"] = EnsureSimpleMaterial(artRoot + "/Materials/Mountain.mat", new Color(0.38f, 0.40f, 0.43f, 1f)),
+            };
+
+            // Auto-discover the promoted meshes per category and round-robin them across the slots.
+            var meshesByCategory = new Dictionary<string, List<string>>();
+            var cursor = new Dictionary<string, int>();
+            var counter = new Dictionary<string, int>();
+
+            foreach (LocationPropSlot slot in LocationGroveLayout)
+            {
+                if (!meshesByCategory.TryGetValue(slot.Category, out List<string> meshes))
+                {
+                    meshes = DiscoverCategoryMeshes(artRoot + "/" + slot.Category);
+                    meshesByCategory[slot.Category] = meshes;
+                    cursor[slot.Category] = 0;
+                }
+
+                if (meshes.Count == 0)
+                {
+                    continue;
+                }
+
+                int index = cursor[slot.Category];
+                cursor[slot.Category] = index + 1;
+                string assetPath = meshes[index % meshes.Count];
+
+                counter.TryGetValue(slot.Category, out int n);
+                counter[slot.Category] = n + 1;
+                string instanceName = $"{slot.Category}_{n + 1}";
+
+                Material material = materials.TryGetValue(slot.MaterialKey, out Material m) ? m : materials["tree"];
+                InstantiateLocationProp(assetPath, instanceName, p, slot.X, slot.Z, slot.Yaw, slot.Height, material, slot.Collider);
+            }
+        }
+
+        private static List<string> DiscoverCategoryMeshes(string folder)
+        {
+            var paths = new List<string>();
+            if (!AssetDatabase.IsValidFolder(folder))
+            {
+                return paths;
+            }
+
+            foreach (string guid in AssetDatabase.FindAssets("t:Model", new[] { folder }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    paths.Add(path);
+                }
+            }
+
+            paths.Sort(System.StringComparer.Ordinal);
+            return paths;
+        }
+
+        private static GameObject InstantiateLocationProp(
+            string assetPath,
+            string instanceName,
+            Transform parent,
+            float x,
+            float z,
+            float yaw,
+            float targetHeight,
+            Material material,
+            bool addCollider)
+        {
+            GameObject instance = InstantiateAssetPrefab(assetPath, instanceName, parent, Vector3.zero, Quaternion.Euler(0f, yaw, 0f), Vector3.one);
+            if (instance == null)
+            {
+                return null;
+            }
+
+            ApplyMaterialToRenderers(instance, material);
+            float groundY = SampleGroundY(x, z, 0f);
+            NormalizeVisualBounds(instance, new Vector3(x, groundY, z), targetHeight);
+            if (addCollider)
+            {
+                AddMeshColliders(instance);
+            }
+
+            return instance;
+        }
+
+        // Creates a nested Asset folder chain (AssetDatabase-aware) if it does not exist yet.
+        private static void EnsureAssetFolder(string assetFolderPath)
+        {
+            if (AssetDatabase.IsValidFolder(assetFolderPath))
+            {
+                return;
+            }
+
+            string parent = Path.GetDirectoryName(assetFolderPath).Replace("\\", "/");
+            string leaf = Path.GetFileName(assetFolderPath);
+            if (!AssetDatabase.IsValidFolder(parent))
+            {
+                EnsureAssetFolder(parent);
+            }
+
+            AssetDatabase.CreateFolder(parent, leaf);
+        }
+
         private static bool CreateHumanVillageTerrain(Transform parent)
         {
             Material terrainMaterial = EnsureSimpleMaterial(
@@ -2594,7 +2847,12 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(TitleScreenScenePath, true),
                 new EditorBuildSettingsScene(BambooHomeScenePath, true),
                 new EditorBuildSettingsScene(HumanVillageScenePath, true),
-                new EditorBuildSettingsScene(PureNatureMeadowsScenePath, true)
+                new EditorBuildSettingsScene(PureNatureMeadowsScenePath, true),
+                new EditorBuildSettingsScene(ClassicScenePath, true),
+                new EditorBuildSettingsScene(JungleScenePath, true),
+                new EditorBuildSettingsScene(IslandsScenePath, true),
+                new EditorBuildSettingsScene(MountainsScenePath, true),
+                new EditorBuildSettingsScene(FantasyForestScenePath, true)
             };
         }
 

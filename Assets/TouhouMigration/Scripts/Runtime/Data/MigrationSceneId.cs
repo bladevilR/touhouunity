@@ -6,6 +6,11 @@ namespace TouhouMigration.Runtime.Data
         TitleScreen,
         BambooHomeVerticalSlice,
         HumanVillageVerticalSlice,
-        PureNatureMeadows
+        PureNatureMeadows,
+        PureNatureClassic,
+        PureNatureJungle,
+        PureNatureIslands,
+        PureNatureMountains,
+        PureNatureFantasyForest
     }
 }

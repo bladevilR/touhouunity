@@ -20,4 +20,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouhouMigration/Scenes/PureNatureMeadows.unity
     guid: 4c2f21e9e2c6940d0a82c6a61579d494
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/PureNatureClassic.unity
+    guid: fe142678790634e2e8bfde97ad2cf8b0
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/PureNatureJungle.unity
+    guid: 78c92953ca2f342cfbe598da24d241e1
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/PureNatureIslands.unity
+    guid: 1367dc58bd64e45f9850966a043be741
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/PureNatureMountains.unity
+    guid: d0a5c62e216a84cf98321b01152af222
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/PureNatureFantasyForest.unity
+    guid: 0d171b634de624f6eb490c5d2a5f1b33
   m_configObjects: {}
