@@ -6,6 +6,7 @@ using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Data;
 using TouhouMigration.Runtime.Foundation;
+using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Services;
 using TouhouMigration.Runtime.Settings;
@@ -2049,9 +2050,29 @@ namespace TouhouMigration.Editor
             GameObject props = new GameObject("Props");
             props.transform.SetParent(root.transform);
             CreateBambooHomeProps(props.transform);
+            CreateBambooHomeBed(root.transform);
             CreatePortal(root.transform, "TownPortal", new Vector3(-10f, 1f, 15f), MigrationSceneId.HumanVillageVerticalSlice, new Color(0.2f, 0.55f, 1f, 0.45f));
 
             EditorSceneManager.SaveScene(scene, scenePath);
+        }
+
+        // A bed prop with a MigrationBedInteractor: pressing the interact key in range sleeps to the
+        // next morning (advance day + restore fatigue) via the global UI owner.
+        private static void CreateBambooHomeBed(Transform parent)
+        {
+            GameObject bed = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            bed.name = "Bed";
+            bed.transform.SetParent(parent);
+            bed.transform.position = new Vector3(-3.2f, 0.4f, -2.4f);
+            bed.transform.localScale = new Vector3(1.4f, 0.6f, 2.6f);
+
+            Renderer renderer = bed.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = new Material(Shader.Find("Standard")) { color = new Color(0.62f, 0.5f, 0.72f, 1f) };
+            }
+
+            bed.AddComponent<MigrationBedInteractor>();
         }
 
         // Combat/boss arenas: a walled flat arena + training dummies or a Cirno boss marker. The full
