@@ -20,6 +20,11 @@ namespace TouhouMigration.Editor.Tests
             TestSetAndGetProgress();
             TestStoryEventIsExclusiveAndEndCompletes();
             TestCancelledEventCanRetrigger();
+            TestCooldownBlocksRetriggerWithinWindow();
+            TestForceTriggerBypassesCooldown();
+            TestGetCooldownRemainingAndClear();
+            TestStoryEventBypassesCooldown();
+            TestNoClockMeansNoCooldown();
             Debug.Log("Migration event manager smoke tests passed.");
         }
 
@@ -101,6 +106,58 @@ namespace TouhouMigration.Editor.Tests
             events.CancelEvent("e1");
             AssertEqual(true, events.TriggerEvent("e1"), "A cancelled (inactive) event can be triggered again.");
             AssertEqual(true, events.IsEventActive("e1"), "The re-triggered event is active again.");
+        }
+
+        private static void TestCooldownBlocksRetriggerWithinWindow()
+        {
+            double[] now = { 0.0 };
+            MigrationEventManager events = new MigrationEventManager(() => now[0]);
+            events.TriggerEvent("e1");   // cooldown recorded at t=0
+            events.CancelEvent("e1");    // inactive, cooldown remains
+            now[0] = 100.0;              // within the 300s window
+            AssertEqual(false, events.TriggerEvent("e1"), "An event on cooldown cannot be re-triggered.");
+            now[0] = 400.0;              // past the window
+            AssertEqual(true, events.TriggerEvent("e1"), "Once the cooldown elapses, the event can be triggered.");
+        }
+
+        private static void TestForceTriggerBypassesCooldown()
+        {
+            double[] now = { 0.0 };
+            MigrationEventManager events = new MigrationEventManager(() => now[0]);
+            events.TriggerEvent("e1");
+            events.CancelEvent("e1");
+            now[0] = 100.0;
+            AssertEqual(true, events.TriggerEvent("e1", true), "A forced trigger bypasses the cooldown.");
+        }
+
+        private static void TestGetCooldownRemainingAndClear()
+        {
+            double[] now = { 0.0 };
+            MigrationEventManager events = new MigrationEventManager(() => now[0]);
+            events.TriggerEvent("e1");
+            now[0] = 100.0;
+            AssertEqual(200.0, events.GetCooldownRemaining("e1"), "Cooldown remaining is the window minus elapsed.");
+            events.ClearCooldown("e1");
+            AssertEqual(0.0, events.GetCooldownRemaining("e1"), "Clearing the cooldown zeroes the remaining time.");
+        }
+
+        private static void TestStoryEventBypassesCooldown()
+        {
+            double[] now = { 0.0 };
+            MigrationEventManager events = new MigrationEventManager(() => now[0]);
+            events.TriggerEvent("s1");
+            events.CancelEvent("s1");
+            now[0] = 100.0; // s1 is on cooldown
+            AssertEqual(true, events.StartStoryEvent("s1"), "A story event force-triggers past the cooldown.");
+            AssertEqual(true, events.HasActiveStoryEvent(), "The story event is running.");
+        }
+
+        private static void TestNoClockMeansNoCooldown()
+        {
+            MigrationEventManager events = new MigrationEventManager(); // no clock
+            events.TriggerEvent("e1");
+            events.CancelEvent("e1");
+            AssertEqual(true, events.TriggerEvent("e1"), "Without a clock, events have no cooldown.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
