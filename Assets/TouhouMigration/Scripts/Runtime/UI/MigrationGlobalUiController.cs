@@ -7,9 +7,11 @@ using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Farming;
 using TouhouMigration.Runtime.Fishing;
 using TouhouMigration.Runtime.Foundation;
+using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Narrative;
 using TouhouMigration.Runtime.Player;
+using TouhouMigration.Runtime.Progression;
 using TouhouMigration.Runtime.Quest;
 using TouhouMigration.Runtime.Save;
 using TouhouMigration.Runtime.Settings;
@@ -34,6 +36,12 @@ namespace TouhouMigration.Runtime.UI
         private MigrationPlayerProgressService playerProgressService;
         private HumanityService humanityService;
         private MigrationStoryFlagService storyFlagService;
+        private MigrationFatigueSystem fatigueSystem;
+        private MigrationCompanionRoster companionRoster;
+        private MigrationHomeStorage homeStorage;
+        private MigrationMetaProgression metaProgression;
+        private MigrationNpcRelationshipNetwork npcRelationshipNetwork;
+        private MigrationNpcMemorySystem npcMemorySystem;
         private DialogueDatabase dialogueDatabase;
         private DialogueRuntimeFacade dialogueFacade;
         private GiftDatabase giftDatabase;
@@ -361,14 +369,23 @@ namespace TouhouMigration.Runtime.UI
             itemUseService = new ItemUseService(inventoryService, itemDatabase, cookingBuffService, playerHealthRuntime);
             humanityService = new HumanityService();
             storyFlagService = new MigrationStoryFlagService();
+            fatigueSystem = new MigrationFatigueSystem();
+            companionRoster = new MigrationCompanionRoster();
+            homeStorage = new MigrationHomeStorage();
+            metaProgression = new MigrationMetaProgression();
+            npcRelationshipNetwork = new MigrationNpcRelationshipNetwork();
+            npcMemorySystem = new MigrationNpcMemorySystem();
             dialogueEffectRouter = new DialogueEffectRouter(socialBondService, questDeliveryService);
             dialogueEffectRouter.BindInventory(inventoryService);
             dialogueEffectRouter.BindHumanity(humanityService);
             dialogueEffectRouter.BindStoryFlags(storyFlagService);
 
             saveService = new MigrationSaveService(null);
+            // clock/calendar save is wired alongside the day-cycle once worldSimulation is resolved (see Awake).
             saveOrchestrator = new MigrationSaveOrchestrator(
-                inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService, humanityService);
+                inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService, humanityService,
+                fatigue: fatigueSystem, companions: companionRoster, homeStorage: homeStorage, meta: metaProgression,
+                relationships: npcRelationshipNetwork, npcMemory: npcMemorySystem);
             gameState = new MigrationGameStateMachine(MigrationGameStateMode.Overworld);
             gameState.ModeChanged += OnGameStateModeChanged;
             ApplyWorldTimeScaleForMode(gameState.CurrentMode);
