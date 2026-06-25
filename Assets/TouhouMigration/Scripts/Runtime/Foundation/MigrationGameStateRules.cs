@@ -28,5 +28,26 @@ namespace TouhouMigration.Runtime.Foundation
                 || mode == MigrationGameStateMode.Dialogue
                 || mode == MigrationGameStateMode.Cutscene;
         }
+
+        // Sleeping fast-forwards the world clock (Godot TimeManager.time_scale intent).
+        public const float SleepingTimeScale = 12f;
+
+        // World-clock speed multiplier for the active mode: 0 freezes (Menu/Dialogue/Cutscene),
+        // Sleeping fast-forwards, everything else runs normally. Stays consistent with
+        // FreezesWorldTime: the scale is exactly 0 iff that mode freezes world time.
+        public static float WorldTimeScale(MigrationGameStateMode mode)
+        {
+            if (FreezesWorldTime(mode))
+            {
+                return 0f;
+            }
+
+            if (mode == MigrationGameStateMode.Sleeping)
+            {
+                return SleepingTimeScale;
+            }
+
+            return 1f;
+        }
     }
 }

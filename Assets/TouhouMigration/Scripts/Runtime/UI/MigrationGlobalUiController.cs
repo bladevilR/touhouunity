@@ -48,6 +48,7 @@ namespace TouhouMigration.Runtime.UI
         private MigrationSaveService saveService;
         private MigrationSaveOrchestrator saveOrchestrator;
         private MigrationGameStateMachine gameState;
+        private WorldSimulationBehaviour worldSimulation;
         private DialogueEffectRouter dialogueEffectRouter;
 
         public bool BlocksGameplayInput =>
@@ -185,6 +186,7 @@ namespace TouhouMigration.Runtime.UI
             projectileSettlement ??= GetComponent<MigrationProjectileSpecialSettlement>();
 
             WorldSimulationBehaviour simulation = FindAnyObjectByType<WorldSimulationBehaviour>();
+            worldSimulation = simulation;
             hudController?.Bind(settings, simulation, inventoryService, itemDatabase, playerProgressService, phoenixGaugeRuntime);
             unifiedMenuController?.Bind(
                 settings,
@@ -301,6 +303,8 @@ namespace TouhouMigration.Runtime.UI
             saveOrchestrator = new MigrationSaveOrchestrator(
                 inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService);
             gameState = new MigrationGameStateMachine(MigrationGameStateMode.Overworld);
+            gameState.ModeChanged += OnGameStateModeChanged;
+            ApplyWorldTimeScaleForMode(gameState.CurrentMode);
             if (dialogueFacade != null)
             {
                 dialogueFacade.ActionRequested += OnDialogueActionRequested;
@@ -463,6 +467,18 @@ namespace TouhouMigration.Runtime.UI
         private void OnDialogueActionRequested(string actionId, Dictionary<string, object> payload)
         {
             dialogueEffectRouter?.ApplyAction(actionId, payload);
+        }
+
+        // E2: gate world-time on the active game-state mode. Dialogue/Menu/Cutscene freeze the clock,
+        // Sleeping fast-forwards it; the existing Dialogue Push/Pop already drives ModeChanged here.
+        private void OnGameStateModeChanged(MigrationGameStateMode previous, MigrationGameStateMode current)
+        {
+            ApplyWorldTimeScaleForMode(current);
+        }
+
+        private void ApplyWorldTimeScaleForMode(MigrationGameStateMode mode)
+        {
+            worldSimulation?.SetExternalTimeScale(MigrationGameStateRules.WorldTimeScale(mode));
         }
 
         private Dictionary<string, object> BuildDialogueContext(string npcId)

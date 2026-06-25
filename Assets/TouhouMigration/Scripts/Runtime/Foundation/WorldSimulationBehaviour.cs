@@ -5,6 +5,7 @@ namespace TouhouMigration.Runtime.Foundation
     public sealed class WorldSimulationBehaviour : MonoBehaviour
     {
         [SerializeField] private bool advanceClock = true;
+        private float externalTimeScale = 1f;
         [SerializeField] private DayNightLightingController lightingController;
 
         private int lastSyncedDay = -1;
@@ -60,6 +61,13 @@ namespace TouhouMigration.Runtime.Foundation
             ApplyLighting();
         }
 
+        // E2 game-state gate: the owner sets this from MigrationGameStateRules.WorldTimeScale(mode) so
+        // Dialogue/Menu/Cutscene freeze the world clock and Sleeping fast-forwards it. Default 1 (normal).
+        public void SetExternalTimeScale(float scale)
+        {
+            externalTimeScale = Mathf.Max(0f, scale);
+        }
+
         private void Awake()
         {
             Initialize();
@@ -74,8 +82,14 @@ namespace TouhouMigration.Runtime.Foundation
                 return;
             }
 
-            float gameHoursAdvanced = Time.deltaTime * Clock.TimeScale / Clock.RealSecondsPerGameMinute / GameClock.MinutesPerHour;
-            Clock.AdvanceSeconds(Time.deltaTime);
+            float scaledDelta = Time.deltaTime * externalTimeScale;
+            if (scaledDelta <= 0f)
+            {
+                return;
+            }
+
+            float gameHoursAdvanced = scaledDelta * Clock.TimeScale / Clock.RealSecondsPerGameMinute / GameClock.MinutesPerHour;
+            Clock.AdvanceSeconds(scaledDelta);
             Weather.AdvanceHours(gameHoursAdvanced);
             SyncWeather(force: false);
             ApplyLighting();

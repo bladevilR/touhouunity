@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 08:52 CST
+Last updated: 2026-06-25 09:08 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 08:52 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E5.2, dialogue humanity stat routing (session 2). Prior milestone M58 (Perfect Freeze Phase-Outcome Presenter) plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E2.4, world-time gating by game-state mode (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,41 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E2.4: World-Time Gating By Game-State Mode
+
+- Date: 2026-06-25 09:08 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Make the existing game-state machine actually gate the world clock. Session 1 added `MigrationGameStateRules` but nothing applied them, so entering Dialogue did not stop time.
+
+Completed:
+
+- `MigrationGameStateRules.WorldTimeScale(mode)` (pure): 0 for Menu/Dialogue/Cutscene (frozen), `SleepingTimeScale` (×12, Godot `TimeManager.time_scale` intent) for Sleeping, ×1 otherwise. Invariant: scale == 0 iff `FreezesWorldTime(mode)`.
+- `WorldSimulationBehaviour.SetExternalTimeScale(float)` + an `externalTimeScale` applied to clock/weather advancement (default 1 = behavior-preserving; 0 freezes, >1 fast-forwards).
+- `MigrationGlobalUiController` subscribes `gameState.ModeChanged` and applies `WorldTimeScale(mode)` to the world sim. The existing Dialogue Push/Pop now freezes/resumes the world clock with no extra wiring.
+
+TDD (red -> green):
+
+- Extended `GameStateRulesSmokeTests` with `TestWorldTimeScaleModes` (per-mode scale + the scale-0-iff-frozen invariant across all modes).
+- RED: focused run failed to compile on missing `WorldTimeScale` / `SleepingTimeScale` (CS0117).
+- GREEN: full regression 44/44 suites passed, 0 compile errors (suite count unchanged — extended in place). `GlobalUiSmokeTests` + `FoundationSmokeTests` gate the owner/sim changes.
+
+E1.5 investigation (recorded, not yet actioned):
+
+- The MokouValidation clips are already Humanoid, but `Art/Characters/Mokou/Models/mokou.glb` imports via the glTF ScriptedImporter (glTFast) and has **no Mecanim Humanoid avatar**, so the humanoid Mixamo clips can't retarget onto Mokou. E1.5's player-animation visual work is blocked until the model gets a Humanoid avatar (convert `mokou.glb`→FBX, or source a humanoid-rigged Mokou FBX). See `CURRENT_HANDOFF.md`.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Foundation/MigrationGameStateRules.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/Foundation/WorldSimulationBehaviour.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/GameStateRulesSmokeTests.cs`
+
+Known follow-ups:
+
+- Combat/Sleeping/Menu modes are not yet pushed from gameplay; only Dialogue drives `ModeChanged` today. The Sleeping fast-forward scale exists but no sleep flow triggers it yet.
+- Pre-existing: `WorldSimulationBehaviour` advances the clock by real deltaTime (now ×`externalTimeScale`); `Clock.TimeScale` still only affects weather-hour bookkeeping. Left as-is.
 
 ### E5.2: Dialogue Humanity Stat Routing
 
