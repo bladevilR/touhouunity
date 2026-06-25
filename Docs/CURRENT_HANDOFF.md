@@ -15,7 +15,7 @@ Standing goal: **complete all migration**, driven autonomously, user reviews fin
 
 - Tree clean, `main` in sync with origin. ~127 runtime C# files; **50 smoke-test suites**.
 - Last full regression: **50/50 green** (`MigrationSmokeTestRunner.RunAll`, session 2) — through the E5.6 time-of-day slice; 0 compile errors. (Session-2 added suites: E5.2 dialogue-humanity, E4.1 shop-service, E4.2 farm-plot, E4.3 shop-hours, E5.3 dialogue-bond, E5.4 story-flag, E5.6 time-of-day (44th–50th); E2.4/E8.1/E8.2 extended `GameStateRulesSmokeTests`/`SaveOrchestratorSmokeTests`/`StoryFlagServiceSmokeTests` in place; E2.5/E5.5 are owner-only wiring gated by `GlobalUiSmokeTests`.)
-- 4 scenes (Bootstrap/BambooHome/HumanVillage/TitleScreen) **play-validated runtime-clean** via `MigrationPlayModeValidator` (note: it can't capture Screen-Space-Overlay UI, so UI scenes screenshot black — a capture limitation, not a game error).
+- 4 scenes (Bootstrap/BambooHome/HumanVillage/TitleScreen) **play-validated runtime-clean** via `MigrationPlayModeValidator` — **re-confirmed at the end of session 2** (Scenes: 4, Failed: False, 0 errors each) with all session-2 owner changes active (menu-mode `Update` polling, world-time scaling, `ModeChanged` subscription, humanity/story-flag context wiring). (Note: it can't capture Screen-Space-Overlay UI, so UI scenes screenshot black — a capture limitation, not a game error.)
 - Completion: **~13% by roadmap structure.** This is a multi-session, weeks-scale effort.
 
 ## Done (session 1)
