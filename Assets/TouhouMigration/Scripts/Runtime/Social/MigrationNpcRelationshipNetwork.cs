@@ -148,5 +148,79 @@ namespace TouhouMigration.Runtime.Social
             string b = npc2 ?? string.Empty;
             return string.CompareOrdinal(a, b) <= 0 ? a + "_" + b : b + "_" + a;
         }
+
+        // Snapshot the mutable runtime state for save/load: modified relationship values, faction
+        // membership, and faction reputations. The predefined relationship catalog (RegisterRelationship)
+        // is rebuilt at startup and not persisted. Parallel lists keep it JsonUtility-safe.
+        public NpcRelationshipSnapshot CreateSnapshot()
+        {
+            NpcRelationshipSnapshot snapshot = new NpcRelationshipSnapshot();
+            foreach (KeyValuePair<string, int> entry in values)
+            {
+                snapshot.valueKeys.Add(entry.Key);
+                snapshot.valueAmounts.Add(entry.Value);
+            }
+
+            foreach (KeyValuePair<string, int> entry in npcFactions)
+            {
+                snapshot.factionNpcs.Add(entry.Key);
+                snapshot.factionIds.Add(entry.Value);
+            }
+
+            foreach (KeyValuePair<int, int> entry in factionReputations)
+            {
+                snapshot.reputationFactions.Add(entry.Key);
+                snapshot.reputationValues.Add(entry.Value);
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(NpcRelationshipSnapshot snapshot)
+        {
+            values.Clear();
+            npcFactions.Clear();
+            factionReputations.Clear();
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            int valueCount = Math.Min(snapshot.valueKeys?.Count ?? 0, snapshot.valueAmounts?.Count ?? 0);
+            for (int i = 0; i < valueCount; i++)
+            {
+                if (!string.IsNullOrEmpty(snapshot.valueKeys[i]))
+                {
+                    values[snapshot.valueKeys[i]] = snapshot.valueAmounts[i];
+                }
+            }
+
+            int factionCount = Math.Min(snapshot.factionNpcs?.Count ?? 0, snapshot.factionIds?.Count ?? 0);
+            for (int i = 0; i < factionCount; i++)
+            {
+                if (!string.IsNullOrEmpty(snapshot.factionNpcs[i]))
+                {
+                    npcFactions[snapshot.factionNpcs[i]] = snapshot.factionIds[i];
+                }
+            }
+
+            int reputationCount = Math.Min(snapshot.reputationFactions?.Count ?? 0, snapshot.reputationValues?.Count ?? 0);
+            for (int i = 0; i < reputationCount; i++)
+            {
+                factionReputations[snapshot.reputationFactions[i]] = snapshot.reputationValues[i];
+            }
+        }
+    }
+
+    // Persisted NPC relationship runtime state: modified pair values + faction membership + reputations.
+    [Serializable]
+    public sealed class NpcRelationshipSnapshot
+    {
+        public List<string> valueKeys = new List<string>();
+        public List<int> valueAmounts = new List<int>();
+        public List<string> factionNpcs = new List<string>();
+        public List<int> factionIds = new List<int>();
+        public List<int> reputationFactions = new List<int>();
+        public List<int> reputationValues = new List<int>();
     }
 }

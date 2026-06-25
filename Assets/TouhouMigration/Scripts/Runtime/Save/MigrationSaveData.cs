@@ -34,6 +34,7 @@ namespace TouhouMigration.Runtime.Save
         public CompanionRosterSnapshot companions = new CompanionRosterSnapshot();
         public HomeStorageSnapshot home_storage = new HomeStorageSnapshot();
         public MetaProgressionSnapshot meta_progression = new MetaProgressionSnapshot();
+        public NpcRelationshipSnapshot npc_relationships = new NpcRelationshipSnapshot();
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -169,6 +170,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => meta_progression;
             set => meta_progression = value ?? new MetaProgressionSnapshot();
+        }
+
+        public NpcRelationshipSnapshot NpcRelationships
+        {
+            get => npc_relationships;
+            set => npc_relationships = value ?? new NpcRelationshipSnapshot();
         }
 
         public static MigrationSaveData CreateDefault()

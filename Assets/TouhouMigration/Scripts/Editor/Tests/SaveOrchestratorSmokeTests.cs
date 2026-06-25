@@ -22,6 +22,7 @@ namespace TouhouMigration.Editor.Tests
             TestCompanionRosterRoundTripsThroughSaveData();
             TestHomeStorageRoundTripsThroughSaveData();
             TestMetaProgressionRoundTripsThroughSaveData();
+            TestNpcRelationshipRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -138,6 +139,27 @@ namespace TouhouMigration.Editor.Tests
             applyOrchestrator.Apply(data);
             AssertEqual(150, restored.Currency, "Apply restores the meta currency.");
             AssertEqual(1, restored.GetUpgradeLevel("hp_boost"), "Apply restores the purchased upgrade level.");
+        }
+
+        private static void TestNpcRelationshipRoundTripsThroughSaveData()
+        {
+            MigrationNpcRelationshipNetwork source = new MigrationNpcRelationshipNetwork();
+            source.ModifyRelationship("reimu", "marisa", 30);
+            source.SetNpcFaction("reimu", 2);
+            source.ModifyFactionReputation(2, 10);
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+
+            MigrationNpcRelationshipNetwork restored = new MigrationNpcRelationshipNetwork();
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+
+            AssertEqual(80, restored.GetRelationshipValue("reimu", "marisa"), "Apply restores modified relationship values.");
+            AssertEqual(2, restored.GetNpcFaction("reimu"), "Apply restores faction membership.");
+            AssertEqual(60, restored.GetFactionReputation(2), "Apply restores faction reputation.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()
