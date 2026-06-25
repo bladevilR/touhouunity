@@ -28,6 +28,7 @@ namespace TouhouMigration.Runtime.Save
         public int total_kills;
         public int humanity = 100;
         public double fatigue;
+        public MigrationCalendarSnapshot calendar = new MigrationCalendarSnapshot();
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -141,6 +142,12 @@ namespace TouhouMigration.Runtime.Save
             set => fatigue = Math.Clamp(value, 0.0, 100.0);
         }
 
+        public MigrationCalendarSnapshot Calendar
+        {
+            get => calendar;
+            set => calendar = value ?? new MigrationCalendarSnapshot();
+        }
+
         public static MigrationSaveData CreateDefault()
         {
             return new MigrationSaveData
@@ -163,6 +170,17 @@ namespace TouhouMigration.Runtime.Save
         public float x;
         public float y;
         public float z;
+    }
+
+    // Persisted GameClock state (calendar + time of day) so a save reloads at the same date/time.
+    [Serializable]
+    public sealed class MigrationCalendarSnapshot
+    {
+        public int day = 1;
+        public string season = "Spring";
+        public int year = 1;
+        public int hour = 7;
+        public int minute;
     }
 
     public sealed class MigrationSaveInfo

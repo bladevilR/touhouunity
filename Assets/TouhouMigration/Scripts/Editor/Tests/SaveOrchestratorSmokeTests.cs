@@ -1,4 +1,5 @@
 using System;
+using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Save;
 using TouhouMigration.Runtime.Social;
@@ -15,6 +16,7 @@ namespace TouhouMigration.Editor.Tests
             TestBondStateRoundTripsThroughSaveData();
             TestHumanityRoundTripsThroughSaveData();
             TestFatigueRoundTripsThroughSaveData();
+            TestCalendarRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -39,6 +41,32 @@ namespace TouhouMigration.Editor.Tests
             applyOrchestrator.Apply(data);
             AssertEqual(75.0, restored.CurrentFatigue, "Apply should restore captured fatigue into the live service.");
             AssertEqual(false, restored.IsExhausted, "Restored fatigue below the exhausted threshold should not latch exhausted.");
+        }
+
+        private static void TestCalendarRoundTripsThroughSaveData()
+        {
+            GameClock source = new GameClock();
+            source.SetDate(15, "Autumn", 3);
+            source.SetTime(14, 30);
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+            AssertEqual(15, data.calendar.day, "Capture stores the calendar day.");
+            AssertEqual("Autumn", data.calendar.season, "Capture stores the season.");
+            AssertEqual(3, data.calendar.year, "Capture stores the year.");
+            AssertEqual(14, data.calendar.hour, "Capture stores the hour.");
+            AssertEqual(30, data.calendar.minute, "Capture stores the minute.");
+
+            GameClock restored = new GameClock();
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+            AssertEqual(15, restored.Day, "Apply restores the day.");
+            AssertEqual(GameSeason.Autumn, restored.Season, "Apply restores the season.");
+            AssertEqual(3, restored.Year, "Apply restores the year.");
+            AssertEqual(14, restored.Hour, "Apply restores the hour.");
+            AssertEqual(30, restored.Minute, "Apply restores the minute.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()

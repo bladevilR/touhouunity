@@ -1,4 +1,5 @@
 using TouhouMigration.Runtime.Cooking;
+using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Social;
@@ -19,6 +20,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly QuestDeliveryService quests;
         private readonly HumanityService humanity;
         private readonly MigrationFatigueSystem fatigue;
+        private readonly GameClock clock;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -27,7 +29,8 @@ namespace TouhouMigration.Runtime.Save
             SocialBondService bonds,
             QuestDeliveryService quests,
             HumanityService humanity,
-            MigrationFatigueSystem fatigue = null)
+            MigrationFatigueSystem fatigue = null,
+            GameClock clock = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -36,6 +39,7 @@ namespace TouhouMigration.Runtime.Save
             this.quests = quests;
             this.humanity = humanity;
             this.fatigue = fatigue;
+            this.clock = clock;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -68,6 +72,17 @@ namespace TouhouMigration.Runtime.Save
             if (fatigue != null)
             {
                 data.Fatigue = fatigue.CurrentFatigue;
+            }
+            if (clock != null)
+            {
+                data.Calendar = new MigrationCalendarSnapshot
+                {
+                    day = clock.Day,
+                    season = clock.Season.ToString(),
+                    year = clock.Year,
+                    hour = clock.Hour,
+                    minute = clock.Minute,
+                };
             }
             return data;
         }
@@ -105,6 +120,11 @@ namespace TouhouMigration.Runtime.Save
             if (fatigue != null)
             {
                 fatigue.LoadFatigue(data.Fatigue);
+            }
+            if (clock != null && data.calendar != null)
+            {
+                clock.SetDate(data.calendar.day, data.calendar.season, data.calendar.year);
+                clock.SetTime(data.calendar.hour, data.calendar.minute);
             }
         }
     }
