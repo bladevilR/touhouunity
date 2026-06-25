@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 11:16 CST
+Last updated: 2026-06-25 11:39 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 11:16 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.13, NPC manager schedules from the roster — end-to-end (session 2). Earlier session-2 work: E3.1 (NPC roster loaded), E4.1-E4.12 (shop + farming end-to-end, fishing), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.14, fish database — fish catalog → fishing service, end-to-end (session 2). All three life-sim catalogs (crops/shops/fish) now load + register into their services; the NPC roster derives manager schedules. Earlier session-2 work: E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end, fishing), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,36 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.14: Fish Database (catalog -> fishing service, end-to-end)
+
+- Date: 2026-06-25 11:39 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Complete fishing's data layer (symmetric to crops/shops): port the Godot fish catalog (15 fish, GDScript-only) to `fish.json` and load + register it into the fishing service.
+
+Completed:
+
+- Created `Assets/TouhouMigration/Data/Fishing/fish.json` (15 fish: id + rarity, **extracted programmatically** from Godot `FishDatabase.FISH` via awk — accurate, no hand-typing).
+- New `MigrationFishDatabase` (`Runtime/Fishing/`): `LoadFromPath` parses `{"fish": {id: {rarity}}}` via `MigrationJson` into `MigrationFishDefinition` (rarity parsed `COMMON`->`Common` with `Enum.TryParse`; item id defaults to the fish id). `GetFish` / `GetAllFish` / `FishCount` / `Errors`. Mirrors the `ItemDatabase` loader.
+- `MigrationFishingService.RegisterFrom(database)` registers all catalog fish as catchable.
+
+TDD (red -> green):
+
+- New `FishDatabaseSmokeTests` (loads 15 fish; `crucian_carp` common + item id = id; `phantom_fish` legendary; unknown -> null; `RegisterFrom` gives the service catchable fish + a catch succeeds).
+- RED: focused run failed to compile on the missing `MigrationFishDatabase` (CS0246).
+- GREEN: full regression 59/59 suites passed, 0 compile errors (58 prior + new fish-database suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Data/Fishing/fish.json` (new, ported from Godot)
+- `Assets/TouhouMigration/Scripts/Runtime/Fishing/MigrationFishDatabase.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Fishing/MigrationFishingService.cs` (`RegisterFrom`)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/FishDatabaseSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Port spot/season/hour/size from the Godot `FISH` dict (only id + rarity ported so far); a fishing spot/minigame + owner wiring. **All three life-sim catalogs (crops, shops, fish) now load + register into their services/managers.**
 
 ### E4.13: NPC Manager Schedules From The Roster (end-to-end)
 

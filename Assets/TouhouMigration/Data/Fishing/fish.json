@@ -1,0 +1,19 @@
+{
+  "fish": {
+    "crucian_carp": {"rarity": "COMMON"},
+    "carp": {"rarity": "COMMON"},
+    "catfish": {"rarity": "COMMON"},
+    "sweetfish": {"rarity": "UNCOMMON"},
+    "rainbow_trout": {"rarity": "UNCOMMON"},
+    "eel": {"rarity": "UNCOMMON"},
+    "loach": {"rarity": "COMMON"},
+    "pufferfish": {"rarity": "RARE"},
+    "koi": {"rarity": "RARE"},
+    "iwana": {"rarity": "UNCOMMON"},
+    "misty_lake_bass": {"rarity": "RARE"},
+    "phantom_fish": {"rarity": "LEGENDARY"},
+    "bamboo_fish": {"rarity": "RARE"},
+    "moon_fish": {"rarity": "LEGENDARY"},
+    "snow_char": {"rarity": "UNCOMMON"}
+  }
+}

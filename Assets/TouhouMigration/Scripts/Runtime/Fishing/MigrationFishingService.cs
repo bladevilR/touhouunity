@@ -68,6 +68,20 @@ namespace TouhouMigration.Runtime.Fishing
             }
         }
 
+        // Register every fish from a loaded MigrationFishDatabase as catchable.
+        public void RegisterFrom(MigrationFishDatabase database)
+        {
+            if (database == null)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<string, MigrationFishDefinition> pair in database.GetAllFish())
+            {
+                RegisterFish(pair.Value);
+            }
+        }
+
         public int TotalWeight()
         {
             return TotalWeight(0);
