@@ -540,6 +540,8 @@ namespace TouhouMigration.Runtime.UI
                     ? MigrationTimeOfDay.FromHour(worldSimulation.GetTimeSnapshot().Hour)
                     : "afternoon",
                 ["is_full_moon"] = worldSimulation != null && worldSimulation.GetWeatherSnapshot().IsFullMoonActive,
+                // Godot dialogue weather conditions use lowercase names (e.g. "rain"); match GameWeather.
+                ["weather"] = worldSimulation != null ? worldSimulation.GetWeatherSnapshot().Weather.ToString().ToLowerInvariant() : "clear",
                 ["active_quests"] = activeQuestIds,
                 ["completed_quests"] = completedQuestIds,
                 ["started_quests"] = startedQuestIds,

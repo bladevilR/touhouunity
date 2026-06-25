@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 10:11 CST
+Last updated: 2026-06-25 10:14 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 10:11 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E5.8, corrected is_full_moon to the night-gated `IsFullMoonActive` (session 2; fixes E5.7). Session-2 milestones (all in the Milestone Log below): E5.2-E5.8 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/seen_events), E4.1/E4.2/E4.3 (shop economy/hours, farm growth), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E5.9, live weather in dialogue context (session 2) — every dialogue condition is now driven by live world state. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1/E4.2/E4.3 (shop economy/hours, farm growth), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,30 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.9: Live Weather In Dialogue Context
+
+- Date: 2026-06-25 10:14 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Wire `weather` into the dialogue context so the `weather` / `weather_not` conditions fire (Godot rain-gated dialogue lines). Last dialogue-condition gap.
+
+Completed:
+
+- `BuildDialogueContext` sets `weather = GetWeatherSnapshot().Weather.ToString().ToLowerInvariant()` — matching the Godot lowercase weather condition values (verified against `WeatherSystem.WEATHER_NAMES` + `DialogueDatabaseExpanded` conditions, e.g. `{"weather": "rain"}`).
+- **Every dialogue condition is now driven by live world state:** bond_level, humanity, time_of_day, is_full_moon, weather, active/completed/started quests, seen_events.
+
+Verification:
+
+- Owner-only wiring (casing verified against Godot, per the E5.8 lesson) — full regression 50/50 suites, 0 compile errors. `GlobalUiSmokeTests` gates the owner.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+
+Known follow-ups:
+
+- Dialogue context is complete for the implemented conditions. Next E5: portraits; all 35 NPCs reachable; shop dialogue flows.
 
 ### E5.8: Correct is_full_moon To Night-Gated IsFullMoonActive (fixes E5.7)
 
