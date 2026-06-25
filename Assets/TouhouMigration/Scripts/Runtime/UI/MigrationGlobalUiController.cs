@@ -253,6 +253,7 @@ namespace TouhouMigration.Runtime.UI
             {
                 worldSimulation.Initialize();
                 fatigueDriver = new MigrationFatigueDriver(worldSimulation.Clock, fatigueSystem);
+                fatigueDriver.CurrentActivity = MigrationFatigueDriver.ActivityForGameMode(gameState.CurrentMode);
                 dayCycle = new MigrationDayCycle(
                     worldSimulation.Clock, farmingManager, questDeliveryService, socialBondService,
                     fatigueSystem, npcMemorySystem, worldSimulation.Weather);
@@ -595,6 +596,10 @@ namespace TouhouMigration.Runtime.UI
         private void OnGameStateModeChanged(MigrationGameStateMode previous, MigrationGameStateMode current)
         {
             ApplyWorldTimeScaleForMode(current);
+            if (fatigueDriver != null)
+            {
+                fatigueDriver.CurrentActivity = MigrationFatigueDriver.ActivityForGameMode(current);
+            }
         }
 
         private void ApplyWorldTimeScaleForMode(MigrationGameStateMode mode)

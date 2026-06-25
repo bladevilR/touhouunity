@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestIdleDoesNotAccrue();
             TestFarmingUsesFarmingRate();
             TestRateForMapping();
+            TestActivityForGameModeMapping();
             Debug.Log("Migration fatigue driver smoke tests passed.");
         }
 
@@ -74,6 +75,15 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(MigrationFatigueSystem.FatiguePerHourFarming, MigrationFatigueDriver.RateFor(MigrationFatigueDriver.Activity.Farming), "Farming rate.");
             AssertEqual(MigrationFatigueSystem.FatiguePerHourMining, MigrationFatigueDriver.RateFor(MigrationFatigueDriver.Activity.Mining), "Mining rate.");
             AssertEqual(0.0, MigrationFatigueDriver.RateFor(MigrationFatigueDriver.Activity.Idle), "Idle rate is zero.");
+        }
+
+        private static void TestActivityForGameModeMapping()
+        {
+            AssertEqual(MigrationFatigueDriver.Activity.Active, MigrationFatigueDriver.ActivityForGameMode(MigrationGameStateMode.Overworld), "Overworld accrues fatigue.");
+            AssertEqual(MigrationFatigueDriver.Activity.Active, MigrationFatigueDriver.ActivityForGameMode(MigrationGameStateMode.Combat), "Combat accrues fatigue.");
+            AssertEqual(MigrationFatigueDriver.Activity.Idle, MigrationFatigueDriver.ActivityForGameMode(MigrationGameStateMode.Dialogue), "Dialogue is idle.");
+            AssertEqual(MigrationFatigueDriver.Activity.Idle, MigrationFatigueDriver.ActivityForGameMode(MigrationGameStateMode.Sleeping), "Sleeping is idle.");
+            AssertEqual(MigrationFatigueDriver.Activity.Idle, MigrationFatigueDriver.ActivityForGameMode(MigrationGameStateMode.Menu), "Menu is idle.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

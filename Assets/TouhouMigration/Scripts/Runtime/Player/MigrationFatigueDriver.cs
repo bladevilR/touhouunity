@@ -40,6 +40,20 @@ namespace TouhouMigration.Runtime.Player
             HoursAccrued++;
         }
 
+        // Maps a game-state mode to the fatigue activity: only active play (Overworld/Combat) accrues;
+        // menus, dialogue, cutscenes, home, and sleeping are idle (no accrual).
+        public static Activity ActivityForGameMode(MigrationGameStateMode mode)
+        {
+            switch (mode)
+            {
+                case MigrationGameStateMode.Overworld:
+                case MigrationGameStateMode.Combat:
+                    return Activity.Active;
+                default:
+                    return Activity.Idle;
+            }
+        }
+
         // Per-hour fatigue for an activity, mapped from the Godot FatigueSystem accrual constants.
         public static double RateFor(Activity activity)
         {
