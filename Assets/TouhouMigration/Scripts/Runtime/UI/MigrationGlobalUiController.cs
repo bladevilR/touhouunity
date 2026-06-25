@@ -539,7 +539,7 @@ namespace TouhouMigration.Runtime.UI
                 ["time_of_day"] = worldSimulation != null
                     ? MigrationTimeOfDay.FromHour(worldSimulation.GetTimeSnapshot().Hour)
                     : "afternoon",
-                ["is_full_moon"] = worldSimulation != null && MigrationMoonPhase.IsFullMoon(worldSimulation.GetTimeSnapshot().Day),
+                ["is_full_moon"] = worldSimulation != null && worldSimulation.GetWeatherSnapshot().IsFullMoonActive,
                 ["active_quests"] = activeQuestIds,
                 ["completed_quests"] = completedQuestIds,
                 ["started_quests"] = startedQuestIds,
