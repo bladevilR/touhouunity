@@ -22,6 +22,7 @@ namespace TouhouMigration.Editor.Tests
             TestSleepRunsDailyQuestReset();
             TestNaturalMidnightCrossingRunsDailyReset();
             TestSleepDecaysNpcMemories();
+            TestSleepUpdatesWeatherForNewDate();
             TestNullServicesAreSafe();
             Debug.Log("Migration day cycle smoke tests passed.");
         }
@@ -94,6 +95,22 @@ namespace TouhouMigration.Editor.Tests
             }
 
             AssertEqual(0, memory.GetMemoryCount("youmu"), "Sleeping six days decays the memory until it is forgotten.");
+            cycle.Detach();
+        }
+
+        private static void TestSleepUpdatesWeatherForNewDate()
+        {
+            GameClock clock = new GameClock();
+            clock.SetTime(22, 0);
+            WeatherService weather = new WeatherService();
+            MigrationDayCycle cycle = new MigrationDayCycle(clock, null, null, null, null, null, weather);
+
+            cycle.Sleep();
+
+            // The day-cycle's weather should now match a reference service updated for the same new date.
+            WeatherService expected = new WeatherService();
+            expected.UpdateForDate(clock.Day, clock.Season.ToString());
+            AssertEqual(expected.MoonPhase, weather.MoonPhase, "Sleeping updates the weather/moon phase for the new date.");
             cycle.Detach();
         }
 

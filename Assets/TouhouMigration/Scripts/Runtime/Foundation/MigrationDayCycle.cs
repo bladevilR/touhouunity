@@ -23,6 +23,7 @@ namespace TouhouMigration.Runtime.Foundation
         private readonly SocialBondService bonds;
         private readonly MigrationFatigueSystem fatigue;
         private readonly MigrationNpcMemorySystem npcMemory;
+        private readonly WeatherService weather;
 
         public int DailyResetsRun { get; private set; }
         public int LastResetDay { get; private set; } = -1;
@@ -33,7 +34,8 @@ namespace TouhouMigration.Runtime.Foundation
             QuestDeliveryService quests = null,
             SocialBondService bonds = null,
             MigrationFatigueSystem fatigue = null,
-            MigrationNpcMemorySystem npcMemory = null)
+            MigrationNpcMemorySystem npcMemory = null,
+            WeatherService weather = null)
         {
             this.clock = clock;
             this.farming = farming;
@@ -41,6 +43,7 @@ namespace TouhouMigration.Runtime.Foundation
             this.bonds = bonds;
             this.fatigue = fatigue;
             this.npcMemory = npcMemory;
+            this.weather = weather;
 
             if (this.clock != null)
             {
@@ -56,6 +59,7 @@ namespace TouhouMigration.Runtime.Foundation
             quests?.ResetDailyQuests(day);
             bonds?.StartNewDay();
             npcMemory?.DecayAllMemories();
+            weather?.UpdateForDate(day, season.ToString());
             LastResetDay = day;
             DailyResetsRun++;
         }
