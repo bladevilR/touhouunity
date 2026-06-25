@@ -1295,6 +1295,7 @@ namespace TouhouMigration.Editor
             GameObject props = new GameObject("Props");
             props.transform.SetParent(root.transform);
             CreateBambooHomeProps(props.transform);
+            CreateBambooHomeBed(root.transform);
             CreateCookingStation(root.transform, new Vector3(3.2f, 0.75f, -0.8f));
             CreatePortal(
                 root.transform,
