@@ -1654,13 +1654,13 @@ namespace TouhouMigration.Editor
         private static void CreateVillageScenes()
         {
             CreateVillageLocationScene(MigrationSceneCatalog.TownWorld, TownWorldScenePath, LocationsArtRoot + "/TownWorld",
-                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.66f, 0.25f, 0.45f), new Color(0.64f, 0.48f, 0.34f, 1f), new Color(0.32f, 0.44f, 0.24f, 1f), new Color(0.20f, 0.42f, 0.23f, 1f));
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.66f, 0.25f, 0.45f), new Color(0.64f, 0.48f, 0.34f, 1f), new Color(0.32f, 0.44f, 0.24f, 1f), new Color(0.20f, 0.42f, 0.23f, 1f), 0);
             CreateVillageLocationScene(MigrationSceneCatalog.FantasyVillage, FantasyVillageScenePath, LocationsArtRoot + "/FantasyVillage",
-                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.80f, 0.45f, 0.85f, 0.45f), new Color(0.70f, 0.55f, 0.42f, 1f), new Color(0.30f, 0.48f, 0.28f, 1f), new Color(0.22f, 0.46f, 0.26f, 1f));
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.80f, 0.45f, 0.85f, 0.45f), new Color(0.70f, 0.55f, 0.42f, 1f), new Color(0.30f, 0.48f, 0.28f, 1f), new Color(0.22f, 0.46f, 0.26f, 1f), 4);
             CreateVillageLocationScene(MigrationSceneCatalog.SuntailVillagePlayable, SuntailVillagePlayableScenePath, LocationsArtRoot + "/SuntailVillagePlayable",
-                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.82f, 0.40f, 0.45f), new Color(0.66f, 0.50f, 0.36f, 1f), new Color(0.33f, 0.45f, 0.25f, 1f), new Color(0.21f, 0.43f, 0.24f, 1f));
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.82f, 0.40f, 0.45f), new Color(0.66f, 0.50f, 0.36f, 1f), new Color(0.33f, 0.45f, 0.25f, 1f), new Color(0.21f, 0.43f, 0.24f, 1f), 8);
             CreateVillageLocationScene(MigrationSceneCatalog.SuntailVillageImported, SuntailVillageImportedScenePath, LocationsArtRoot + "/SuntailVillageImported",
-                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.90f, 0.78f, 0.45f, 0.45f), new Color(0.62f, 0.47f, 0.33f, 1f), new Color(0.31f, 0.46f, 0.26f, 1f), new Color(0.20f, 0.42f, 0.23f, 1f));
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.90f, 0.78f, 0.45f, 0.45f), new Color(0.62f, 0.47f, 0.33f, 1f), new Color(0.31f, 0.46f, 0.26f, 1f), new Color(0.20f, 0.42f, 0.23f, 1f), 12);
         }
 
         private static void CreateVillageLocationScene(
@@ -1671,7 +1671,8 @@ namespace TouhouMigration.Editor
             Color portalColor,
             Color buildingColor,
             Color groundColor,
-            Color natureColor)
+            Color natureColor,
+            int npcStartIndex)
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = sceneName;
@@ -1717,6 +1718,20 @@ namespace TouhouMigration.Editor
             InstantiateLocationProp($"{n}/Bush_2.fbx", "Bush2", p, 22f, 18f, 0f, 4f, nature, false);
             InstantiateLocationProp($"{n}/Stone_1.fbx", "Stone1", p, -34f, -8f, 0f, 3f, stone, true);
             InstantiateLocationProp($"{n}/Stone_2.fbx", "Stone2", p, 34f, -22f, 0f, 3f, stone, true);
+
+            // Populate the village with a distinct subset of the canonical cast as interactable markers.
+            GameObject npcRoot = new GameObject("NPCMarkers");
+            npcRoot.transform.SetParent(root.transform);
+            const int villageNpcCount = 5;
+            for (int k = 0; k < villageNpcCount; k++)
+            {
+                int idx = (npcStartIndex + k) % HumanVillageNpcIds.Length;
+                float angle = (k / (float)villageNpcCount) * Mathf.PI * 2f;
+                float radius = 16f + (k % 2) * 8f;
+                Vector3 pos = new Vector3(Mathf.Cos(angle) * radius, 2.4f, Mathf.Sin(angle) * radius + 8f);
+                Color color = Color.HSVToRGB((idx * 0.137f) % 1f, 0.62f, 0.92f);
+                CreateNpcMarker(npcRoot.transform, HumanVillageNpcIds[idx], HumanVillageNpcNames[idx], HumanVillageNpcGifts[idx], pos, color);
+            }
 
             float playerGroundY = SampleGroundY(-4f, -6f, 0f);
             CreateMigrationPlayer(root.transform, new Vector3(-4f, playerGroundY + 2f, -6f));
