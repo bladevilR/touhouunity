@@ -5,6 +5,7 @@ using TouhouMigration.Runtime.Bootstrap;
 using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Data;
+using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Farming;
 using TouhouMigration.Runtime.Fishing;
 using TouhouMigration.Runtime.Foundation;
@@ -1704,8 +1705,16 @@ namespace TouhouMigration.Editor
             InstantiateLocationProp($"{b}/House_4.prefab", "House5", p, 8f, 38f, 180f, 10f, building, true);
             InstantiateLocationProp($"{b}/House_6.prefab", "House6", p, -12f, -4f, 90f, 9f, building, true);
 
-            InstantiateLocationProp($"{e}/Shop_1.fbx", "Shop1", p, -14f, 12f, 30f, 6f, prop, true);
-            InstantiateLocationProp($"{e}/Shop_2.fbx", "Shop2", p, 14f, 10f, -25f, 6f, prop, true);
+            GameObject shop1 = InstantiateLocationProp($"{e}/Shop_1.fbx", "Shop1", p, -14f, 12f, 30f, 6f, prop, true);
+            if (shop1 != null)
+            {
+                shop1.AddComponent<MigrationShopInteractor>().Configure("town_general");
+            }
+            GameObject shop2 = InstantiateLocationProp($"{e}/Shop_2.fbx", "Shop2", p, 14f, 10f, -25f, 6f, prop, true);
+            if (shop2 != null)
+            {
+                shop2.AddComponent<MigrationShopInteractor>().Configure("town_blacksmith");
+            }
             InstantiateLocationProp($"{e}/Well_1.fbx", "Well", p, 3f, 3f, 0f, 3.5f, stone, true);
             InstantiateLocationProp($"{e}/Cart_1.fbx", "Cart", p, -6f, -12f, 60f, 3f, prop, true);
             InstantiateLocationProp($"{e}/Lantern_1.fbx", "Lantern1", p, 6f, 15f, 0f, 4.5f, prop, false);
@@ -2838,6 +2847,7 @@ namespace TouhouMigration.Editor
             MigrationSettingsController settings = ui.AddComponent<MigrationSettingsController>();
             RuneDialogueController runeDialogue = ui.AddComponent<RuneDialogueController>();
             MigrationGiftSelectionController giftSelection = ui.AddComponent<MigrationGiftSelectionController>();
+            MigrationShopController shop = ui.AddComponent<MigrationShopController>();
             MigrationProjectileSpecialSettlement projectileSettlement = ui.AddComponent<MigrationProjectileSpecialSettlement>();
             projectileSettlement.ConfigureRewards(2f, 5f, 8f, 12f, 12, 1.2f);
 
@@ -2847,6 +2857,7 @@ namespace TouhouMigration.Editor
             serialized.FindProperty("settingsController").objectReferenceValue = settings;
             serialized.FindProperty("runeDialogueController").objectReferenceValue = runeDialogue;
             serialized.FindProperty("giftSelectionController").objectReferenceValue = giftSelection;
+            serialized.FindProperty("shopController").objectReferenceValue = shop;
             serialized.FindProperty("projectileSettlement").objectReferenceValue = projectileSettlement;
             serialized.ApplyModifiedPropertiesWithoutUndo();
 

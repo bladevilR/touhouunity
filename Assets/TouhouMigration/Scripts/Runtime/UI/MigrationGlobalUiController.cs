@@ -28,6 +28,7 @@ namespace TouhouMigration.Runtime.UI
         [SerializeField] private MigrationSettingsController settingsController;
         [SerializeField] private RuneDialogueController runeDialogueController;
         [SerializeField] private MigrationGiftSelectionController giftSelectionController;
+        [SerializeField] private MigrationShopController shopController;
         [SerializeField] private MigrationProjectileSpecialSettlement projectileSettlement;
 
         private MigrationGameSettings settings;
@@ -71,6 +72,7 @@ namespace TouhouMigration.Runtime.UI
         private MigrationCropDatabase cropDatabase;
         private MigrationFarmingManager farmingManager;
         private MigrationShopDatabase shopDatabase;
+        private MigrationShopService shopService;
         private MigrationFishDatabase fishDatabase;
         private MigrationFishingService fishingService;
         private MigrationNpcRoster npcRoster;
@@ -83,6 +85,7 @@ namespace TouhouMigration.Runtime.UI
 
         public bool BlocksGameplayInput =>
             (giftSelectionController != null && giftSelectionController.IsOpen) ||
+            (shopController != null && shopController.IsOpen) ||
             (unifiedMenuController != null && unifiedMenuController.IsOpen) ||
             (dialogueFacade != null && dialogueFacade.IsActive);
 
@@ -220,6 +223,7 @@ namespace TouhouMigration.Runtime.UI
             settingsController ??= GetComponent<MigrationSettingsController>();
             runeDialogueController ??= GetComponent<RuneDialogueController>();
             giftSelectionController ??= GetComponent<MigrationGiftSelectionController>();
+            shopController ??= GetComponent<MigrationShopController>();
             projectileSettlement ??= GetComponent<MigrationProjectileSpecialSettlement>();
 
             WorldSimulationBehaviour simulation = FindAnyObjectByType<WorldSimulationBehaviour>();
@@ -239,6 +243,13 @@ namespace TouhouMigration.Runtime.UI
                 itemUseService);
             runeDialogueController?.Bind(dialogueFacade);
             giftSelectionController?.Bind(giftDatabase, giftInteractionService, inventoryService, itemDatabase);
+            shopController?.Bind(
+                shopDatabase,
+                shopService,
+                inventoryService,
+                itemDatabase,
+                playerProgressService,
+                () => worldSimulation != null ? worldSimulation.GetTimeSnapshot().Hour : 12);
 
             if (settingsController != null)
             {
@@ -321,6 +332,8 @@ namespace TouhouMigration.Runtime.UI
             {
                 Debug.LogWarning("Migration shop database failed to load: " + string.Join("; ", shopDatabase.Errors));
             }
+
+            shopService = new MigrationShopService(inventoryService, itemDatabase, playerProgressService);
 
             fishDatabase = new MigrationFishDatabase();
             if (!fishDatabase.LoadFromPath("Assets/TouhouMigration/Data/Fishing/fish.json"))
@@ -460,6 +473,16 @@ namespace TouhouMigration.Runtime.UI
                 return;
             }
 
+            if (shopController != null && shopController.IsOpen)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    shopController.Close();
+                }
+
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 unifiedMenuController?.Toggle();
@@ -558,6 +581,23 @@ namespace TouhouMigration.Runtime.UI
             unifiedMenuController.Open("cooking");
             return true;
         }
+
+        // Open the scoped shop modal for a shopkeeper interactor's shop id. Gated like OpenCooking so it
+        // does not stack on top of an active dialogue/gift/menu modal.
+        public bool OpenShop(string shopId)
+        {
+            if (shopController == null ||
+                dialogueFacade != null && dialogueFacade.IsActive ||
+                giftSelectionController != null && giftSelectionController.IsOpen ||
+                unifiedMenuController != null && unifiedMenuController.IsOpen)
+            {
+                return false;
+            }
+
+            return shopController.OpenForShop(shopId);
+        }
+
+        public MigrationShopController ShopWindow => shopController;
 
         public GiftDeliveryResult SelectGiftForCurrentNpc(string giftId)
         {
