@@ -20,12 +20,12 @@ Last updated: 2026-06-25 (session 3)
 
 ## Current Handoff Snapshot
 
-- Date: 2026-06-25 05:04 CST
+- Date: 2026-06-25 (session 4)
 - Recommended context mode: fresh/project handoff. Start a new Codex conversation from this document plus `/Users/Shared/Touhougodot/docs/AI_AGENT_GUIDE.md`.
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: C2, companion skill cooldowns (session 3). **Next priority (user override, 2026-06-25 s3): migrate ALL formal game scenes (E3) — cardbuild (E6) pushed back. See `Docs/CURRENT_HANDOFF.md` "Prioritized Next" §1.** Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system), S1 (NPC memory system), M1 (meta progression economy), S2 (NPC memory decay), S3 (NPC relationship graph), S4 (NPC factions), S5 (NPC memory dialogue modifier), EV1 (event-status manager), EV2 (event cooldowns), S6 (NPC memory queries), C1 (companion roster). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: **E3.2, PureNatureMeadows location scene (session 4)** — first E3 scene migrated Unity-native via the asset-promotion pipeline (proves the template for the PureNature variant fan-out); play-validated runtime-clean, regression 68/68. Prior: C2, companion skill cooldowns (session 3). **Active priority (user override, 2026-06-25 s3): migrate ALL formal game scenes (E3) — cardbuild (E6) pushed back. See `Docs/CURRENT_HANDOFF.md` "Prioritized Next" §1.** Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system), S1 (NPC memory system), M1 (meta progression economy), S2 (NPC memory decay), S3 (NPC relationship graph), S4 (NPC factions), S5 (NPC memory dialogue modifier), EV1 (event-status manager), EV2 (event cooldowns), S6 (NPC memory queries), C1 (companion roster). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,37 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E3.2: PureNatureMeadows Location Scene (E3 pipeline proof)
+
+- Date: 2026-06-25 (session 4)
+- Status: Complete (location slice; first E3 scene)
+- Owner: Claude
+- Goal: Prove the E3 scene-migration pipeline end-to-end on one location and establish the reusable template for the PureNature variant fan-out.
+
+Completed:
+
+- Promoted 26 curated raw FBX meshes (Oak/Birch/Willow/Elm/Cypres/Bush trees, Stone/Cliff rocks, mushrooms, grass/flowers, mountains) + the 1000m terrain OBJ from `ExternalUnityAssets/unity_imports/PureNature_Meadows` into `Assets/TouhouMigration/Art/Locations/PureNatureMeadows` (raw meshes only — no source `.meta`/`.import`/textures; Unity regenerated GUIDs; flat project-owned URP materials applied, matching the Human Village pattern).
+- `CreatePureNatureMeadowsScene` in `TouhouMigrationProjectBuilder`: WorldSimulation + terrain (origin-normalized so the spawn column rests at y=0 regardless of the terrain's hills) + grove set-dressing (each prop auto-scaled to a target height via `NormalizeVisualBounds` and raycast-grounded onto the terrain collider, with graceful fallback) + player + a low establishing follow camera (skybox + horizon mountains visible) + GlobalUI + return portal to Bamboo Home.
+- New focused `Touhou Migration/Build Location Scenes` menu method authors location scenes without the enemy-prefab churn of `BuildInitialProject`.
+- Registered the scene across `MigrationSceneId` / `MigrationSceneCatalog` / `MigrationSceneRegistry` (flipped `pure_nature_meadows` to available), `RegisterBuildScenes` (EditorBuildSettings), and the play-mode validator scene list.
+
+Verification:
+
+- Build batch: 0 compile errors; scene authored; all 26 FBX imported via FBXImporter (no "Unable to load/instantiate" warnings).
+- Play-mode validation: 5 scenes, Failed: False, 0 runtime errors; the meadow renders as a place (grove + shadows + terrain + horizon mountains + sky + portal + player).
+- Full smoke regression: 68/68 suites passed, 0 failed.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Editor/TouhouMigrationProjectBuilder.cs` (location builder + helpers)
+- `Assets/TouhouMigration/Scripts/Editor/MigrationPlayModeValidator.cs` (scene list)
+- `Assets/TouhouMigration/Scripts/Runtime/Data/MigrationSceneId.cs` / `MigrationSceneCatalog.cs` / `MigrationSceneRegistry.cs`
+- `ProjectSettings/EditorBuildSettings.asset`
+- New: `Assets/TouhouMigration/Scenes/PureNatureMeadows.unity`, `Assets/TouhouMigration/Art/Locations/PureNatureMeadows/*` (26 FBX + terrain OBJ + 7 materials)
+- `Verification/VisualChecks/PureNatureMeadows_PlayMode.png`
+
+Deferred (E7 polish): real PureNature textured materials (currently flat colors), per-submesh trunk/leaf material split, terrain splatmap material, denser scatter, NPC/gameplay content.
 
 ### C2: Companion Per-Skill Cooldowns
 
