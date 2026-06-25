@@ -416,6 +416,21 @@ Next recommended milestone:
 
 ## Milestone Log
 
+### E4 day-loop: Day-Cycle Orchestrator + Fatigue Driver
+
+- Date: 2026-06-25 (session 4)
+- Status: Complete (2 pure-logic slices; owner-wiring deferred)
+- Owner: Claude
+- Goal: After E3 scenes, start closing the life-sim loop by orchestrating the existing (logic-complete) services into a real day cycle.
+
+Completed:
+
+- **`MigrationDayCycle`** (`Runtime/Foundation`, `dd18fc4`): subscribes to `GameClock.DayStarted` and runs the per-day resets — farming `AdvanceDay`, quest `ResetDailyQuests(day)`, bond `StartNewDay` — for every new day (sleep or natural midnight). `Sleep()` advances the clock exactly one day to `WakeHour` (firing the resets) and calls `fatigue.SleepFullRecovery()`. All deps optional/null-safe; `Detach()` unsubscribes. Closes the long-standing "GameClock/day-start integration not wired" + "sleep day-loop" gaps. `MigrationDayCycleSmokeTests` (4 tests).
+- **`MigrationFatigueDriver`** (`Runtime/Player`, `62478e5`): the accrual half of the fatigue loop — adds activity fatigue each game hour off `GameClock.HourChanged`, scaled by `CurrentActivity` (Idle/Active/Farming/Mining) using the Godot `FatigueSystem` per-hour rates. Pairs with the day-cycle's sleep recovery. `MigrationFatigueDriverSmokeTests` (4 tests).
+- Regression 68→70 suites, all green.
+
+Deferred: owner-wiring (construct both in a world owner; forward `Sleep()` from a bed/HUD; set driver activity from the game-state mode) — MonoBehaviour work gated via `GlobalUiSmokeTests` + play-mode.
+
 ### E3.4–E3.5: Remaining Formal Locations (AngryMesh + Forest/Lake + Villages + Landmarks + Bamboo + Arenas)
 
 - Date: 2026-06-25 (session 4)
