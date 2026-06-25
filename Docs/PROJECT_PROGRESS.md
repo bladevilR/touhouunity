@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 10:31 CST
+Last updated: 2026-06-25 10:36 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 10:31 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.6, fishing-level catch boost (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.6 (shop economy/hours, farm growth + harvest-to-inventory loop, fishing weighted catch + level boost), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.7, NPC schedule — location by hour (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.7 (shop economy/hours, farm growth + harvest loop, fishing weighted catch + level, NPC schedules), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,36 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.7: NPC Schedule (location by hour) + shared MigrationHourRange
+
+- Date: 2026-06-25 10:36 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: NPC daily schedules (Godot `NPCScheduleManager`): resolve an NPC's location from its schedule + the current hour. Also DRY the wrap-around hour-range logic shared with shop hours.
+
+Completed:
+
+- New `MigrationHourRange.Contains(start, end, hour)` (`Runtime/Foundation/`): inclusive-start / exclusive-end with wrap-around (Godot `is_shop_open` / `_is_hour_in_range`). `MigrationShopHours.IsOpen` (E4.3) now delegates to it — single source of truth for the hour-range rule.
+- New `MigrationNpcScheduleEntry` (start / end / location) + `MigrationNpcSchedule.LocationAt(hour, homeLocation)` (`Runtime/Social/`): the first matching entry's location, else the home fallback.
+
+TDD (red -> green):
+
+- New `NpcScheduleSmokeTests` (day blocks by hour incl. the exclusive-end handoff; wrap-around night block; empty schedule -> home).
+- RED: focused run failed to compile on the missing schedule types (CS0246).
+- GREEN: full regression 53/53 suites passed, 0 compile errors (52 prior + new NPC-schedule suite); `ShopHoursSmokeTests` confirms the `MigrationShopHours` delegation preserved behavior.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Foundation/MigrationHourRange.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/MigrationShopHours.cs` (delegates to `MigrationHourRange`)
+- `Assets/TouhouMigration/Scripts/Runtime/Social/MigrationNpcScheduleEntry.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Social/MigrationNpcSchedule.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/NpcScheduleSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- NPC schedule data (`NPCScheduleData` / JSON) for the 35 NPCs; an `NPCManager` driving locations on `hour_changed` (E2 clock); activity/sprite per entry; spawn NPCs into scenes by schedule (E3).
 
 ### E4.6: Fishing-Level Catch Boost (completes roll_fish)
 
