@@ -3,6 +3,9 @@ using TouhouMigration.Runtime.Bootstrap;
 using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Dialogue;
+using TouhouMigration.Runtime.Economy;
+using TouhouMigration.Runtime.Farming;
+using TouhouMigration.Runtime.Fishing;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Narrative;
@@ -53,6 +56,20 @@ namespace TouhouMigration.Runtime.UI
         private WorldSimulationBehaviour worldSimulation;
         private DialogueEffectRouter dialogueEffectRouter;
         private bool menuModePushed;
+
+        private const int FarmPlotCount = 9;
+        private MigrationCropDatabase cropDatabase;
+        private MigrationFarmingManager farmingManager;
+        private MigrationShopDatabase shopDatabase;
+        private MigrationFishDatabase fishDatabase;
+        private MigrationFishingService fishingService;
+        private MigrationNpcRoster npcRoster;
+        private MigrationNpcManager npcManager;
+
+        public MigrationFarmingManager FarmingManager => farmingManager;
+        public MigrationShopDatabase ShopCatalog => shopDatabase;
+        public MigrationFishingService Fishing => fishingService;
+        public MigrationNpcManager NpcManager => npcManager;
 
         public bool BlocksGameplayInput =>
             (giftSelectionController != null && giftSelectionController.IsOpen) ||
@@ -186,6 +203,7 @@ namespace TouhouMigration.Runtime.UI
             InitializeInventory();
             InitializeDialogue();
             InitializeSocial();
+            InitializeLifeSimCatalogs();
 
             hudController ??= GetComponent<MigrationHudController>();
             unifiedMenuController ??= GetComponent<MigrationUnifiedMenuController>();
@@ -240,6 +258,44 @@ namespace TouhouMigration.Runtime.UI
             inventoryService.AddItem("rice", 2);
             inventoryService.AddItem("tea_leaves", 2);
             inventoryService.AddItem("hot_water", 2);
+        }
+
+        // Load the life-sim catalogs (crops/shops/fish/roster) + build their managers so the game has
+        // its full life-sim content on startup. Consumers (Farm scene, shop UI, NPC spawning) come later.
+        private void InitializeLifeSimCatalogs()
+        {
+            cropDatabase = new MigrationCropDatabase();
+            if (!cropDatabase.LoadFromPath("Assets/TouhouMigration/Data/Farming/crops.json"))
+            {
+                Debug.LogWarning("Migration crop database failed to load: " + string.Join("; ", cropDatabase.Errors));
+            }
+
+            farmingManager = new MigrationFarmingManager(inventoryService, FarmPlotCount);
+            farmingManager.RegisterCropsFrom(cropDatabase);
+
+            shopDatabase = new MigrationShopDatabase();
+            if (!shopDatabase.LoadFromPath("Assets/TouhouMigration/Data/Shops/shops.json"))
+            {
+                Debug.LogWarning("Migration shop database failed to load: " + string.Join("; ", shopDatabase.Errors));
+            }
+
+            fishDatabase = new MigrationFishDatabase();
+            if (!fishDatabase.LoadFromPath("Assets/TouhouMigration/Data/Fishing/fish.json"))
+            {
+                Debug.LogWarning("Migration fish database failed to load: " + string.Join("; ", fishDatabase.Errors));
+            }
+
+            fishingService = new MigrationFishingService(inventoryService);
+            fishingService.RegisterFrom(fishDatabase);
+
+            npcRoster = new MigrationNpcRoster();
+            if (!npcRoster.LoadFromPath("Assets/TouhouMigration/Data/Npc/human_village_roster.json"))
+            {
+                Debug.LogWarning("Migration npc roster failed to load: " + string.Join("; ", npcRoster.Errors));
+            }
+
+            npcManager = new MigrationNpcManager();
+            npcManager.RegisterFrom(npcRoster, 8, 18);
         }
 
         private void InitializeDialogue()

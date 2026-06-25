@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 11:39 CST
+Last updated: 2026-06-25 11:47 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 11:39 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.14, fish database — fish catalog → fishing service, end-to-end (session 2). All three life-sim catalogs (crops/shops/fish) now load + register into their services; the NPC roster derives manager schedules. Earlier session-2 work: E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end, fishing), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.15, owner loads the life-sim catalogs on startup (session 2) — the game now loads crops/shops/fish/roster + builds their managers in `Awake` (play-mode verified, runtime-clean). Earlier session-2 work: E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end, fishing), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,29 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.15: Owner Loads The Life-Sim Catalogs On Startup
+
+- Date: 2026-06-25 11:47 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Integrate the session's life-sim data layer into the game owner — load all catalogs (crops/shops/fish/roster) + build their managers on startup so the game has its full life-sim content ready (scaffolding for the Farm scene / shop UI / NPC spawning).
+
+Completed:
+
+- `MigrationGlobalUiController.InitializeLifeSimCatalogs()` (called from `Awake` after `InitializeInventory`): loads `crops.json` -> `MigrationCropDatabase` -> `MigrationFarmingManager` (9 plots, `RegisterCropsFrom`); `shops.json` -> `MigrationShopDatabase`; `fish.json` -> `MigrationFishDatabase` -> `MigrationFishingService` (`RegisterFrom`); `human_village_roster.json` -> `MigrationNpcRoster` -> `MigrationNpcManager` (`RegisterFrom`, work 8-18). Exposed via `FarmingManager` / `ShopCatalog` / `Fishing` / `NpcManager` properties for future consumers. Mirrors the existing `InitializeInventory/Dialogue/Social` pattern (warn-on-load-failure).
+
+Verification:
+
+- Owner `Awake` wiring (not smoke-exercised — `Awake` runs in play mode). Full regression 59/59 (compile + no breakage), 0 compile errors; **play-mode validation: 4 scenes, Failed: False, no catalog-load failures** — the catalogs load runtime-clean in-game.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+
+Known follow-ups:
+
+- Consumers: a Farm scene driving `FarmingManager.AdvanceDay` on the day-loop; shop UI / NPC interaction building a `MigrationShop` from `ShopCatalog`; spawn `NpcManager` NPCs into scenes at `LocationOf`.
 
 ### E4.14: Fish Database (catalog -> fishing service, end-to-end)
 
