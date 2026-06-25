@@ -14,5 +14,9 @@
 | AngryMeshMeadow | yes | Verification/VisualChecks/AngryMeshMeadow_PlayMode.png | 0 |
 | MagicForest | yes | Verification/VisualChecks/MagicForest_PlayMode.png | 0 |
 | MistyLake | yes | Verification/VisualChecks/MistyLake_PlayMode.png | 0 |
+| TownWorld | yes | Verification/VisualChecks/TownWorld_PlayMode.png | 0 |
+| FantasyVillage | yes | Verification/VisualChecks/FantasyVillage_PlayMode.png | 0 |
+| SuntailVillagePlayable | yes | Verification/VisualChecks/SuntailVillagePlayable_PlayMode.png | 0 |
+| SuntailVillageImported | yes | Verification/VisualChecks/SuntailVillageImported_PlayMode.png | 0 |
 | TitleScreen | yes | Verification/VisualChecks/TitleScreen_PlayMode.png | 0 |
 

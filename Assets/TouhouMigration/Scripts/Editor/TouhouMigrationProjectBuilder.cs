@@ -78,6 +78,10 @@ namespace TouhouMigration.Editor
         private const string AngryMeshMeadowScenePath = ScenesRoot + "/AngryMeshMeadow.unity";
         private const string MagicForestScenePath = ScenesRoot + "/MagicForest.unity";
         private const string MistyLakeScenePath = ScenesRoot + "/MistyLake.unity";
+        private const string TownWorldScenePath = ScenesRoot + "/TownWorld.unity";
+        private const string FantasyVillageScenePath = ScenesRoot + "/FantasyVillage.unity";
+        private const string SuntailVillagePlayableScenePath = ScenesRoot + "/SuntailVillagePlayable.unity";
+        private const string SuntailVillageImportedScenePath = ScenesRoot + "/SuntailVillageImported.unity";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -112,6 +116,7 @@ namespace TouhouMigration.Editor
             CreatePureNatureMeadowsScene();
             CreatePureNatureVariantScenes();
             CreateBespokeNatureScenes();
+            CreateVillageScenes();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
@@ -128,6 +133,7 @@ namespace TouhouMigration.Editor
             CreatePureNatureMeadowsScene();
             CreatePureNatureVariantScenes();
             CreateBespokeNatureScenes();
+            CreateVillageScenes();
             RegisterBuildScenes();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -1620,6 +1626,86 @@ namespace TouhouMigration.Editor
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.85f, 0.78f, 0.40f, 0.45f), new Color(0.33f, 0.49f, 0.24f, 1f), new Color(0.22f, 0.44f, 0.22f, 1f));
         }
 
+        // Village/town locations: flat ground + Suntail houses, shop/well/cart/bridge props, and
+        // trees, reusing the shared promoted Suntail meshes with per-location materials.
+        private static void CreateVillageScenes()
+        {
+            CreateVillageLocationScene(MigrationSceneCatalog.TownWorld, TownWorldScenePath, LocationsArtRoot + "/TownWorld",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.66f, 0.25f, 0.45f), new Color(0.64f, 0.48f, 0.34f, 1f), new Color(0.32f, 0.44f, 0.24f, 1f), new Color(0.20f, 0.42f, 0.23f, 1f));
+            CreateVillageLocationScene(MigrationSceneCatalog.FantasyVillage, FantasyVillageScenePath, LocationsArtRoot + "/FantasyVillage",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.80f, 0.45f, 0.85f, 0.45f), new Color(0.70f, 0.55f, 0.42f, 1f), new Color(0.30f, 0.48f, 0.28f, 1f), new Color(0.22f, 0.46f, 0.26f, 1f));
+            CreateVillageLocationScene(MigrationSceneCatalog.SuntailVillagePlayable, SuntailVillagePlayableScenePath, LocationsArtRoot + "/SuntailVillagePlayable",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.82f, 0.40f, 0.45f), new Color(0.66f, 0.50f, 0.36f, 1f), new Color(0.33f, 0.45f, 0.25f, 1f), new Color(0.21f, 0.43f, 0.24f, 1f));
+            CreateVillageLocationScene(MigrationSceneCatalog.SuntailVillageImported, SuntailVillageImportedScenePath, LocationsArtRoot + "/SuntailVillageImported",
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.90f, 0.78f, 0.45f, 0.45f), new Color(0.62f, 0.47f, 0.33f, 1f), new Color(0.31f, 0.46f, 0.26f, 1f), new Color(0.20f, 0.42f, 0.23f, 1f));
+        }
+
+        private static void CreateVillageLocationScene(
+            string sceneName,
+            string scenePath,
+            string artRoot,
+            MigrationSceneId returnTo,
+            Color portalColor,
+            Color buildingColor,
+            Color groundColor,
+            Color natureColor)
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = sceneName;
+
+            GameObject root = new GameObject(sceneName);
+            CreateWorldSimulation(root.transform);
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, sceneName + "Ground", artRoot + "/Materials/Ground.mat", groundColor);
+
+            Material building = EnsureSimpleMaterial(artRoot + "/Materials/Building.mat", buildingColor);
+            Material prop = EnsureSimpleMaterial(artRoot + "/Materials/Prop.mat", new Color(0.50f, 0.36f, 0.24f, 1f));
+            Material stone = EnsureSimpleMaterial(artRoot + "/Materials/Stone.mat", new Color(0.45f, 0.45f, 0.42f, 1f));
+            Material nature = EnsureSimpleMaterial(artRoot + "/Materials/Nature.mat", natureColor);
+
+            GameObject dress = new GameObject("VillageSetDressing");
+            dress.transform.SetParent(root.transform);
+            Transform p = dress.transform;
+
+            string b = HumanVillageBuildingPrefabsRoot;
+            string e = HumanVillageEnvironmentModelsRoot;
+            string n = HumanVillageNatureModelsRoot;
+
+            InstantiateLocationProp($"{b}/House_1.prefab", "House1", p, -30f, 22f, 30f, 10f, building, true);
+            InstantiateLocationProp($"{b}/House_3.prefab", "House2", p, 30f, 26f, -25f, 10f, building, true);
+            InstantiateLocationProp($"{b}/House_5.prefab", "House3", p, -38f, -16f, 15f, 10f, building, true);
+            InstantiateLocationProp($"{b}/House_2.prefab", "House4", p, 36f, -12f, -60f, 10f, building, true);
+            InstantiateLocationProp($"{b}/House_4.prefab", "House5", p, 8f, 38f, 180f, 10f, building, true);
+            InstantiateLocationProp($"{b}/House_6.prefab", "House6", p, -12f, -4f, 90f, 9f, building, true);
+
+            InstantiateLocationProp($"{e}/Shop_1.fbx", "Shop1", p, -14f, 12f, 30f, 6f, prop, true);
+            InstantiateLocationProp($"{e}/Shop_2.fbx", "Shop2", p, 14f, 10f, -25f, 6f, prop, true);
+            InstantiateLocationProp($"{e}/Well_1.fbx", "Well", p, 3f, 3f, 0f, 3.5f, stone, true);
+            InstantiateLocationProp($"{e}/Cart_1.fbx", "Cart", p, -6f, -12f, 60f, 3f, prop, true);
+            InstantiateLocationProp($"{e}/Lantern_1.fbx", "Lantern1", p, 6f, 15f, 0f, 4.5f, prop, false);
+            InstantiateLocationProp($"{e}/Lantern_2.fbx", "Lantern2", p, -18f, 8f, 0f, 4.5f, prop, false);
+            InstantiateLocationProp($"{e}/Barrel.fbx", "Barrel", p, 17f, -2f, 0f, 2.5f, prop, false);
+            InstantiateLocationProp($"{e}/Bridge_centre.fbx", "Bridge", p, 0f, -30f, 90f, 3f, prop, true);
+
+            InstantiateLocationProp($"{n}/Broadleaf_1.fbx", "Tree1", p, -46f, 30f, 0f, 16f, nature, true);
+            InstantiateLocationProp($"{n}/Broadleaf_2.fbx", "Tree2", p, 46f, 30f, 25f, 16f, nature, true);
+            InstantiateLocationProp($"{n}/Broadleaf_3.fbx", "Tree3", p, 42f, -34f, -45f, 16f, nature, true);
+            InstantiateLocationProp($"{n}/Bush_1.fbx", "Bush1", p, -22f, 16f, 0f, 4f, nature, false);
+            InstantiateLocationProp($"{n}/Bush_2.fbx", "Bush2", p, 22f, 18f, 0f, 4f, nature, false);
+            InstantiateLocationProp($"{n}/Stone_1.fbx", "Stone1", p, -34f, -8f, 0f, 3f, stone, true);
+            InstantiateLocationProp($"{n}/Stone_2.fbx", "Stone2", p, 34f, -22f, 0f, 3f, stone, true);
+
+            float playerGroundY = SampleGroundY(-4f, -6f, 0f);
+            CreateMigrationPlayer(root.transform, new Vector3(-4f, playerGroundY + 2f, -6f));
+            CreateFollowCamera(root.transform, new Vector3(0f, 34f, -66f), Quaternion.Euler(28f, 0f, 0f));
+            CreateGlobalUi(root.transform);
+
+            float portalGroundY = SampleGroundY(-20f, -14f, 0f);
+            CreatePortal(root.transform, "BambooHomeReturnPortal", new Vector3(-20f, portalGroundY + 2f, -14f), returnTo, portalColor);
+
+            EditorSceneManager.SaveScene(scene, scenePath);
+        }
+
         // Bespoke Godot nature locations that reuse the generic nature builder on flat ground with
         // distinctive palettes (Magic Forest = dark/teal woods; Misty Lake = blue-grey "misty water").
         private static void CreateBespokeNatureScenes()
@@ -2899,7 +2985,11 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(FantasyForestScenePath, true),
                 new EditorBuildSettingsScene(AngryMeshMeadowScenePath, true),
                 new EditorBuildSettingsScene(MagicForestScenePath, true),
-                new EditorBuildSettingsScene(MistyLakeScenePath, true)
+                new EditorBuildSettingsScene(MistyLakeScenePath, true),
+                new EditorBuildSettingsScene(TownWorldScenePath, true),
+                new EditorBuildSettingsScene(FantasyVillageScenePath, true),
+                new EditorBuildSettingsScene(SuntailVillagePlayableScenePath, true),
+                new EditorBuildSettingsScene(SuntailVillageImportedScenePath, true)
             };
         }
 

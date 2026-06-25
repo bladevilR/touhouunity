@@ -22,7 +22,10 @@ namespace TouhouMigration.Runtime.Data
             new MigrationSceneOption("pure_nature_jungle", "纯自然·雨林", true, MigrationSceneId.PureNatureJungle),
             new MigrationSceneOption("pure_nature_meadows", "纯自然·草甸", true, MigrationSceneId.PureNatureMeadows),
             new MigrationSceneOption("angrymesh_meadow", "草甸·野境", true, MigrationSceneId.AngryMeshMeadow),
-            new MigrationSceneOption("town_world", "旧版城镇", false, MigrationSceneId.BambooHomeVerticalSlice),
+            new MigrationSceneOption("town_world", "旧版城镇", true, MigrationSceneId.TownWorld),
+            new MigrationSceneOption("fantasy_village", "幻想乡村", true, MigrationSceneId.FantasyVillage),
+            new MigrationSceneOption("suntail_village_playable", "向尾村·可玩", true, MigrationSceneId.SuntailVillagePlayable),
+            new MigrationSceneOption("suntail_village_imported", "向尾村·导入", true, MigrationSceneId.SuntailVillageImported),
             new MigrationSceneOption("combat", "战斗竞技场", false, MigrationSceneId.BambooHomeVerticalSlice),
             new MigrationSceneOption("cirno_mvp", "琪露诺试炼", false, MigrationSceneId.BambooHomeVerticalSlice)
         };

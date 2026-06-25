@@ -17,6 +17,10 @@ namespace TouhouMigration.Runtime.Data
         public const string AngryMeshMeadow = "AngryMeshMeadow";
         public const string MagicForest = "MagicForest";
         public const string MistyLake = "MistyLake";
+        public const string TownWorld = "TownWorld";
+        public const string FantasyVillage = "FantasyVillage";
+        public const string SuntailVillagePlayable = "SuntailVillagePlayable";
+        public const string SuntailVillageImported = "SuntailVillageImported";
 
         public static string ToSceneName(MigrationSceneId sceneId)
         {
@@ -35,6 +39,10 @@ namespace TouhouMigration.Runtime.Data
                 MigrationSceneId.AngryMeshMeadow => AngryMeshMeadow,
                 MigrationSceneId.MagicForest => MagicForest,
                 MigrationSceneId.MistyLake => MistyLake,
+                MigrationSceneId.TownWorld => TownWorld,
+                MigrationSceneId.FantasyVillage => FantasyVillage,
+                MigrationSceneId.SuntailVillagePlayable => SuntailVillagePlayable,
+                MigrationSceneId.SuntailVillageImported => SuntailVillageImported,
                 _ => throw new ArgumentOutOfRangeException(nameof(sceneId), sceneId, "Unknown migration scene id.")
             };
         }

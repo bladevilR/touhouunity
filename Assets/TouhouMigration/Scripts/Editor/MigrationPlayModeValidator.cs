@@ -43,6 +43,10 @@ namespace TouhouMigration.Editor
             "Assets/TouhouMigration/Scenes/AngryMeshMeadow.unity",
             "Assets/TouhouMigration/Scenes/MagicForest.unity",
             "Assets/TouhouMigration/Scenes/MistyLake.unity",
+            "Assets/TouhouMigration/Scenes/TownWorld.unity",
+            "Assets/TouhouMigration/Scenes/FantasyVillage.unity",
+            "Assets/TouhouMigration/Scenes/SuntailVillagePlayable.unity",
+            "Assets/TouhouMigration/Scenes/SuntailVillageImported.unity",
             "Assets/TouhouMigration/Scenes/TitleScreen.unity",
         };
 

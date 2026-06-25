@@ -14,6 +14,10 @@ namespace TouhouMigration.Runtime.Data
         PureNatureFantasyForest,
         AngryMeshMeadow,
         MagicForest,
-        MistyLake
+        MistyLake,
+        TownWorld,
+        FantasyVillage,
+        SuntailVillagePlayable,
+        SuntailVillageImported
     }
 }

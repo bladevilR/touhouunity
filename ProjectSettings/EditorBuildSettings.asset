@@ -44,4 +44,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouhouMigration/Scenes/MistyLake.unity
     guid: d1f29f2b7aea84ee2ae3cd4d01ae1253
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/TownWorld.unity
+    guid: 6477559710a91451eb94221d06577cc8
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/FantasyVillage.unity
+    guid: 63dbcef37295d4c94b1ce6a388dfdf9b
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/SuntailVillagePlayable.unity
+    guid: 866cf6fd5aaf54d6d99d7675b818cb97
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/SuntailVillageImported.unity
+    guid: 284314a7d00724bbeb19e07fa467a5c2
   m_configObjects: {}
