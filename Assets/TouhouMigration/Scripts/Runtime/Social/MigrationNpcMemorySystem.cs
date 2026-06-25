@@ -37,6 +37,30 @@ namespace TouhouMigration.Runtime.Social
         public bool? Liked { get; set; }     // GiftReceived: was the gift liked? (default true)
         public bool? WasGood { get; set; }   // WitnessedAction: was the witnessed action good? (default true)
         public string Aspect { get; set; }   // DialogueChoice: which relationship aspect the choice affects
+        public string Topic { get; set; }    // conversation topic this memory is about (for dialogue modifiers)
+    }
+
+    // How an NPC greets the player, derived from its impression (Godot get_dialogue_modifier greeting_style).
+    public enum GreetingStyle { Neutral, Cold, Wary, Polite, Warm, Affectionate }
+
+    // Coarse trust banding for dialogue (Godot get_dialogue_modifier trust_level).
+    public enum TrustLevel { Low, Normal, High }
+
+    // Dialogue adjustments an NPC applies based on its memories of the player (Godot get_dialogue_modifier).
+    public sealed class NpcDialogueModifier
+    {
+        public NpcDialogueModifier(GreetingStyle greetingStyle, TrustLevel trustLevel, System.Collections.Generic.IReadOnlyList<string> specialTopics, System.Collections.Generic.IReadOnlyList<string> avoidTopics)
+        {
+            GreetingStyle = greetingStyle;
+            TrustLevel = trustLevel;
+            SpecialTopics = specialTopics;
+            AvoidTopics = avoidTopics;
+        }
+
+        public GreetingStyle GreetingStyle { get; }
+        public TrustLevel TrustLevel { get; }
+        public System.Collections.Generic.IReadOnlyList<string> SpecialTopics { get; }
+        public System.Collections.Generic.IReadOnlyList<string> AvoidTopics { get; }
     }
 
     // Lets NPCs remember the player's actions and form an impression (Godot NPCMemorySystem). Each memory
@@ -97,6 +121,7 @@ namespace TouhouMigration.Runtime.Social
             public NpcMemoryType Type;
             public double Weight;
             public bool IsPositive;
+            public string Topic;
         }
 
         private sealed class NpcRecord
@@ -126,6 +151,7 @@ namespace TouhouMigration.Runtime.Social
                 Type = type,
                 Weight = MemoryWeights.TryGetValue(type, out int weight) ? weight : 10,
                 IsPositive = IsPositiveMemory(type, context),
+                Topic = context?.Topic,
             };
 
             int capacity = GetPersonality(npcId).MemoryCapacity;
@@ -206,6 +232,49 @@ namespace TouhouMigration.Runtime.Social
                 case NpcImpression.Hostile: return "敌对";
                 default: return "未知";
             }
+        }
+
+        // Dialogue adjustments from this NPC's memories of the player (Godot get_dialogue_modifier): a greeting
+        // style + trust band from the current impression/trust, plus special topics (from notable memories) and
+        // topics to avoid (from negative memories).
+        public NpcDialogueModifier GetDialogueModifier(string npcId)
+        {
+            NpcRecord record = EnsureNpc(npcId);
+
+            GreetingStyle greeting;
+            switch (record.Impression)
+            {
+                case NpcImpression.Hostile: greeting = GreetingStyle.Cold; break;
+                case NpcImpression.Distrustful: greeting = GreetingStyle.Wary; break;
+                case NpcImpression.Stranger: greeting = GreetingStyle.Polite; break;
+                case NpcImpression.Friend:
+                case NpcImpression.CloseFriend: greeting = GreetingStyle.Warm; break;
+                case NpcImpression.Romantic: greeting = GreetingStyle.Affectionate; break;
+                default: greeting = GreetingStyle.Neutral; break;
+            }
+
+            double trust = record.Aspects["trust"];
+            TrustLevel trustLevel = trust < 30.0 ? TrustLevel.Low : (trust > 70.0 ? TrustLevel.High : TrustLevel.Normal);
+
+            List<string> specialTopics = new List<string>();
+            foreach (Memory memory in record.NotableMemories)
+            {
+                if (!string.IsNullOrEmpty(memory.Topic))
+                {
+                    specialTopics.Add(memory.Topic);
+                }
+            }
+
+            List<string> avoidTopics = new List<string>();
+            foreach (Memory memory in record.Memories)
+            {
+                if (!memory.IsPositive && !string.IsNullOrEmpty(memory.Topic))
+                {
+                    avoidTopics.Add(memory.Topic);
+                }
+            }
+
+            return new NpcDialogueModifier(greeting, trustLevel, specialTopics, avoidTopics);
         }
 
         public int GetRelationshipAspect(string npcId, string aspect)

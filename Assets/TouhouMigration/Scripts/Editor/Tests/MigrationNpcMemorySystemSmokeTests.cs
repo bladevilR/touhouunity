@@ -23,6 +23,9 @@ namespace TouhouMigration.Editor.Tests
             TestMemoryForgottenWhenWeightDropsBelowMinimum();
             TestGratitudeRateSlowsPositiveMemoryDecay();
             TestForgivenessRateSlowsNegativeMemoryDecay();
+            TestGreetingStyleReflectsImpression();
+            TestTrustLevelReflectsTrust();
+            TestSpecialAndAvoidTopicsFromMemories();
             Debug.Log("Migration NPC memory smoke tests passed.");
         }
 
@@ -136,6 +139,45 @@ namespace TouhouMigration.Editor.Tests
 
             AssertEqual(0, memory.GetMemoryCount("marisa"), "A forgiving NPC lets go of a grudge (30-25.2=4.8).");
             AssertEqual(1, memory.GetMemoryCount("sakuya"), "An unforgiving NPC holds the grudge (30-8.4=21.6).");
+        }
+
+        private static void TestGreetingStyleReflectsImpression()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            AssertEqual(GreetingStyle.Neutral, memory.GetDialogueModifier("a").GreetingStyle, "An unknown NPC greets neutrally.");
+            memory.AddMemory("b", NpcMemoryType.GiftReceived); // affection up, familiarity 0 -> Stranger
+            AssertEqual(GreetingStyle.Polite, memory.GetDialogueModifier("b").GreetingStyle, "A stranger greets politely.");
+            memory.AddMemory("c", NpcMemoryType.Betrayal);
+            memory.AddMemory("c", NpcMemoryType.Betrayal); // trust 0 -> Hostile
+            AssertEqual(GreetingStyle.Cold, memory.GetDialogueModifier("c").GreetingStyle, "A hostile NPC greets coldly.");
+        }
+
+        private static void TestTrustLevelReflectsTrust()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            AssertEqual(TrustLevel.Normal, memory.GetDialogueModifier("a").TrustLevel, "Default trust 50 is normal.");
+            memory.AddMemory("b", NpcMemoryType.Betrayal);
+            memory.AddMemory("b", NpcMemoryType.Betrayal); // trust 0
+            AssertEqual(TrustLevel.Low, memory.GetDialogueModifier("b").TrustLevel, "Trust below 30 is low.");
+            for (int i = 0; i < 5; i++)
+            {
+                memory.AddMemory("c", NpcMemoryType.QuestHelp); // trust 50 -> 75
+            }
+
+            AssertEqual(TrustLevel.High, memory.GetDialogueModifier("c").TrustLevel, "Trust above 70 is high.");
+        }
+
+        private static void TestSpecialAndAvoidTopicsFromMemories()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            // SpecialEvent (weight 80) is notable + positive; a disliked gift (weight 30) is non-notable + negative.
+            memory.AddMemory("npc", NpcMemoryType.SpecialEvent, new NpcMemoryContext { Topic = "festival" });
+            memory.AddMemory("npc", NpcMemoryType.GiftReceived, new NpcMemoryContext { Liked = false, Topic = "badgift" });
+            NpcDialogueModifier mod = memory.GetDialogueModifier("npc");
+            AssertEqual(1, mod.SpecialTopics.Count, "A notable memory contributes a special topic.");
+            AssertEqual("festival", mod.SpecialTopics[0], "The special topic is the notable memory's topic.");
+            AssertEqual(1, mod.AvoidTopics.Count, "A negative memory contributes an avoid topic.");
+            AssertEqual("badgift", mod.AvoidTopics[0], "The avoid topic is the negative memory's topic.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
