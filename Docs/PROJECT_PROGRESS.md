@@ -25,7 +25,7 @@ Last updated: 2026-06-25 (session 3)
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: F1, fatigue stat system (session 3). Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: M1, meta progression economy (session 3). Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system), S1 (NPC memory system), M1 (meta progression economy). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,59 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### M1: Meta Progression — Between-Run Upgrade Economy
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Port the core of `MetaProgressionManager` + `MetaProgressionData.MetaUpgrade` — the roguelike between-run upgrade economy. New `Runtime/Progression` area.
+
+Completed:
+
+- New `MigrationMetaUpgrade` (`Runtime/Progression/`): `GetCostForLevel` = `(int)(base_cost * mult^level)`, `-1` at max (Godot `get_cost_for_level`); `GetEffectAtLevel` = `effect_per_level * level`.
+- New `MigrationMetaProgression`: in-memory currency + per-upgrade levels; `CanAfford` / `CanPurchaseUpgrade` / `PurchaseUpgrade` (spends + increments, gated by affordability + max level) / `GetNextUpgradeCost` / `IsUpgradeMaxed` / `GetTotalBonus(effectType)`.
+
+TDD (red -> green):
+
+- New `MigrationMetaProgressionSmokeTests` (purchase deducts + raises level; unaffordable blocks; geometric cost scaling; max-level cap; total-bonus sum by type; unknown-upgrade safety).
+- RED: genuine assertion failure (stub CanPurchase false), 0 compile errors.
+- GREEN: full regression 65/65 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Progression/MigrationMetaProgression.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationMetaProgressionSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Port the concrete upgrade catalog (`MetaProgressionData.initialize`, ~130 lines of definitions) + categories; persist currency/levels (Godot `GameSaveManager`); wire bonuses into combat/run start; signals.
+
+### S1: NPC Memory System — Memories Shift Aspects + Impression
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Port the core of Godot `NPCMemorySystem` — NPCs remembering player actions and forming an impression. Adds memory depth to `Runtime/Social`.
+
+Completed:
+
+- New `MigrationNpcMemorySystem` (`Runtime/Social/`): `AddMemory(npc, type, context)` forms a weighted positive/negative memory (`MEMORY_WEIGHTS`); per-NPC capacity evicts the weakest when full; each memory shifts relationship aspects (trust/affection/respect/familiarity 0-100) by weight/10 per type (Godot `_update_relationship_from_memory`); impression recomputed from trust/affection/familiarity bands (Unknown..Hostile) with Chinese names; queries `GetImpression(Name)` / `GetRelationshipAspect` / `GetMemoryCount` / `HasMemoryOf`.
+
+TDD (red -> green):
+
+- New `MigrationNpcMemorySystemSmokeTests` (new NPC defaults; gift raises affection; betrayal lowers trust 2x + affection; repeated betrayal -> Hostile; quest help raises trust + respect; has-memory/count; capacity evicts weakest).
+- RED: genuine assertion failure (stub impression Friend vs Unknown), 0 compile errors.
+- GREEN: full regression 64/64 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Social/MigrationNpcMemorySystem.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationNpcMemorySystemSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Memory decay (personality forgiveness/gratitude rates, day-driven), save/load, `get_dialogue_modifier` (memory -> dialogue), notable-memory queries, signals. Wire into the dialogue context + bond systems.
 
 ### F1: Fatigue Stat System (Godot FatigueSystem core)
 
