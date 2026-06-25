@@ -6,6 +6,7 @@ using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Data;
 using TouhouMigration.Runtime.Farming;
+using TouhouMigration.Runtime.Fishing;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Player;
@@ -2152,7 +2153,27 @@ namespace TouhouMigration.Editor
             CreateNatureLocationScene(MigrationSceneCatalog.MagicForest, MagicForestScenePath, LocationsArtRoot + "/MagicForest", string.Empty,
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.45f, 0.85f, 0.45f), new Color(0.20f, 0.34f, 0.22f, 1f), new Color(0.14f, 0.32f, 0.22f, 1f));
             CreateNatureLocationScene(MigrationSceneCatalog.MistyLake, MistyLakeScenePath, LocationsArtRoot + "/MistyLake", string.Empty,
-                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.45f, 0.72f, 0.85f, 0.45f), new Color(0.34f, 0.46f, 0.48f, 1f), new Color(0.26f, 0.42f, 0.40f, 1f));
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.45f, 0.72f, 0.85f, 0.45f), new Color(0.34f, 0.46f, 0.48f, 1f), new Color(0.26f, 0.42f, 0.40f, 1f),
+                CreateMistyLakeFishingSpot);
+        }
+
+        // A small dock + fishing-spot prop at the misty lake: a MigrationFishingSpotInteractor lets the
+        // player cast (interact key) to roll a weighted catch into the inventory via the owner's service.
+        private static void CreateMistyLakeFishingSpot(Transform root)
+        {
+            string artRoot = LocationsArtRoot + "/MistyLake";
+            EnsureAssetFolder(artRoot + "/Materials");
+            Material wood = EnsureSimpleMaterial(artRoot + "/Materials/Dock.mat", new Color(0.46f, 0.34f, 0.22f, 1f));
+            Material water = EnsureSimpleMaterial(artRoot + "/Materials/FishingWater.mat", new Color(0.30f, 0.52f, 0.62f, 1f));
+
+            GameObject lm = new GameObject("FishingSpot");
+            lm.transform.SetParent(root);
+            Transform t = lm.transform;
+
+            float dockGroundY = SampleGroundY(8f, 6f, 0f);
+            CreatePrimitiveBlock(t, "Dock", PrimitiveType.Cube, new Vector3(8f, dockGroundY + 0.3f, 6f), new Vector3(3f, 0.4f, 6f), Vector3.zero, wood, false);
+            GameObject ripple = CreatePrimitiveBlock(t, "FishingWater", PrimitiveType.Cylinder, new Vector3(8f, dockGroundY + 0.05f, 11f), new Vector3(5f, 0.1f, 5f), Vector3.zero, water, false);
+            ripple.AddComponent<MigrationFishingSpotInteractor>();
         }
 
         // Generic nature-location builder reused by every promoted environment pack (PureNature
@@ -2166,7 +2187,8 @@ namespace TouhouMigration.Editor
             MigrationSceneId returnTo,
             Color portalColor,
             Color terrainColor,
-            Color treeColor)
+            Color treeColor,
+            System.Action<Transform> decorate = null)
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = sceneName;
@@ -2192,6 +2214,8 @@ namespace TouhouMigration.Editor
 
             float portalGroundY = SampleGroundY(-16f, -10f, 0f);
             CreatePortal(root.transform, "BambooHomeReturnPortal", new Vector3(-16f, portalGroundY + 2f, -10f), returnTo, portalColor);
+
+            decorate?.Invoke(root.transform);
 
             EditorSceneManager.SaveScene(scene, scenePath);
         }
