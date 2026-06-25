@@ -62,19 +62,35 @@ namespace TouhouMigration.Runtime.Social
             { NpcMemoryType.RepeatedVisit, 15 },
         };
 
-        // Per-NPC memory capacity (Godot NPC_PERSONALITY.memory_capacity); others use the default.
-        private static readonly Dictionary<string, int> MemoryCapacity = new Dictionary<string, int>
+        // Per-NPC personality (Godot NPC_PERSONALITY): memory capacity + decay rates. Others use the default.
+        private sealed class Personality
         {
-            { "keine", 50 },
-            { "reimu", 40 },
-            { "marisa", 35 },
-            { "koishi", 10 },
-            { "sakuya", 60 },
-            { "kaguya", 100 },
+            public int MemoryCapacity;
+            public double ForgivenessRate; // negative memories decay *= this (lower = holds grudges longer)
+            public double GratitudeRate;   // positive memories decay /= this (higher = cherishes good memories)
+        }
+
+        private static readonly Dictionary<string, Personality> Personalities = new Dictionary<string, Personality>
+        {
+            { "keine", new Personality { MemoryCapacity = 50, ForgivenessRate = 0.7, GratitudeRate = 1.2 } },
+            { "reimu", new Personality { MemoryCapacity = 40, ForgivenessRate = 0.5, GratitudeRate = 0.8 } },
+            { "marisa", new Personality { MemoryCapacity = 35, ForgivenessRate = 0.9, GratitudeRate = 1.0 } },
+            { "koishi", new Personality { MemoryCapacity = 10, ForgivenessRate = 1.0, GratitudeRate = 0.5 } },
+            { "sakuya", new Personality { MemoryCapacity = 60, ForgivenessRate = 0.3, GratitudeRate = 1.0 } },
+            { "kaguya", new Personality { MemoryCapacity = 100, ForgivenessRate = 0.6, GratitudeRate = 1.5 } },
         };
 
-        private const int DefaultMemoryCapacity = 30;
+        private static readonly Personality DefaultPersonality =
+            new Personality { MemoryCapacity = 30, ForgivenessRate = 0.5, GratitudeRate = 1.0 };
+
         private const double NotableWeight = 80.0;
+        private const double MemoryDecayRate = 2.0;
+        private const double MinMemoryWeight = 5.0;
+
+        private static Personality GetPersonality(string npcId)
+        {
+            return Personalities.TryGetValue(npcId ?? string.Empty, out Personality personality) ? personality : DefaultPersonality;
+        }
 
         private sealed class Memory
         {
@@ -112,7 +128,7 @@ namespace TouhouMigration.Runtime.Social
                 IsPositive = IsPositiveMemory(type, context),
             };
 
-            int capacity = MemoryCapacity.TryGetValue(npcId ?? string.Empty, out int cap) ? cap : DefaultMemoryCapacity;
+            int capacity = GetPersonality(npcId).MemoryCapacity;
             if (record.Memories.Count >= capacity)
             {
                 RemoveWeakestMemory(record);
@@ -124,6 +140,50 @@ namespace TouhouMigration.Runtime.Social
             if (memory.Weight >= NotableWeight)
             {
                 record.NotableMemories.Add(memory);
+            }
+        }
+
+        // Decay every NPC's memories by one day (Godot _decay_all_memories, driven by the day_started signal).
+        public void DecayAllMemories()
+        {
+            foreach (KeyValuePair<string, NpcRecord> pair in npcs)
+            {
+                DecayNpcMemories(pair.Key, pair.Value);
+            }
+        }
+
+        // Reduce each memory's weight by the personality-adjusted decay (Godot _decay_npc_memories): positive
+        // memories fade slower for grateful NPCs, negative memories fade slower for unforgiving ones. Memories
+        // below the minimum weight are forgotten.
+        private static void DecayNpcMemories(string npcId, NpcRecord record)
+        {
+            Personality personality = GetPersonality(npcId);
+            List<Memory> forgotten = null;
+            foreach (Memory memory in record.Memories)
+            {
+                double decay = MemoryDecayRate;
+                if (memory.IsPositive)
+                {
+                    decay /= personality.GratitudeRate;
+                }
+                else
+                {
+                    decay *= personality.ForgivenessRate;
+                }
+
+                memory.Weight -= decay;
+                if (memory.Weight < MinMemoryWeight)
+                {
+                    (forgotten ??= new List<Memory>()).Add(memory);
+                }
+            }
+
+            if (forgotten != null)
+            {
+                foreach (Memory memory in forgotten)
+                {
+                    record.Memories.Remove(memory);
+                }
             }
         }
 

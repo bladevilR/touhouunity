@@ -20,6 +20,9 @@ namespace TouhouMigration.Editor.Tests
             TestQuestHelpRaisesTrustAndRespect();
             TestHasMemoryAndCount();
             TestMemoryCapacityEvictsWeakest();
+            TestMemoryForgottenWhenWeightDropsBelowMinimum();
+            TestGratitudeRateSlowsPositiveMemoryDecay();
+            TestForgivenessRateSlowsNegativeMemoryDecay();
             Debug.Log("Migration NPC memory smoke tests passed.");
         }
 
@@ -88,6 +91,51 @@ namespace TouhouMigration.Editor.Tests
             }
 
             AssertEqual(10, memory.GetMemoryCount("koishi"), "Memory storage is capped at the NPC's capacity.");
+        }
+
+        private static void TestMemoryForgottenWhenWeightDropsBelowMinimum()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            // "youmu" uses the default personality (gratitude 1.0); a RepeatedVisit (weight 15, positive)
+            // decays 2.0/day, so 15 -> 5 after 5 days (kept) -> 3 after 6 (forgotten, below the min of 5).
+            memory.AddMemory("youmu", NpcMemoryType.RepeatedVisit);
+            for (int i = 0; i < 5; i++)
+            {
+                memory.DecayAllMemories();
+            }
+
+            AssertEqual(1, memory.GetMemoryCount("youmu"), "A memory still at the minimum weight is not yet forgotten.");
+            memory.DecayAllMemories();
+            AssertEqual(0, memory.GetMemoryCount("youmu"), "A memory below the minimum weight is forgotten.");
+        }
+
+        private static void TestGratitudeRateSlowsPositiveMemoryDecay()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            memory.AddMemory("koishi", NpcMemoryType.RepeatedVisit);  // gratitude 0.5 -> positive decay 4.0/day
+            memory.AddMemory("kaguya", NpcMemoryType.RepeatedVisit);  // gratitude 1.5 -> positive decay ~1.33/day
+            for (int i = 0; i < 3; i++)
+            {
+                memory.DecayAllMemories();
+            }
+
+            AssertEqual(0, memory.GetMemoryCount("koishi"), "An ungrateful NPC forgets a good memory quickly (15-12=3).");
+            AssertEqual(1, memory.GetMemoryCount("kaguya"), "A grateful NPC keeps a good memory longer (15-4=11).");
+        }
+
+        private static void TestForgivenessRateSlowsNegativeMemoryDecay()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            NpcMemoryContext disliked = new NpcMemoryContext { Liked = false };
+            memory.AddMemory("marisa", NpcMemoryType.GiftReceived, disliked);  // forgiveness 0.9 -> neg decay 1.8/day
+            memory.AddMemory("sakuya", NpcMemoryType.GiftReceived, disliked);  // forgiveness 0.3 -> neg decay 0.6/day
+            for (int i = 0; i < 14; i++)
+            {
+                memory.DecayAllMemories();
+            }
+
+            AssertEqual(0, memory.GetMemoryCount("marisa"), "A forgiving NPC lets go of a grudge (30-25.2=4.8).");
+            AssertEqual(1, memory.GetMemoryCount("sakuya"), "An unforgiving NPC holds the grudge (30-8.4=21.6).");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
