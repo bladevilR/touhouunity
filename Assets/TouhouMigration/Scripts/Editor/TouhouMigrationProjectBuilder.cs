@@ -76,6 +76,8 @@ namespace TouhouMigration.Editor
         private const string MountainsScenePath = ScenesRoot + "/PureNatureMountains.unity";
         private const string FantasyForestScenePath = ScenesRoot + "/PureNatureFantasyForest.unity";
         private const string AngryMeshMeadowScenePath = ScenesRoot + "/AngryMeshMeadow.unity";
+        private const string MagicForestScenePath = ScenesRoot + "/MagicForest.unity";
+        private const string MistyLakeScenePath = ScenesRoot + "/MistyLake.unity";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -109,6 +111,7 @@ namespace TouhouMigration.Editor
             CreateHumanVillageVerticalSlice();
             CreatePureNatureMeadowsScene();
             CreatePureNatureVariantScenes();
+            CreateBespokeNatureScenes();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
@@ -124,6 +127,7 @@ namespace TouhouMigration.Editor
             AssetDatabase.Refresh();
             CreatePureNatureMeadowsScene();
             CreatePureNatureVariantScenes();
+            CreateBespokeNatureScenes();
             RegisterBuildScenes();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -1616,6 +1620,16 @@ namespace TouhouMigration.Editor
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.85f, 0.78f, 0.40f, 0.45f), new Color(0.33f, 0.49f, 0.24f, 1f), new Color(0.22f, 0.44f, 0.22f, 1f));
         }
 
+        // Bespoke Godot nature locations that reuse the generic nature builder on flat ground with
+        // distinctive palettes (Magic Forest = dark/teal woods; Misty Lake = blue-grey "misty water").
+        private static void CreateBespokeNatureScenes()
+        {
+            CreateNatureLocationScene(MigrationSceneCatalog.MagicForest, MagicForestScenePath, LocationsArtRoot + "/MagicForest", string.Empty,
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.45f, 0.85f, 0.45f), new Color(0.20f, 0.34f, 0.22f, 1f), new Color(0.14f, 0.32f, 0.22f, 1f));
+            CreateNatureLocationScene(MigrationSceneCatalog.MistyLake, MistyLakeScenePath, LocationsArtRoot + "/MistyLake", string.Empty,
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.45f, 0.72f, 0.85f, 0.45f), new Color(0.34f, 0.46f, 0.48f, 1f), new Color(0.26f, 0.42f, 0.40f, 1f));
+        }
+
         // Generic nature-location builder reused by every promoted environment pack (PureNature
         // variants, AngryMesh, and the bespoke nature locations). Pass an empty terrainObjPath to
         // get a large flat ground instead of a promoted terrain mesh.
@@ -2883,7 +2897,9 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(IslandsScenePath, true),
                 new EditorBuildSettingsScene(MountainsScenePath, true),
                 new EditorBuildSettingsScene(FantasyForestScenePath, true),
-                new EditorBuildSettingsScene(AngryMeshMeadowScenePath, true)
+                new EditorBuildSettingsScene(AngryMeshMeadowScenePath, true),
+                new EditorBuildSettingsScene(MagicForestScenePath, true),
+                new EditorBuildSettingsScene(MistyLakeScenePath, true)
             };
         }
 

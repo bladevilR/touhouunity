@@ -12,6 +12,8 @@ namespace TouhouMigration.Runtime.Data
         PureNatureIslands,
         PureNatureMountains,
         PureNatureFantasyForest,
-        AngryMeshMeadow
+        AngryMeshMeadow,
+        MagicForest,
+        MistyLake
     }
 }

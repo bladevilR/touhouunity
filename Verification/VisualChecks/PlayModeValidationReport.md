@@ -12,5 +12,7 @@
 | PureNatureMountains | yes | Verification/VisualChecks/PureNatureMountains_PlayMode.png | 0 |
 | PureNatureFantasyForest | yes | Verification/VisualChecks/PureNatureFantasyForest_PlayMode.png | 0 |
 | AngryMeshMeadow | yes | Verification/VisualChecks/AngryMeshMeadow_PlayMode.png | 0 |
+| MagicForest | yes | Verification/VisualChecks/MagicForest_PlayMode.png | 0 |
+| MistyLake | yes | Verification/VisualChecks/MistyLake_PlayMode.png | 0 |
 | TitleScreen | yes | Verification/VisualChecks/TitleScreen_PlayMode.png | 0 |
 

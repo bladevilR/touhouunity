@@ -15,6 +15,8 @@ namespace TouhouMigration.Runtime.Data
         public const string PureNatureMountains = "PureNatureMountains";
         public const string PureNatureFantasyForest = "PureNatureFantasyForest";
         public const string AngryMeshMeadow = "AngryMeshMeadow";
+        public const string MagicForest = "MagicForest";
+        public const string MistyLake = "MistyLake";
 
         public static string ToSceneName(MigrationSceneId sceneId)
         {
@@ -31,6 +33,8 @@ namespace TouhouMigration.Runtime.Data
                 MigrationSceneId.PureNatureMountains => PureNatureMountains,
                 MigrationSceneId.PureNatureFantasyForest => PureNatureFantasyForest,
                 MigrationSceneId.AngryMeshMeadow => AngryMeshMeadow,
+                MigrationSceneId.MagicForest => MagicForest,
+                MigrationSceneId.MistyLake => MistyLake,
                 _ => throw new ArgumentOutOfRangeException(nameof(sceneId), sceneId, "Unknown migration scene id.")
             };
         }

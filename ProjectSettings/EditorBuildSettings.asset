@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouhouMigration/Scenes/AngryMeshMeadow.unity
     guid: 3788852b6fb7e498b8ed20e608783b6c
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/MagicForest.unity
+    guid: 114636143e05545f8a9e26c1237fad6e
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/MistyLake.unity
+    guid: d1f29f2b7aea84ee2ae3cd4d01ae1253
   m_configObjects: {}

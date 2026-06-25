@@ -68,7 +68,7 @@ namespace TouhouMigration.Editor.Tests
             int count = 0;
             bool foundBamboo = false;
             bool foundTown = false;
-            bool foundMagicForestDisabled = false;
+            bool foundMagicForestAvailable = false;
             bool foundFarmDisabled = false;
 
             foreach (object option in (IEnumerable)allOptions)
@@ -87,9 +87,9 @@ namespace TouhouMigration.Editor.Tests
                     foundTown = true;
                 }
 
-                if (key == "magic_forest" && !isAvailable)
+                if (key == "magic_forest" && isAvailable)
                 {
-                    foundMagicForestDisabled = true;
+                    foundMagicForestAvailable = true;
                 }
 
                 if (key == "farm" && !isAvailable)
@@ -101,7 +101,7 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, count >= 10, "Scene registry should expose the formal scene-selection surface.");
             AssertEqual(true, foundBamboo, "Bamboo Home should be selectable because it has a Unity scene.");
             AssertEqual(true, foundTown, "Human Village/town should be selectable because it has a Unity scene.");
-            AssertEqual(true, foundMagicForestDisabled, "Magic Forest should be listed but disabled until migrated.");
+            AssertEqual(true, foundMagicForestAvailable, "Magic Forest is now migrated (E3) and should be selectable.");
             AssertEqual(true, foundFarmDisabled, "Farm should be listed but disabled until migrated.");
         }
 
