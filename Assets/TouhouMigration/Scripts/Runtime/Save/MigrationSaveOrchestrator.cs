@@ -18,6 +18,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly SocialBondService bonds;
         private readonly QuestDeliveryService quests;
         private readonly HumanityService humanity;
+        private readonly MigrationFatigueSystem fatigue;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -25,7 +26,8 @@ namespace TouhouMigration.Runtime.Save
             CookingBuffService cookingBuffs,
             SocialBondService bonds,
             QuestDeliveryService quests,
-            HumanityService humanity)
+            HumanityService humanity,
+            MigrationFatigueSystem fatigue = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -33,6 +35,7 @@ namespace TouhouMigration.Runtime.Save
             this.bonds = bonds;
             this.quests = quests;
             this.humanity = humanity;
+            this.fatigue = fatigue;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -61,6 +64,10 @@ namespace TouhouMigration.Runtime.Save
             if (humanity != null)
             {
                 data.Humanity = humanity.Humanity;
+            }
+            if (fatigue != null)
+            {
+                data.Fatigue = fatigue.CurrentFatigue;
             }
             return data;
         }
@@ -94,6 +101,10 @@ namespace TouhouMigration.Runtime.Save
             if (humanity != null)
             {
                 humanity.Set(data.Humanity);
+            }
+            if (fatigue != null)
+            {
+                fatigue.LoadFatigue(data.Fatigue);
             }
         }
     }

@@ -85,6 +85,17 @@ namespace TouhouMigration.Runtime.Player
             HasCollapsed = false;
         }
 
+        // Restores a persisted fatigue value (save load): sets the absolute value (clamped 0-100) and
+        // re-derives the latched exhausted/collapse flags + warning level from it, without emitting
+        // spurious warnings.
+        public void LoadFatigue(double value)
+        {
+            CurrentFatigue = Math.Clamp(value, 0.0, 100.0);
+            IsExhausted = CurrentFatigue >= FatigueExhausted;
+            HasCollapsed = CurrentFatigue >= FatigueCollapse;
+            lastWarningLevel = Level;
+        }
+
         public string GetFatigueDescription()
         {
             if (CurrentFatigue >= FatigueCollapse)

@@ -27,6 +27,7 @@ namespace TouhouMigration.Runtime.Save
         public float play_time;
         public int total_kills;
         public int humanity = 100;
+        public double fatigue;
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -132,6 +133,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => story_flags;
             set => story_flags = value ?? new List<string>();
+        }
+
+        public double Fatigue
+        {
+            get => fatigue;
+            set => fatigue = Math.Clamp(value, 0.0, 100.0);
         }
 
         public static MigrationSaveData CreateDefault()

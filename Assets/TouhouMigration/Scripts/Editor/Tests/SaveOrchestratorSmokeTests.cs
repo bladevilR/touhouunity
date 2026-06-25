@@ -14,9 +14,31 @@ namespace TouhouMigration.Editor.Tests
         {
             TestBondStateRoundTripsThroughSaveData();
             TestHumanityRoundTripsThroughSaveData();
+            TestFatigueRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
+        }
+
+        private static void TestFatigueRoundTripsThroughSaveData()
+        {
+            MigrationFatigueSystem source = new MigrationFatigueSystem();
+            source.AddFatigue(75.0);
+            AssertEqual(75.0, source.CurrentFatigue, "Source fatigue should reflect the accrual before capture.");
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+            AssertEqual(75.0, data.Fatigue, "Capture should store the live fatigue value into the save record.");
+
+            MigrationFatigueSystem restored = new MigrationFatigueSystem();
+            AssertEqual(0.0, restored.CurrentFatigue, "A fresh fatigue system should start at zero fatigue.");
+
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+            AssertEqual(75.0, restored.CurrentFatigue, "Apply should restore captured fatigue into the live service.");
+            AssertEqual(false, restored.IsExhausted, "Restored fatigue below the exhausted threshold should not latch exhausted.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()
