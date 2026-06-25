@@ -5,6 +5,7 @@ using TouhouMigration.Runtime.Bootstrap;
 using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Data;
+using TouhouMigration.Runtime.Farming;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Player;
@@ -1908,14 +1909,21 @@ namespace TouhouMigration.Editor
             GameObject lm = new GameObject("FarmLandmark");
             lm.transform.SetParent(root.transform);
             Transform t = lm.transform;
-            // Tilled plot rows with crop rows on top.
+            // Tilled plot rows with crop rows on top; the first 9 crops are workable plots wired to the
+            // FarmingManager (plant/water/harvest via MigrationFarmPlotInteractor; growth via the day-loop).
+            int plotCounter = 0;
             for (int row = 0; row < 4; row++)
             {
                 float z = -4f + row * 6f;
                 CreatePrimitiveBlock(t, $"Plot_{row}", PrimitiveType.Cube, new Vector3(0f, 0.15f, z), new Vector3(20f, 0.3f, 3.2f), Vector3.zero, soil, false);
                 for (int col = -2; col <= 2; col++)
                 {
-                    CreatePrimitiveBlock(t, $"Crop_{row}_{col}", PrimitiveType.Cube, new Vector3(col * 4f, 0.7f, z), new Vector3(0.8f, 1.1f, 0.8f), Vector3.zero, crop, false);
+                    GameObject cropCube = CreatePrimitiveBlock(t, $"Crop_{row}_{col}", PrimitiveType.Cube, new Vector3(col * 4f, 0.7f, z), new Vector3(0.8f, 1.1f, 0.8f), Vector3.zero, crop, false);
+                    if (plotCounter < 9)
+                    {
+                        cropCube.AddComponent<MigrationFarmPlotInteractor>().Configure(plotCounter, "crop_turnip");
+                        plotCounter++;
+                    }
                 }
             }
             // Barn (Suntail house) + fences.
