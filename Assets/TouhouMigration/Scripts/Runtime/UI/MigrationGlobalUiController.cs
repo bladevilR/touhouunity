@@ -93,8 +93,8 @@ namespace TouhouMigration.Runtime.UI
         public MigrationPlayerHealthRuntime PlayerHealth => playerHealthRuntime;
         public MigrationGameStateMachine GameState => gameState;
 
-        // Persist gameplay state: the five life-sim service snapshots (via the save orchestrator) plus
-        // player HP. Coins/scene/position scalars remain a follow-up. Returns false if not yet initialized.
+        // Persist gameplay state: the life-sim service snapshots (via the save orchestrator), player HP,
+        // story flags, and the active scene + player position scalars. Returns false if not yet initialized.
         public bool SaveGame(int slot)
         {
             if (saveOrchestrator == null || saveService == null)
@@ -114,7 +114,48 @@ namespace TouhouMigration.Runtime.UI
                 data.StoryFlags = storyFlagService.CreateSnapshot();
             }
 
+            CapturePlayerLocation(data);
+
             return saveService.SaveSlot(slot, data);
+        }
+
+        // Record the active scene + player transform position. Keeps the data's existing position when no
+        // player is present (e.g. a UI-only scene).
+        private void CapturePlayerLocation(MigrationSaveData data)
+        {
+            string sceneName = gameObject.scene.name;
+            Transform player = ResolvePlayerTransform();
+            if (player != null)
+            {
+                Vector3 p = player.position;
+                MigrationPlayerLocation.Write(data, sceneName, p.x, p.y, p.z);
+            }
+            else
+            {
+                MigrationPlayerLocation.Write(data, sceneName, data.Position.x, data.Position.y, data.Position.z);
+            }
+        }
+
+        // Move the player back to the saved position when the save's scene matches the active scene.
+        // A cross-scene restore (load the saved scene, then place the player) is a scene-flow follow-up.
+        private void RestorePlayerLocation(MigrationSaveData data)
+        {
+            if (!MigrationPlayerLocation.IsSameScene(data, gameObject.scene.name))
+            {
+                return;
+            }
+
+            Transform player = ResolvePlayerTransform();
+            if (player != null)
+            {
+                player.position = new Vector3(data.Position.x, data.Position.y, data.Position.z);
+            }
+        }
+
+        private Transform ResolvePlayerTransform()
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            return player != null ? player.transform : null;
         }
 
         public bool LoadGame(int slot)
@@ -133,6 +174,7 @@ namespace TouhouMigration.Runtime.UI
             saveOrchestrator.Apply(data);
             playerHealthRuntime?.SetHealth(data.current_hp, data.max_hp);
             storyFlagService?.LoadSnapshot(data.StoryFlags);
+            RestorePlayerLocation(data);
             return true;
         }
 
