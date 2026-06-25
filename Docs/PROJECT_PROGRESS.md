@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 10:36 CST
+Last updated: 2026-06-25 10:40 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 10:36 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.7, NPC schedule — location by hour (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.7 (shop economy/hours, farm growth + harvest loop, fishing weighted catch + level, NPC schedules), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.8, NPC manager (registry + LocationOf) (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.8 (shop economy/hours, farm growth + harvest loop, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,32 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.8: NPC Manager (registry + LocationOf)
+
+- Date: 2026-06-25 10:40 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: The NPC-registry layer over E4.7 schedules (Godot `NPCScheduleManager`) — register NPCs with a schedule + home and resolve where each NPC is at a given hour.
+
+Completed:
+
+- New `MigrationNpcManager` (`Runtime/Social/`): `RegisterNpc(npcId, schedule, homeLocation)`, `IsRegistered(npcId)`, `LocationOf(npcId, hour)` -> the NPC's schedule location or home fallback (empty string for an unknown NPC).
+
+TDD (red -> green):
+
+- New `NpcManagerSmokeTests` (a registered NPC resolves location by hour incl. the home fallback; an unknown NPC resolves to empty).
+- RED: focused run failed to compile on the missing `MigrationNpcManager` (CS0246).
+- GREEN: full regression 54/54 suites passed, 0 compile errors (53 prior + new NPC-manager suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Social/MigrationNpcManager.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/NpcManagerSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- NPC schedule data for the 35 NPCs (load `NPCScheduleData` / JSON into the manager); drive `LocationOf` on the E2 clock hour to place NPCs in scenes (E3); activity/sprite per schedule entry.
 
 ### E4.7: NPC Schedule (location by hour) + shared MigrationHourRange
 
