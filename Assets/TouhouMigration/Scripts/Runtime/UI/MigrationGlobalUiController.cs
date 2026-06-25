@@ -42,6 +42,8 @@ namespace TouhouMigration.Runtime.UI
         private MigrationMetaProgression metaProgression;
         private MigrationNpcRelationshipNetwork npcRelationshipNetwork;
         private MigrationNpcMemorySystem npcMemorySystem;
+        private MigrationDayCycle dayCycle;
+        private MigrationFatigueDriver fatigueDriver;
         private DialogueDatabase dialogueDatabase;
         private DialogueRuntimeFacade dialogueFacade;
         private GiftDatabase giftDatabase;
@@ -243,7 +245,39 @@ namespace TouhouMigration.Runtime.UI
                 settingsController.BindSettings(settings);
                 settingsController.SceneLoadRequested += LoadScene;
             }
+
+            // Day-loop wiring: now that the world clock + farming manager are resolved, build the day
+            // cycle (sleep -> daily resets across farming/quests/bonds/NPC-memory/weather) + the fatigue
+            // accrual driver, and upgrade the save orchestrator to also persist the calendar.
+            if (worldSimulation != null)
+            {
+                worldSimulation.Initialize();
+                fatigueDriver = new MigrationFatigueDriver(worldSimulation.Clock, fatigueSystem);
+                dayCycle = new MigrationDayCycle(
+                    worldSimulation.Clock, farmingManager, questDeliveryService, socialBondService,
+                    fatigueSystem, npcMemorySystem, worldSimulation.Weather);
+                saveOrchestrator = new MigrationSaveOrchestrator(
+                    inventoryService, cookingService, cookingBuffService, socialBondService, questDeliveryService, humanityService,
+                    fatigue: fatigueSystem, clock: worldSimulation.Clock, companions: companionRoster, homeStorage: homeStorage,
+                    meta: metaProgression, relationships: npcRelationshipNetwork, npcMemory: npcMemorySystem);
+            }
         }
+
+        private void OnDestroy()
+        {
+            dayCycle?.Detach();
+            fatigueDriver?.Detach();
+        }
+
+        // Sleep to the next morning: advances the world clock a day (running the daily resets) and fully
+        // restores fatigue. A bed interaction or HUD button calls this.
+        public void Sleep()
+        {
+            dayCycle?.Sleep();
+        }
+
+        // The fatigue accrual driver, so a gameplay mode/activity binder can set CurrentActivity.
+        public MigrationFatigueDriver FatigueDriver => fatigueDriver;
 
         private void InitializeInventory()
         {
