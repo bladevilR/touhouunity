@@ -18,8 +18,8 @@ namespace TouhouMigration.Runtime.Social
     }
 
     // The NPC-to-NPC social graph (Godot NPCRelationshipNetwork): each unordered NPC pair has a fixed
-    // relationship type plus a mutable value. Free of UnityEngine. Factions, gossip, group events, and the
-    // player-bond reactions are deferred.
+    // relationship type plus a mutable value, and each NPC may belong to a faction with its own reputation.
+    // Free of UnityEngine. Gossip, group events, and the player-bond reactions are deferred.
     public sealed class MigrationNpcRelationshipNetwork
     {
         private static readonly Dictionary<NpcRelationType, string> RelationshipNames = new Dictionary<NpcRelationType, string>
@@ -43,6 +43,8 @@ namespace TouhouMigration.Runtime.Social
 
         private readonly Dictionary<string, Relationship> relationships = new Dictionary<string, Relationship>();
         private readonly Dictionary<string, int> values = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> npcFactions = new Dictionary<string, int>();
+        private readonly Dictionary<int, int> factionReputations = new Dictionary<int, int>();
 
         // Register a predefined relationship between two NPCs (Godot NPC_RELATIONSHIPS data).
         public void RegisterRelationship(string npc1, string npc2, NpcRelationType type, int value)
@@ -93,6 +95,50 @@ namespace TouhouMigration.Runtime.Social
             string key = RelationshipId(npc1, npc2);
             int current = values.TryGetValue(key, out int value) ? value : 50;
             values[key] = Math.Clamp(current + amount, -100, 100);
+        }
+
+        // Faction membership + reputation (Godot NPCRelationshipNetwork faction system). NoFaction (-1) means
+        // the NPC belongs to no faction.
+        public const int NoFaction = -1;
+
+        public void SetNpcFaction(string npcId, int faction)
+        {
+            npcFactions[npcId ?? string.Empty] = faction;
+        }
+
+        public int GetNpcFaction(string npcId)
+        {
+            return npcFactions.TryGetValue(npcId ?? string.Empty, out int faction) ? faction : NoFaction;
+        }
+
+        public bool AreSameFaction(string npc1, string npc2)
+        {
+            int faction = GetNpcFaction(npc1);
+            return faction != NoFaction && faction == GetNpcFaction(npc2);
+        }
+
+        public int GetFactionReputation(int faction)
+        {
+            return factionReputations.TryGetValue(faction, out int reputation) ? reputation : 50;
+        }
+
+        public void ModifyFactionReputation(int faction, int amount)
+        {
+            factionReputations[faction] = Math.Clamp(GetFactionReputation(faction) + amount, 0, 100);
+        }
+
+        public IReadOnlyList<string> GetFactionMembers(int faction)
+        {
+            List<string> members = new List<string>();
+            foreach (KeyValuePair<string, int> pair in npcFactions)
+            {
+                if (pair.Value == faction)
+                {
+                    members.Add(pair.Key);
+                }
+            }
+
+            return members;
         }
 
         // Order-independent key for a pair (Godot _get_relationship_id sorts the two ids).

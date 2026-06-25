@@ -20,6 +20,11 @@ namespace TouhouMigration.Editor.Tests
             TestRelationshipNameMapping();
             TestModifyClampsAndStartsAtFifty();
             TestModifyUnregisteredPairStartsAtFifty();
+            TestNpcWithoutFactionIsNone();
+            TestSameFactionDetection();
+            TestFactionlessPairIsNotSameFaction();
+            TestFactionReputationDefaultAndClamp();
+            TestFactionMembers();
             Debug.Log("Migration NPC relationship smoke tests passed.");
         }
 
@@ -91,6 +96,52 @@ namespace TouhouMigration.Editor.Tests
             MigrationNpcRelationshipNetwork net = new MigrationNpcRelationshipNetwork();
             net.ModifyRelationship("x", "y", 20);
             AssertEqual(70, net.GetRelationshipValue("x", "y"), "Modifying an unregistered pair seeds from 50 (-> 70).");
+        }
+
+        private static void TestNpcWithoutFactionIsNone()
+        {
+            MigrationNpcRelationshipNetwork net = new MigrationNpcRelationshipNetwork();
+            AssertEqual(MigrationNpcRelationshipNetwork.NoFaction, net.GetNpcFaction("reimu"), "An NPC with no faction reports NoFaction.");
+        }
+
+        private static void TestSameFactionDetection()
+        {
+            MigrationNpcRelationshipNetwork net = new MigrationNpcRelationshipNetwork();
+            net.SetNpcFaction("reimu", 1);
+            net.SetNpcFaction("marisa", 1);
+            net.SetNpcFaction("sakuya", 2);
+            AssertEqual(true, net.AreSameFaction("reimu", "marisa"), "NPCs in the same faction are detected.");
+            AssertEqual(false, net.AreSameFaction("reimu", "sakuya"), "NPCs in different factions are not.");
+            AssertEqual(false, net.AreSameFaction("reimu", "nobody"), "A factionless NPC shares no faction.");
+        }
+
+        private static void TestFactionlessPairIsNotSameFaction()
+        {
+            MigrationNpcRelationshipNetwork net = new MigrationNpcRelationshipNetwork();
+            AssertEqual(false, net.AreSameFaction("x", "y"), "Two factionless NPCs do not share a faction.");
+        }
+
+        private static void TestFactionReputationDefaultAndClamp()
+        {
+            MigrationNpcRelationshipNetwork net = new MigrationNpcRelationshipNetwork();
+            AssertEqual(50, net.GetFactionReputation(1), "Faction reputation defaults to 50.");
+            net.ModifyFactionReputation(1, 30);
+            AssertEqual(80, net.GetFactionReputation(1), "Reputation accumulates.");
+            net.ModifyFactionReputation(1, 50);
+            AssertEqual(100, net.GetFactionReputation(1), "Reputation clamps at 100.");
+            net.ModifyFactionReputation(1, -200);
+            AssertEqual(0, net.GetFactionReputation(1), "Reputation clamps at 0.");
+        }
+
+        private static void TestFactionMembers()
+        {
+            MigrationNpcRelationshipNetwork net = new MigrationNpcRelationshipNetwork();
+            net.SetNpcFaction("reimu", 1);
+            net.SetNpcFaction("marisa", 1);
+            net.SetNpcFaction("sakuya", 2);
+            AssertEqual(2, net.GetFactionMembers(1).Count, "Faction 1 has two members.");
+            AssertEqual(1, net.GetFactionMembers(2).Count, "Faction 2 has one member.");
+            AssertEqual(0, net.GetFactionMembers(99).Count, "An unknown faction has no members.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
