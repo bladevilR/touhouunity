@@ -25,7 +25,7 @@ Last updated: 2026-06-25 (session 3)
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: M1, meta progression economy (session 3). Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system), S1 (NPC memory system), M1 (meta progression economy). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: S2, NPC memory decay (session 3). Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system), S1 (NPC memory system), M1 (meta progression economy), S2 (NPC memory decay). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,33 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### S2: NPC Memory Decay — Personality-Driven Forgetting
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Complete the memory lifecycle from S1 — memories fade over time at a personality-adjusted rate (Godot `_decay_npc_memories`).
+
+Completed:
+
+- Refactored the per-NPC config into a `Personality` (memory capacity + forgiveness + gratitude rates, Godot `NPC_PERSONALITY`).
+- `DecayAllMemories` reduces each memory's weight by base 2.0, scaled by personality (positive `/= gratitude_rate`, negative `*= forgiveness_rate`); memories below the min weight (5.0) are forgotten. Grateful NPCs keep good memories longer; unforgiving NPCs hold grudges longer.
+
+TDD (red -> green):
+
+- Extended `MigrationNpcMemorySystemSmokeTests` (default decay forgets at the min threshold; gratitude slows positive decay — koishi vs kaguya; forgiveness slows negative decay — marisa vs sakuya).
+- RED: genuine assertion failure (no-op decay kept the memory), 0 compile errors.
+- GREEN: full regression 65/65 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Social/MigrationNpcMemorySystem.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationNpcMemorySystemSmokeTests.cs`
+
+Known follow-ups:
+
+- Drive `DecayAllMemories` from the day-started tick; save/load; `get_dialogue_modifier`; notable-memory queries.
 
 ### M1: Meta Progression — Between-Run Upgrade Economy
 
