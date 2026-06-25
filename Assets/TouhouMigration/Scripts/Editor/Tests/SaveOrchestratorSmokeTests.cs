@@ -17,6 +17,7 @@ namespace TouhouMigration.Editor.Tests
             TestHumanityRoundTripsThroughSaveData();
             TestFatigueRoundTripsThroughSaveData();
             TestCalendarRoundTripsThroughSaveData();
+            TestCompanionRosterRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -67,6 +68,30 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(3, restored.Year, "Apply restores the year.");
             AssertEqual(14, restored.Hour, "Apply restores the hour.");
             AssertEqual(30, restored.Minute, "Apply restores the minute.");
+        }
+
+        private static void TestCompanionRosterRoundTripsThroughSaveData()
+        {
+            MigrationCompanionRoster source = new MigrationCompanionRoster();
+            source.Recruit("marisa");
+            source.Recruit("keine");
+            source.AddToParty("keine");
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+            AssertEqual(2, data.companions.recruited.Count, "Capture stores the recruited companions.");
+            AssertEqual("keine", data.companions.active, "Capture stores the active party member.");
+
+            MigrationCompanionRoster restored = new MigrationCompanionRoster();
+            AssertEqual(false, restored.IsRecruited("marisa"), "A fresh roster has no recruited companions.");
+
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+            AssertEqual(true, restored.IsRecruited("marisa"), "Apply restores recruited companions.");
+            AssertEqual(true, restored.IsRecruited("keine"), "Apply restores all recruited companions.");
+            AssertEqual("keine", restored.ActiveCompanionId, "Apply restores the active party member.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()

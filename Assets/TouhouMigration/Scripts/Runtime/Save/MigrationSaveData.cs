@@ -29,6 +29,7 @@ namespace TouhouMigration.Runtime.Save
         public int humanity = 100;
         public double fatigue;
         public MigrationCalendarSnapshot calendar = new MigrationCalendarSnapshot();
+        public CompanionRosterSnapshot companions = new CompanionRosterSnapshot();
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -146,6 +147,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => calendar;
             set => calendar = value ?? new MigrationCalendarSnapshot();
+        }
+
+        public CompanionRosterSnapshot Companions
+        {
+            get => companions;
+            set => companions = value ?? new CompanionRosterSnapshot();
         }
 
         public static MigrationSaveData CreateDefault()

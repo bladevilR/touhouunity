@@ -21,6 +21,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly HumanityService humanity;
         private readonly MigrationFatigueSystem fatigue;
         private readonly GameClock clock;
+        private readonly MigrationCompanionRoster companions;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -30,7 +31,8 @@ namespace TouhouMigration.Runtime.Save
             QuestDeliveryService quests,
             HumanityService humanity,
             MigrationFatigueSystem fatigue = null,
-            GameClock clock = null)
+            GameClock clock = null,
+            MigrationCompanionRoster companions = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -40,6 +42,7 @@ namespace TouhouMigration.Runtime.Save
             this.humanity = humanity;
             this.fatigue = fatigue;
             this.clock = clock;
+            this.companions = companions;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -84,6 +87,10 @@ namespace TouhouMigration.Runtime.Save
                     minute = clock.Minute,
                 };
             }
+            if (companions != null)
+            {
+                data.Companions = companions.CreateSnapshot();
+            }
             return data;
         }
 
@@ -125,6 +132,10 @@ namespace TouhouMigration.Runtime.Save
             {
                 clock.SetDate(data.calendar.day, data.calendar.season, data.calendar.year);
                 clock.SetTime(data.calendar.hour, data.calendar.minute);
+            }
+            if (companions != null && data.companions != null)
+            {
+                companions.LoadSnapshot(data.companions);
             }
         }
     }

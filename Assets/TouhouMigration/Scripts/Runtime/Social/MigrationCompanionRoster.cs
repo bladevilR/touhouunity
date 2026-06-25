@@ -107,5 +107,51 @@ namespace TouhouMigration.Runtime.Social
         {
             return GetSkillCooldown(npcId, skillId) <= 0.0;
         }
+
+        // Snapshot the recruited set + active party member for save/load (skill cooldowns are transient
+        // and intentionally not persisted).
+        public CompanionRosterSnapshot CreateSnapshot()
+        {
+            return new CompanionRosterSnapshot
+            {
+                recruited = new List<string>(recruited),
+                active = activeCompanion,
+            };
+        }
+
+        public void LoadSnapshot(CompanionRosterSnapshot snapshot)
+        {
+            recruited.Clear();
+            skillCooldowns.Clear();
+            activeCompanion = string.Empty;
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            if (snapshot.recruited != null)
+            {
+                foreach (string id in snapshot.recruited)
+                {
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        recruited.Add(id);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(snapshot.active) && recruited.Contains(snapshot.active))
+            {
+                activeCompanion = snapshot.active;
+            }
+        }
+    }
+
+    // Persisted companion state: the recruited set + the single active party member.
+    [Serializable]
+    public sealed class CompanionRosterSnapshot
+    {
+        public List<string> recruited = new List<string>();
+        public string active = string.Empty;
     }
 }
