@@ -1833,6 +1833,13 @@ namespace TouhouMigration.Editor
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_2.fbx", "Tree2", t, 18f, 10f, 25f, 14f, nature, true);
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Stone_1.fbx", "Stone1", t, -12f, -16f, 0f, 3f, stone, true);
 
+            CreateLocationNpcCast(root.transform, new[]
+            {
+                ("reimu", "博丽灵梦", "green_tea"),
+                ("sanae", "东风谷早苗", "sunflower"),
+                ("suika", "伊吹萃香", "sake"),
+            }, 8f);
+
             FinishLocationScene(root, HakureiShrineScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.90f, 0.30f, 0.28f, 0.45f), scene);
         }
 
@@ -1866,6 +1873,14 @@ namespace TouhouMigration.Editor
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_1.fbx", "Tree1", t, -22f, 8f, 0f, 13f, nature, true);
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_3.fbx", "Tree2", t, 22f, 8f, -30f, 13f, nature, true);
 
+            CreateLocationNpcCast(root.transform, new[]
+            {
+                ("remilia", "蕾米莉亚·斯卡蕾特", "black_tea"),
+                ("sakuya", "十六夜咲夜", "sake"),
+                ("patchouli", "帕秋莉·诺蕾姬", "black_tea"),
+                ("meiling", "红美铃", "dango"),
+            }, 9f);
+
             FinishLocationScene(root, ScarletMansionFrontScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.75f, 0.20f, 0.30f, 0.45f), scene);
         }
 
@@ -1897,6 +1912,15 @@ namespace TouhouMigration.Editor
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Stone_1.fbx", "Stone1", t, -16f, 6f, 0f, 4f, rock, true);
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Stone_2.fbx", "Stone2", t, 16f, 8f, 30f, 4f, rock, true);
             InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_2.fbx", "Tree1", t, -20f, 14f, 0f, 12f, nature, true);
+
+            // Chireiden (underground) cast at the dungeon mouth.
+            CreateLocationNpcCast(root.transform, new[]
+            {
+                ("satori", "古明地觉", "youkan"),
+                ("koishi", "古明地恋", "dango"),
+                ("utsuho", "灵乌路空", "youkan"),
+                ("rin", "火焰猫燐", "rice_ball"),
+            }, 8f);
 
             FinishLocationScene(root, DungeonEntranceScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.45f, 0.30f, 0.45f), scene);
         }
@@ -2065,11 +2089,20 @@ namespace TouhouMigration.Editor
         // Bamboo-home overworld variants (Mokou's house) reusing the Bamboo Home glb + prop set.
         private static void CreateBambooVariantScenes()
         {
-            CreateBambooHomeLikeScene(MigrationSceneCatalog.MokouHouse3D, MokouHouse3DScenePath);
-            CreateBambooHomeLikeScene(MigrationSceneCatalog.BambooHouse, BambooHouseScenePath);
+            CreateBambooHomeLikeScene(MigrationSceneCatalog.MokouHouse3D, MokouHouse3DScenePath, new[]
+            {
+                ("mokou", "藤原妹红", "youkan"),
+            });
+            CreateBambooHomeLikeScene(MigrationSceneCatalog.BambooHouse, BambooHouseScenePath, new[]
+            {
+                ("kaguya", "蓬莱山辉夜", "moon_cake"),
+                ("eirin", "八意永琳", "herbal_tea"),
+                ("reisen", "铃仙·优昙华院·因幡", "moon_cake"),
+                ("tewi", "因幡帝", "rice_ball"),
+            });
         }
 
-        private static void CreateBambooHomeLikeScene(string sceneName, string scenePath)
+        private static void CreateBambooHomeLikeScene(string sceneName, string scenePath, (string id, string name, string gift)[] cast)
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = sceneName;
@@ -2085,6 +2118,7 @@ namespace TouhouMigration.Editor
             props.transform.SetParent(root.transform);
             CreateBambooHomeProps(props.transform);
             CreateBambooHomeBed(root.transform);
+            CreateLocationNpcCast(root.transform, cast, 6f);
             CreatePortal(root.transform, "TownPortal", new Vector3(-10f, 1f, 15f), MigrationSceneId.HumanVillageVerticalSlice, new Color(0.2f, 0.55f, 1f, 0.45f));
 
             EditorSceneManager.SaveScene(scene, scenePath);
@@ -2160,10 +2194,22 @@ namespace TouhouMigration.Editor
         private static void CreateBespokeNatureScenes()
         {
             CreateNatureLocationScene(MigrationSceneCatalog.MagicForest, MagicForestScenePath, LocationsArtRoot + "/MagicForest", string.Empty,
-                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.45f, 0.85f, 0.45f), new Color(0.20f, 0.34f, 0.22f, 1f), new Color(0.14f, 0.32f, 0.22f, 1f));
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.45f, 0.85f, 0.45f), new Color(0.20f, 0.34f, 0.22f, 1f), new Color(0.14f, 0.32f, 0.22f, 1f),
+                CreateMagicForestCast);
             CreateNatureLocationScene(MigrationSceneCatalog.MistyLake, MistyLakeScenePath, LocationsArtRoot + "/MistyLake", string.Empty,
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.45f, 0.72f, 0.85f, 0.45f), new Color(0.34f, 0.46f, 0.48f, 1f), new Color(0.26f, 0.42f, 0.40f, 1f),
                 CreateMistyLakeFishingSpot);
+        }
+
+        // Forest of Magic residents: Marisa, Alice, Kogasa.
+        private static void CreateMagicForestCast(Transform root)
+        {
+            CreateLocationNpcCast(root, new[]
+            {
+                ("marisa", "雾雨魔理沙", "magic_crystal"),
+                ("alice", "爱丽丝·玛格特罗依德", "cherry_blossom"),
+                ("kogasa", "多多良小伞", "manjuu"),
+            }, 9f);
         }
 
         // A small dock + fishing-spot prop at the misty lake: a MigrationFishingSpotInteractor lets the
@@ -2183,6 +2229,13 @@ namespace TouhouMigration.Editor
             CreatePrimitiveBlock(t, "Dock", PrimitiveType.Cube, new Vector3(8f, dockGroundY + 0.3f, 6f), new Vector3(3f, 0.4f, 6f), Vector3.zero, wood, false);
             GameObject ripple = CreatePrimitiveBlock(t, "FishingWater", PrimitiveType.Cylinder, new Vector3(8f, dockGroundY + 0.05f, 11f), new Vector3(5f, 0.1f, 5f), Vector3.zero, water, false);
             ripple.AddComponent<MigrationFishingSpotInteractor>();
+
+            // Misty Lake regulars: Cirno + Mystia.
+            CreateLocationNpcCast(root, new[]
+            {
+                ("cirno", "琪露诺", "herbal_tea"),
+                ("mystia", "米斯蒂娅·萝蕾拉", "rice_ball"),
+            }, 7f);
         }
 
         // Generic nature-location builder reused by every promoted environment pack (PureNature
@@ -2558,6 +2611,29 @@ namespace TouhouMigration.Editor
 
             MigrationNpcInteractor interactor = marker.AddComponent<MigrationNpcInteractor>();
             interactor.Configure(npcId, displayName, preferredGiftId);
+        }
+
+        // Spawn a location's canonical resident cast as interactable NPC markers in a ring near the player
+        // spawn (E5 reachability — more of the 35 NPCs reachable beyond Human Village + the villages). Real
+        // character models (VRM/glb) + hour-driven schedule placement are E5/E7 follow-ups.
+        private static void CreateLocationNpcCast(Transform parent, (string id, string name, string gift)[] cast, float baseRadius)
+        {
+            if (cast == null || cast.Length == 0)
+            {
+                return;
+            }
+
+            GameObject npcRoot = new GameObject("NPCMarkers");
+            npcRoot.transform.SetParent(parent);
+            int n = cast.Length;
+            for (int i = 0; i < n; i++)
+            {
+                float angle = (i / (float)n) * Mathf.PI * 2f;
+                float radius = baseRadius + (i % 2) * 4f;
+                Vector3 pos = new Vector3(Mathf.Cos(angle) * radius, 2.4f, Mathf.Sin(angle) * radius + baseRadius * 0.4f);
+                Color color = Color.HSVToRGB((i * 0.21f) % 1f, 0.6f, 0.92f);
+                CreateNpcMarker(npcRoot.transform, cast[i].id, cast[i].name, cast[i].gift, pos, color);
+            }
         }
 
         private static void CreateCookingStation(Transform parent, Vector3 position)
