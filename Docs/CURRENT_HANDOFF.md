@@ -9,12 +9,12 @@ Build the full Touhou Phantom game in `/Users/Shared/TouhouUnityMigration`, migr
 Standing goal: **complete all migration**, driven autonomously, user reviews final results only.
 
 - North-star roadmap: `Docs/superpowers/plans/2026-06-25-migration-completion-roadmap.md` (Phase 0 → E1…E8; all locations incl. PureNature/AngryMesh variants are in scope).
-- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit: `9936cd0` (session-2 E5.2 humanity routing); the E2 world-time-gating commit lands on top of this update.
+- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit: `7f941b5` (session-2 E2.4 world-time gating); the E4.1 shop-economy commit lands on top of this update.
 
 ## Verified State
 
-- Tree clean, `main` in sync with origin. ~121 runtime C# files; **44 smoke-test suites**.
-- Last full regression: **44/44 green** (`MigrationSmokeTestRunner.RunAll`, session 2) — through the E2 world-time-gating slice; 0 compile errors. (Session added the E5.2 dialogue-humanity suite as the 44th; the E2 slice extended `GameStateRulesSmokeTests` in place.)
+- Tree clean, `main` in sync with origin. ~123 runtime C# files; **45 smoke-test suites**.
+- Last full regression: **45/45 green** (`MigrationSmokeTestRunner.RunAll`, session 2) — through the E4.1 shop-economy slice; 0 compile errors. (Session-2 added suites: E5.2 dialogue-humanity (44th), E4.1 shop-service (45th); E2.4 extended `GameStateRulesSmokeTests` in place.)
 - 4 scenes (Bootstrap/BambooHome/HumanVillage/TitleScreen) **play-validated runtime-clean** via `MigrationPlayModeValidator` (note: it can't capture Screen-Space-Overlay UI, so UI scenes screenshot black — a capture limitation, not a game error).
 - Completion: **~13% by roadmap structure.** This is a multi-session, weeks-scale effort.
 
@@ -24,7 +24,7 @@ Standing goal: **complete all migration**, driven autonomously, user reviews fin
 - **E1 player core:** i-frames (`MigrationPlayerHealthRuntime` opt-in window + owner sets 0.75s); dash (`MigrationDashState` + controller wiring, LeftControl; also fixed jump to use cooking boost); swim (`MigrationSwimState`); locomotion (`MigrationLocomotion` + controller `CurrentLocomotion` seam). **Remaining:** Mecanim humanoid AnimatorController asset + a driver pushing `CurrentLocomotion`; animation-event attack windows; split the controller's concerns. **E1.5 blocker found (session 2):** the MokouValidation clips are already Humanoid (`animationType: 3`), but `Art/Characters/Mokou/Models/mokou.glb` imports via the glTF ScriptedImporter (glTFast) → **no Mecanim Humanoid avatar**, so the humanoid clips can't retarget onto Mokou. Unblock first — give the model a Humanoid avatar (convert `mokou.glb`→FBX, or source a humanoid-rigged Mokou FBX) — then author the controller + driver. Driver logic is otherwise ready: `MigrationLocomotion.Resolve` already yields Animator-facing params.
 - **E2:** `MigrationGameStateMachine` + `MigrationGameStateMode` + `MigrationGameStateRules`; owner Pushes `Dialogue` mode on dialogue start / Pops on finish (`MigrationGlobalUiController.GameState`). **World-time now gated by mode (E2, session 2):** `MigrationGameStateRules.WorldTimeScale(mode)` (0 freezes Menu/Dialogue/Cutscene, Sleeping fast-forwards ×12, else ×1) + `WorldSimulationBehaviour.SetExternalTimeScale`; the owner applies it on `gameState.ModeChanged`, so the existing Dialogue Push/Pop now actually freezes/resumes the world clock. **Remaining:** drive Combat/Sleeping/Menu push/pop from gameplay (combat enter/exit, sleep); gate input/HUD by the rules; scene-flow + full sleep day-loop.
 - **E5.1/E5.2:** dialogue give/take-item routing (`DialogueEffectRouter.BindInventory`, wired in owner). **`humanity` fx now routed** (E5.2, session 2) via `HumanityService` (`Runtime/Player/`, default 100, clamped 0..100, Godot `MokouMonologueSystem` level thresholds), bound in owner + read live in `BuildDialogueContext`. **bond + humanity both routed now.** The give_item capability is added but the current data may not use it.
-- **E4/E8:** save orchestrator wired into owner `SaveGame(slot)/LoadGame(slot)` (5 service snapshots + HP). **Remaining:** coins/scene/position scalars + a save-UI trigger.
+- **E4/E8:** save orchestrator wired into owner `SaveGame(slot)/LoadGame(slot)` (5 service snapshots + HP). **Shop economy service added (E4.1, session 2):** `MigrationShopService` buy/sell against coins+inventory+price (`Runtime/Economy/`, `DefaultBuyRate 0.5`); pure service, not yet owner-wired. **Remaining:** shop catalogs/hours/seasonal items + shop UI; per-shop buy_rate; coins/scene/position save scalars + a save-UI trigger; humanity in the save schema.
 
 ## How To Work (established rhythm)
 
@@ -43,4 +43,4 @@ Standing goal: **complete all migration**, driven autonomously, user reviews fin
 4. **E4:** life-sim closure — shop/economy, cooking UI/timer, farming, fishing, quest/NPC schedule/bond loops to playable.
 5. **E5/E6/E7/E8:** full dialogue (portraits, all 35 NPCs, shop) → combat breadth (general arena, 20-enemy AI, cardbuild loop, more bosses) → presentation (URP/audio/VFX/UI) → save parity + content audit + full play-validation.
 
-*(Done in session 2 — E5.2: dialogue `humanity` fx → `HumanityService`. E2: world-time gated by game-state mode (Dialogue/Menu/Cutscene freeze the clock, Sleeping fast-forwards). E1.5 diagnosed as asset-blocked on the Mokou humanoid avatar.)*
+*(Done in session 2 — E5.2: dialogue `humanity` fx → `HumanityService`. E2.4: world-time gated by game-state mode (Dialogue/Menu/Cutscene freeze the clock, Sleeping fast-forwards). E4.1: `MigrationShopService` buy/sell economy. E1.5 diagnosed as asset-blocked on the Mokou humanoid avatar.)*

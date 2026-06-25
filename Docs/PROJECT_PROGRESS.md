@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:08 CST
+Last updated: 2026-06-25 09:15 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:08 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E2.4, world-time gating by game-state mode (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.1, shop economy service (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,37 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.1: Shop Economy Service
+
+- Date: 2026-06-25 09:15 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: First E4 life-sim economy slice — a Unity-native shop transaction service (Godot `ShopData`/`ShopManager` intent). No shop service existed in Unity yet.
+
+Completed:
+
+- New `MigrationShopService` (`Runtime/Economy/`): `Buy(itemId, qty)` deducts price×qty coins and grants items; `Sell(itemId, qty[, buyRate])` pays floor(price × buy_rate) per unit and removes items. Bridges `InventoryService` (items), `ItemDatabase` (prices via `ItemDefinition.Price`), and `MigrationPlayerProgressService` (coins). `DefaultBuyRate = 0.5` (Godot `ShopData.get_buy_rate` default). Free of UnityEngine → unit-testable.
+- New `ShopTransactionResult`: Success / ItemId / Quantity / CoinDelta (negative = spent, positive = earned) / FailureReason (`insufficient_funds` / `insufficient_items` / `inventory_full` / `unknown_item` / `invalid_request`).
+- `MigrationPlayerProgressService.TrySpendCoins(int)`: deducts coins iff affordable (the service was add-only before).
+
+TDD (red -> green):
+
+- New `ShopServiceSmokeTests` (4 cases): buy deducts coins + grants item; buy fails on insufficient funds (no item, no spend); sell pays floor(price × buy_rate) + removes item; sell fails without the item. Price is derived dynamically from items.json so the test stays deterministic.
+- RED: focused run failed to compile on the missing `Economy` namespace (CS0234).
+- GREEN: full regression 45/45 suites passed, 0 compile errors (44 prior + new shop suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/MigrationShopService.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/ShopTransactionResult.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Player/MigrationPlayerProgressService.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/ShopServiceSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Shop catalogs/hours/seasonal+festival items (Godot `ShopData` JSON), per-shop `buy_rate`, and shop-owner NPC gating are not loaded yet — this slice is the transaction core. Wire shop data + a shop UI in a later E4 slice.
+- Not yet wired into the owner (`MigrationGlobalUiController`) or a shop interaction; pure service for now.
 
 ### E2.4: World-Time Gating By Game-State Mode
 

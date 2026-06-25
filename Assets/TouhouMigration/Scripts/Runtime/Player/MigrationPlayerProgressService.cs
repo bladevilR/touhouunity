@@ -24,6 +24,19 @@ namespace TouhouMigration.Runtime.Player
             }
         }
 
+        // Deduct coins for a purchase. Returns false (and spends nothing) when the player cannot
+        // afford it; spending 0 is a successful no-op.
+        public bool TrySpendCoins(int amount)
+        {
+            if (amount < 0 || Coins < amount)
+            {
+                return false;
+            }
+
+            Coins -= amount;
+            return true;
+        }
+
         public void RegisterKill()
         {
             RegisterKill(1);
