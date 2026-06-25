@@ -50,6 +50,20 @@ namespace TouhouMigration.Runtime.Player
             input = Vector2.ClampMagnitude(input, 1f);
 
             Vector3 movement = new Vector3(input.x, 0f, input.y);
+            // Camera-relative movement (W = away from the camera) for a proper third-person feel; falls
+            // back to world axes if there is no main camera.
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null && movement.sqrMagnitude > 0.001f)
+            {
+                Vector3 camForward = mainCamera.transform.forward;
+                Vector3 camRight = mainCamera.transform.right;
+                camForward.y = 0f;
+                camRight.y = 0f;
+                camForward.Normalize();
+                camRight.Normalize();
+                movement = Vector3.ClampMagnitude(camRight * input.x + camForward * input.y, 1f);
+            }
+
             if (movement.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(movement, Vector3.up);
