@@ -7,11 +7,14 @@ namespace TouhouMigration.Editor.Tests
 {
     public static class NpcManagerSmokeTests
     {
+        private const string RosterPath = "Assets/TouhouMigration/Data/Npc/human_village_roster.json";
+
         [MenuItem("Touhou Migration/Tests/Run Npc Manager Smoke Tests")]
         public static void RunAll()
         {
             TestRegisteredNpcResolvesLocationByHour();
             TestUnknownNpcResolvesToEmpty();
+            TestRegisterNpcsFromRoster();
             Debug.Log("Npc manager smoke tests passed.");
         }
 
@@ -33,6 +36,19 @@ namespace TouhouMigration.Editor.Tests
             MigrationNpcManager manager = new MigrationNpcManager();
             AssertEqual(false, manager.IsRegistered("nobody"), "An unregistered NPC is not registered.");
             AssertEqual(string.Empty, manager.LocationOf("nobody", 10), "An unregistered NPC resolves to no location.");
+        }
+
+        private static void TestRegisterNpcsFromRoster()
+        {
+            MigrationNpcRoster roster = new MigrationNpcRoster();
+            AssertEqual(true, roster.LoadFromPath(RosterPath), "Roster should load for the NPC manager.");
+
+            MigrationNpcManager manager = new MigrationNpcManager();
+            manager.RegisterFrom(roster, 8, 18);
+
+            AssertEqual(true, manager.IsRegistered("uuz"), "Spawn-enabled roster NPCs should be registered.");
+            AssertEqual("plaza", manager.LocationOf("uuz", 10), "During work hours uuz is at the work location (plaza).");
+            AssertEqual("residential", manager.LocationOf("uuz", 22), "Outside work hours uuz is at home (residential).");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

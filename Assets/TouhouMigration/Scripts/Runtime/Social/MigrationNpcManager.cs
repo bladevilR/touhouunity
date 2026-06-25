@@ -28,6 +28,33 @@ namespace TouhouMigration.Runtime.Social
             };
         }
 
+        // Register spawn-enabled NPCs from a location roster: each gets a simple schedule (at its
+        // work_location during [workStartHour, workEndHour), at its home otherwise).
+        public void RegisterFrom(MigrationNpcRoster roster, int workStartHour, int workEndHour)
+        {
+            if (roster == null)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<string, MigrationNpcRosterEntry> pair in roster.GetAllEntries())
+            {
+                MigrationNpcRosterEntry entry = pair.Value;
+                if (entry == null || !entry.SpawnEnabled)
+                {
+                    continue;
+                }
+
+                MigrationNpcSchedule schedule = new MigrationNpcSchedule();
+                if (!string.IsNullOrWhiteSpace(entry.WorkLocation))
+                {
+                    schedule.AddEntry(new MigrationNpcScheduleEntry(workStartHour, workEndHour, entry.WorkLocation));
+                }
+
+                RegisterNpc(entry.NpcId, schedule, entry.Home);
+            }
+        }
+
         public bool IsRegistered(string npcId)
         {
             return !string.IsNullOrWhiteSpace(npcId) && npcs.ContainsKey(npcId);

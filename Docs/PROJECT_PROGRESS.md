@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 11:12 CST
+Last updated: 2026-06-25 11:16 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 11:12 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E3.1, human village NPC roster loader (session 2; first E3 location-data piece). Earlier session-2 work: E5.2-E5.9 (dialogue, fully closed), E4.1-E4.12 (shop + farming end-to-end, fishing, NPC schedules/manager), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.13, NPC manager schedules from the roster — end-to-end (session 2). Earlier session-2 work: E3.1 (NPC roster loaded), E4.1-E4.12 (shop + farming end-to-end, fishing), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,32 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.13: NPC Manager Schedules From The Roster (end-to-end)
+
+- Date: 2026-06-25 11:16 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Connect the roster (E3.1) to the NPC manager (E4.8): derive each spawn-enabled NPC's schedule from its `home`/`work_location` so `LocationOf` resolves the real human-village NPCs by hour.
+
+Completed:
+
+- `MigrationNpcManager.RegisterFrom(roster, workStartHour, workEndHour)`: for each spawn-enabled roster entry, builds a schedule (at `work_location` during `[workStart, workEnd)`, at `home` otherwise) and registers it.
+
+TDD (red -> green):
+
+- Extended `NpcManagerSmokeTests`: load the human village roster, `RegisterFrom(8, 18)`, `uuz` resolves to `plaza` during work hours / `residential` otherwise.
+- RED: focused run failed to compile on the missing `RegisterFrom` (CS1061).
+- GREEN: full regression 58/58 suites passed, 0 compile errors (extended in place).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Social/MigrationNpcManager.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/NpcManagerSmokeTests.cs`
+
+Known follow-ups:
+
+- Per-NPC work hours / multi-block schedules from richer data; spawn the NPCs into scenes at their `LocationOf` on the E2 clock (E3).
 
 ### E3.1: Human Village NPC Roster Loader
 
