@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:31 CST
+Last updated: 2026-06-25 09:35 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:31 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.2, farm plot crop growth (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.3, shop open-hours check (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,32 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.3: Shop Open-Hours Check
+
+- Date: 2026-06-25 09:35 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Port Godot `ShopData.is_shop_open` so shop availability can gate buying by time of day. Extends E4.1.
+
+Completed:
+
+- New `MigrationShopHours.IsOpen(startHour, endHour, currentHour)` (`Runtime/Economy/`): end-exclusive; `end < start` wraps past midnight (e.g. 22..2 → open 22:00-01:59); 0..24 is always open. Pure static, faithful to the Godot branch logic.
+
+TDD (red -> green):
+
+- New `ShopHoursSmokeTests` (3 cases: normal inclusive-start/exclusive-end, wrap-around-midnight, all-day-open).
+- RED: focused run failed to compile on the missing `MigrationShopHours` (CS0103).
+- GREEN: full regression 47/47 suites passed, 0 compile errors (46 prior + new shop-hours suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/MigrationShopHours.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/ShopHoursSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Wire into the shop service/UI (gate `Buy` when the shop is closed) once shop catalog data (`open_hours` per shop) lands; reads the E2 world clock's current hour.
 
 ### E4.2: Farm Plot Crop Growth
 
