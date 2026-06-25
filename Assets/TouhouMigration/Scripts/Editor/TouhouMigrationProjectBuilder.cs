@@ -75,6 +75,7 @@ namespace TouhouMigration.Editor
         private const string IslandsScenePath = ScenesRoot + "/PureNatureIslands.unity";
         private const string MountainsScenePath = ScenesRoot + "/PureNatureMountains.unity";
         private const string FantasyForestScenePath = ScenesRoot + "/PureNatureFantasyForest.unity";
+        private const string AngryMeshMeadowScenePath = ScenesRoot + "/AngryMeshMeadow.unity";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -1599,22 +1600,30 @@ namespace TouhouMigration.Editor
 
         private static void CreatePureNatureVariantScenes()
         {
-            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureClassic, ClassicScenePath, LocationsArtRoot + "/PureNatureClassic",
+            CreateNatureLocationScene(MigrationSceneCatalog.PureNatureClassic, ClassicScenePath, LocationsArtRoot + "/PureNatureClassic", LocationsArtRoot + "/PureNatureClassic/Terrain/terrain.obj",
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.85f, 0.45f, 0.45f), new Color(0.34f, 0.46f, 0.24f, 1f), new Color(0.20f, 0.42f, 0.22f, 1f));
-            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureJungle, JungleScenePath, LocationsArtRoot + "/PureNatureJungle",
+            CreateNatureLocationScene(MigrationSceneCatalog.PureNatureJungle, JungleScenePath, LocationsArtRoot + "/PureNatureJungle", LocationsArtRoot + "/PureNatureJungle/Terrain/terrain.obj",
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.30f, 0.75f, 0.40f, 0.45f), new Color(0.18f, 0.38f, 0.16f, 1f), new Color(0.12f, 0.34f, 0.14f, 1f));
-            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureIslands, IslandsScenePath, LocationsArtRoot + "/PureNatureIslands",
+            CreateNatureLocationScene(MigrationSceneCatalog.PureNatureIslands, IslandsScenePath, LocationsArtRoot + "/PureNatureIslands", LocationsArtRoot + "/PureNatureIslands/Terrain/terrain.obj",
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.35f, 0.80f, 0.85f, 0.45f), new Color(0.44f, 0.50f, 0.30f, 1f), new Color(0.22f, 0.46f, 0.24f, 1f));
-            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureMountains, MountainsScenePath, LocationsArtRoot + "/PureNatureMountains",
+            CreateNatureLocationScene(MigrationSceneCatalog.PureNatureMountains, MountainsScenePath, LocationsArtRoot + "/PureNatureMountains", LocationsArtRoot + "/PureNatureMountains/Terrain/terrain.obj",
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.62f, 0.75f, 0.45f), new Color(0.34f, 0.40f, 0.30f, 1f), new Color(0.22f, 0.40f, 0.24f, 1f));
-            CreatePureNatureVariantScene(MigrationSceneCatalog.PureNatureFantasyForest, FantasyForestScenePath, LocationsArtRoot + "/PureNatureFantasyForest",
+            CreateNatureLocationScene(MigrationSceneCatalog.PureNatureFantasyForest, FantasyForestScenePath, LocationsArtRoot + "/PureNatureFantasyForest", LocationsArtRoot + "/PureNatureFantasyForest/Terrain/terrain.obj",
                 MigrationSceneId.BambooHomeVerticalSlice, new Color(0.78f, 0.45f, 0.85f, 0.45f), new Color(0.26f, 0.42f, 0.28f, 1f), new Color(0.18f, 0.40f, 0.26f, 1f));
+
+            // AngryMesh meadow ships no terrain export → flat ground (empty terrain path).
+            CreateNatureLocationScene(MigrationSceneCatalog.AngryMeshMeadow, AngryMeshMeadowScenePath, LocationsArtRoot + "/AngryMeshMeadow", string.Empty,
+                MigrationSceneId.BambooHomeVerticalSlice, new Color(0.85f, 0.78f, 0.40f, 0.45f), new Color(0.33f, 0.49f, 0.24f, 1f), new Color(0.22f, 0.44f, 0.22f, 1f));
         }
 
-        private static void CreatePureNatureVariantScene(
+        // Generic nature-location builder reused by every promoted environment pack (PureNature
+        // variants, AngryMesh, and the bespoke nature locations). Pass an empty terrainObjPath to
+        // get a large flat ground instead of a promoted terrain mesh.
+        private static void CreateNatureLocationScene(
             string sceneName,
             string scenePath,
             string artRoot,
+            string terrainObjPath,
             MigrationSceneId returnTo,
             Color portalColor,
             Color terrainColor,
@@ -1628,9 +1637,11 @@ namespace TouhouMigration.Editor
 
             EnsureAssetFolder(artRoot + "/Materials");
 
-            if (!CreateLocationTerrain(root.transform, artRoot + "/Terrain/terrain.obj", artRoot + "/Materials/Terrain.mat", terrainColor, sceneName + "Terrain"))
+            bool hasTerrain = !string.IsNullOrEmpty(terrainObjPath)
+                && CreateLocationTerrain(root.transform, terrainObjPath, artRoot + "/Materials/Terrain.mat", terrainColor, sceneName + "Terrain");
+            if (!hasTerrain)
             {
-                CreateBlockoutGround(root.transform, sceneName + "BlockoutGround", new Vector3(12f, 1f, 12f));
+                CreateFlatGround(root.transform, sceneName + "Ground", artRoot + "/Materials/Terrain.mat", terrainColor);
             }
 
             CreateLocationSetDressing(root.transform, artRoot, treeColor);
@@ -1668,6 +1679,25 @@ namespace TouhouMigration.Editor
             }
 
             return true;
+        }
+
+        // Large flat ground for packs that ship no terrain mesh (e.g. AngryMesh). The Plane primitive
+        // brings its own MeshCollider, so the prop-grounding raycasts resolve against it at y=0.
+        private static void CreateFlatGround(Transform parent, string name, string materialPath, Color color)
+        {
+            GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            ground.name = name;
+            ground.transform.SetParent(parent);
+            ground.transform.position = Vector3.zero;
+            ground.transform.localScale = new Vector3(60f, 1f, 60f);
+
+            Renderer renderer = ground.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = EnsureSimpleMaterial(materialPath, color);
+            }
+
+            Physics.SyncTransforms();
         }
 
         private static void CreateLocationSetDressing(Transform parent, string artRoot, Color treeColor)
@@ -2852,7 +2882,8 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(JungleScenePath, true),
                 new EditorBuildSettingsScene(IslandsScenePath, true),
                 new EditorBuildSettingsScene(MountainsScenePath, true),
-                new EditorBuildSettingsScene(FantasyForestScenePath, true)
+                new EditorBuildSettingsScene(FantasyForestScenePath, true),
+                new EditorBuildSettingsScene(AngryMeshMeadowScenePath, true)
             };
         }
 

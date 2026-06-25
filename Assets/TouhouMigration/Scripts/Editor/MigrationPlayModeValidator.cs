@@ -40,6 +40,7 @@ namespace TouhouMigration.Editor
             "Assets/TouhouMigration/Scenes/PureNatureIslands.unity",
             "Assets/TouhouMigration/Scenes/PureNatureMountains.unity",
             "Assets/TouhouMigration/Scenes/PureNatureFantasyForest.unity",
+            "Assets/TouhouMigration/Scenes/AngryMeshMeadow.unity",
             "Assets/TouhouMigration/Scenes/TitleScreen.unity",
         };
 
