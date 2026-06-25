@@ -1,0 +1,685 @@
+{
+  "crops": {
+    "crop_turnip": {
+      "name": "蕪菁",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 3,
+      "base_price": 35,
+      "stats": {"DEF": 1},
+      "traits": ["入门作物"],
+      "multi_harvest": false
+    },
+    "crop_potato": {
+      "name": "马铃薯",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 4,
+      "base_price": 50,
+      "stats": {"DEF": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_strawberry": {
+      "name": "草莓",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 5,
+      "base_price": 60,
+      "stats": {"SPD": 1},
+      "traits": ["多次收获"],
+      "multi_harvest": true,
+      "harvest_count": 3
+    },
+    "crop_cabbage": {
+      "name": "卷心菜",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 5,
+      "base_price": 55,
+      "stats": {"DEF": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_spring_onion": {
+      "name": "春葱",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 3,
+      "base_price": 30,
+      "stats": {"ATK": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_radish": {
+      "name": "大根",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 4,
+      "base_price": 45,
+      "stats": {"DEF": 1, "SPI": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_bamboo_shoot": {
+      "name": "竹笋",
+      "rarity": "UNCOMMON",
+      "season": "SPRING",
+      "growth_days": 6,
+      "base_price": 120,
+      "stats": {"SPD": 2, "ATK": 1},
+      "traits": ["春限定"],
+      "multi_harvest": false
+    },
+    "crop_cherry_blossom": {
+      "name": "樱花草",
+      "rarity": "UNCOMMON",
+      "season": "SPRING",
+      "growth_days": 7,
+      "base_price": 180,
+      "stats": {"SPI": 3},
+      "traits": ["花卉", "装饰"],
+      "multi_harvest": false
+    },
+    "crop_tea_leaf": {
+      "name": "茶叶",
+      "rarity": "UNCOMMON",
+      "season": "SPRING",
+      "growth_days": 8,
+      "base_price": 200,
+      "stats": {"SPI": 2, "SPD": 1},
+      "traits": ["多次收获"],
+      "multi_harvest": true,
+      "harvest_count": 4
+    },
+    "crop_wasabi": {
+      "name": "山葵",
+      "rarity": "UNCOMMON",
+      "season": "SPRING",
+      "growth_days": 7,
+      "base_price": 160,
+      "stats": {"ATK": 2, "SPD": 1},
+      "traits": ["需水量高"],
+      "multi_harvest": false
+    },
+    "crop_lotus_root": {
+      "name": "莲藕",
+      "rarity": "UNCOMMON",
+      "season": "SPRING",
+      "growth_days": 6,
+      "base_price": 140,
+      "stats": {"DEF": 2, "SPI": 1},
+      "traits": ["需水田"],
+      "multi_harvest": false
+    },
+    "crop_spring_herb": {
+      "name": "春草药",
+      "rarity": "RARE",
+      "season": "SPRING",
+      "growth_days": 10,
+      "base_price": 350,
+      "stats": {"SPI": 4},
+      "traits": ["药材"],
+      "multi_harvest": false
+    },
+    "crop_fairy_carrot": {
+      "name": "妖精胡萝卜",
+      "rarity": "RARE",
+      "season": "SPRING",
+      "growth_days": 9,
+      "base_price": 400,
+      "stats": {"ATK": 3, "SPD": 2},
+      "traits": ["满月加速"],
+      "multi_harvest": false
+    },
+    "crop_phantom_lily": {
+      "name": "幽灵百合",
+      "rarity": "RARE",
+      "season": "SPRING",
+      "growth_days": 12,
+      "base_price": 600,
+      "stats": {"SPI": 5, "DEF": 2},
+      "traits": ["夜间生长"],
+      "multi_harvest": false
+    },
+    "crop_hakurei_plum": {
+      "name": "博丽梅",
+      "rarity": "RARE",
+      "season": "SPRING",
+      "growth_days": 11,
+      "base_price": 500,
+      "stats": {"ATK": 4, "SPI": 2},
+      "traits": ["需神社附近"],
+      "multi_harvest": false
+    },
+    "crop_saigyou_seed": {
+      "name": "西行妖之种",
+      "rarity": "LEGENDARY",
+      "season": "SPRING",
+      "growth_days": 28,
+      "base_price": 5000,
+      "stats": {"ATK": 5, "DEF": 5, "SPD": 5, "SPI": 5},
+      "traits": ["需完成幽々子支线"],
+      "multi_harvest": false,
+      "unlock_condition": "quest_yuyuko_complete"
+    },
+    "crop_tomato": {
+      "name": "番茄",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 4,
+      "base_price": 50,
+      "stats": {"ATK": 1},
+      "traits": ["多次收获"],
+      "multi_harvest": true,
+      "harvest_count": 3
+    },
+    "crop_corn": {
+      "name": "玉米",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 5,
+      "base_price": 65,
+      "stats": {"ATK": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_melon": {
+      "name": "甜瓜",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 5,
+      "base_price": 70,
+      "stats": {"SPD": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_eggplant": {
+      "name": "茄子",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 4,
+      "base_price": 45,
+      "stats": {"DEF": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_pepper": {
+      "name": "辣椒",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 3,
+      "base_price": 40,
+      "stats": {"ATK": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_sunflower": {
+      "name": "向日葵",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 5,
+      "base_price": 80,
+      "stats": {"SPI": 1},
+      "traits": ["花卉", "装饰"],
+      "multi_harvest": false
+    },
+    "crop_watermelon": {
+      "name": "西瓜",
+      "rarity": "UNCOMMON",
+      "season": "SUMMER",
+      "growth_days": 8,
+      "base_price": 250,
+      "stats": {"SPD": 3},
+      "traits": ["占2格"],
+      "multi_harvest": false,
+      "plot_size": 2
+    },
+    "crop_pineapple": {
+      "name": "菠萝",
+      "rarity": "UNCOMMON",
+      "season": "SUMMER",
+      "growth_days": 7,
+      "base_price": 200,
+      "stats": {"ATK": 2, "SPD": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_blue_lotus": {
+      "name": "蓝莲花",
+      "rarity": "UNCOMMON",
+      "season": "SUMMER",
+      "growth_days": 6,
+      "base_price": 180,
+      "stats": {"SPI": 3},
+      "traits": ["需水田"],
+      "multi_harvest": false
+    },
+    "crop_ginger": {
+      "name": "生姜",
+      "rarity": "UNCOMMON",
+      "season": "SUMMER",
+      "growth_days": 6,
+      "base_price": 150,
+      "stats": {"ATK": 2, "DEF": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_summer_herb": {
+      "name": "夏草药",
+      "rarity": "UNCOMMON",
+      "season": "SUMMER",
+      "growth_days": 7,
+      "base_price": 170,
+      "stats": {"ATK": 3},
+      "traits": ["药材"],
+      "multi_harvest": false
+    },
+    "crop_fire_flower": {
+      "name": "火焰花",
+      "rarity": "RARE",
+      "season": "SUMMER",
+      "growth_days": 10,
+      "base_price": 450,
+      "stats": {"ATK": 5},
+      "traits": ["高温加速"],
+      "multi_harvest": false
+    },
+    "crop_moon_melon": {
+      "name": "月见瓜",
+      "rarity": "RARE",
+      "season": "SUMMER",
+      "growth_days": 12,
+      "base_price": 550,
+      "stats": {"SPI": 4, "SPD": 2},
+      "traits": ["满月收获翻倍"],
+      "multi_harvest": false
+    },
+    "crop_kappa_cucumber": {
+      "name": "河童黄瓜",
+      "rarity": "RARE",
+      "season": "SUMMER",
+      "growth_days": 9,
+      "base_price": 380,
+      "stats": {"DEF": 3, "SPD": 2},
+      "traits": ["河边加成"],
+      "multi_harvest": false
+    },
+    "crop_scarlet_rose": {
+      "name": "红魔玫瑰",
+      "rarity": "RARE",
+      "season": "SUMMER",
+      "growth_days": 11,
+      "base_price": 500,
+      "stats": {"ATK": 4, "SPI": 3},
+      "traits": ["需红魔馆区域"],
+      "multi_harvest": false
+    },
+    "crop_hourai_elixir": {
+      "name": "蓬莱之药草",
+      "rarity": "LEGENDARY",
+      "season": "SUMMER",
+      "growth_days": 21,
+      "base_price": 4000,
+      "stats": {"ATK": 4, "DEF": 4, "SPD": 4, "SPI": 4},
+      "traits": ["需完成永琳支线", "HP恢复"],
+      "multi_harvest": false,
+      "unlock_condition": "quest_eirin_complete"
+    },
+    "crop_sweet_potato": {
+      "name": "红薯",
+      "rarity": "COMMON",
+      "season": "AUTUMN",
+      "growth_days": 4,
+      "base_price": 55,
+      "stats": {"DEF": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_pumpkin": {
+      "name": "南瓜",
+      "rarity": "COMMON",
+      "season": "AUTUMN",
+      "growth_days": 5,
+      "base_price": 70,
+      "stats": {"DEF": 2, "ATK": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_grape": {
+      "name": "葡萄",
+      "rarity": "COMMON",
+      "season": "AUTUMN",
+      "growth_days": 5,
+      "base_price": 65,
+      "stats": {"SPI": 1, "SPD": 1},
+      "traits": ["多次收获"],
+      "multi_harvest": true,
+      "harvest_count": 2
+    },
+    "crop_apple": {
+      "name": "苹果",
+      "rarity": "COMMON",
+      "season": "AUTUMN",
+      "growth_days": 5,
+      "base_price": 60,
+      "stats": {"SPD": 1},
+      "traits": ["果树型"],
+      "multi_harvest": false
+    },
+    "crop_mushroom": {
+      "name": "蘑菇",
+      "rarity": "COMMON",
+      "season": "AUTUMN",
+      "growth_days": 3,
+      "base_price": 40,
+      "stats": {"SPI": 1},
+      "traits": ["阴影处加速"],
+      "multi_harvest": false
+    },
+    "crop_rice": {
+      "name": "稻米",
+      "rarity": "COMMON",
+      "season": "AUTUMN",
+      "growth_days": 5,
+      "base_price": 50,
+      "stats": {"DEF": 1},
+      "traits": ["需水田", "基础食材"],
+      "multi_harvest": false
+    },
+    "crop_persimmon": {
+      "name": "柿子",
+      "rarity": "UNCOMMON",
+      "season": "AUTUMN",
+      "growth_days": 6,
+      "base_price": 130,
+      "stats": {"SPI": 2, "DEF": 1},
+      "traits": ["果树型"],
+      "multi_harvest": false
+    },
+    "crop_chestnut": {
+      "name": "栗子",
+      "rarity": "UNCOMMON",
+      "season": "AUTUMN",
+      "growth_days": 7,
+      "base_price": 160,
+      "stats": {"ATK": 2, "DEF": 2},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_chrysanthemum": {
+      "name": "菊花",
+      "rarity": "UNCOMMON",
+      "season": "AUTUMN",
+      "growth_days": 6,
+      "base_price": 150,
+      "stats": {"SPI": 3},
+      "traits": ["花卉", "泡茶"],
+      "multi_harvest": false
+    },
+    "crop_autumn_herb": {
+      "name": "秋草药",
+      "rarity": "UNCOMMON",
+      "season": "AUTUMN",
+      "growth_days": 8,
+      "base_price": 190,
+      "stats": {"DEF": 3},
+      "traits": ["药材"],
+      "multi_harvest": false
+    },
+    "crop_matsutake": {
+      "name": "松茸",
+      "rarity": "UNCOMMON",
+      "season": "AUTUMN",
+      "growth_days": 7,
+      "base_price": 220,
+      "stats": {"ATK": 2, "SPI": 2},
+      "traits": ["稀有蘑菇"],
+      "multi_harvest": false
+    },
+    "crop_golden_apple": {
+      "name": "金苹果",
+      "rarity": "RARE",
+      "season": "AUTUMN",
+      "growth_days": 10,
+      "base_price": 500,
+      "stats": {"ATK": 2, "DEF": 2, "SPD": 2, "SPI": 2},
+      "traits": ["果树型", "秋限定"],
+      "multi_harvest": false
+    },
+    "crop_tengu_grape": {
+      "name": "天狗葡萄",
+      "rarity": "RARE",
+      "season": "AUTUMN",
+      "growth_days": 12,
+      "base_price": 600,
+      "stats": {"SPD": 5, "SPI": 2},
+      "traits": ["高地加成"],
+      "multi_harvest": false
+    },
+    "crop_moriya_rice": {
+      "name": "守矢神米",
+      "rarity": "RARE",
+      "season": "AUTUMN",
+      "growth_days": 11,
+      "base_price": 450,
+      "stats": {"DEF": 4, "SPI": 3},
+      "traits": ["需守矢神社"],
+      "multi_harvest": false
+    },
+    "crop_death_mushroom": {
+      "name": "毒蘑菇",
+      "rarity": "RARE",
+      "season": "AUTUMN",
+      "growth_days": 9,
+      "base_price": 350,
+      "stats": {"ATK": 5},
+      "traits": ["炼金材料", "有毒"],
+      "multi_harvest": false
+    },
+    "crop_dragon_fruit": {
+      "name": "龙之果实",
+      "rarity": "LEGENDARY",
+      "season": "AUTUMN",
+      "growth_days": 21,
+      "base_price": 3500,
+      "stats": {"ATK": 6, "SPD": 3},
+      "traits": ["需击败龙Boss"],
+      "multi_harvest": false,
+      "unlock_condition": "boss_dragon_defeated"
+    },
+    "crop_winter_radish": {
+      "name": "冬大根",
+      "rarity": "COMMON",
+      "season": "WINTER",
+      "growth_days": 5,
+      "base_price": 60,
+      "stats": {"DEF": 2},
+      "traits": ["耐寒"],
+      "multi_harvest": false
+    },
+    "crop_snow_pea": {
+      "name": "雪豌豆",
+      "rarity": "COMMON",
+      "season": "WINTER",
+      "growth_days": 4,
+      "base_price": 45,
+      "stats": {"SPD": 1, "DEF": 1},
+      "traits": ["耐寒"],
+      "multi_harvest": false
+    },
+    "crop_leek": {
+      "name": "韭葱",
+      "rarity": "COMMON",
+      "season": "WINTER",
+      "growth_days": 4,
+      "base_price": 50,
+      "stats": {"ATK": 1, "DEF": 1},
+      "traits": ["耐寒"],
+      "multi_harvest": false
+    },
+    "crop_winter_herb": {
+      "name": "冬草药",
+      "rarity": "UNCOMMON",
+      "season": "WINTER",
+      "growth_days": 8,
+      "base_price": 200,
+      "stats": {"DEF": 3, "SPI": 1},
+      "traits": ["药材"],
+      "multi_harvest": false
+    },
+    "crop_ice_flower": {
+      "name": "冰晶花",
+      "rarity": "UNCOMMON",
+      "season": "WINTER",
+      "growth_days": 7,
+      "base_price": 180,
+      "stats": {"SPI": 3, "SPD": 1},
+      "traits": ["降雪加速"],
+      "multi_harvest": false
+    },
+    "crop_frost_berry": {
+      "name": "霜之果",
+      "rarity": "RARE",
+      "season": "WINTER",
+      "growth_days": 12,
+      "base_price": 500,
+      "stats": {"SPD": 4, "SPI": 2},
+      "traits": ["需连续霜冻"],
+      "multi_harvest": false
+    },
+    "crop_letty_snowdrop": {
+      "name": "蕾蒂雪花",
+      "rarity": "RARE",
+      "season": "WINTER",
+      "growth_days": 10,
+      "base_price": 450,
+      "stats": {"DEF": 4, "SPI": 3},
+      "traits": ["暴风雪加速"],
+      "multi_harvest": false
+    },
+    "crop_perfect_freeze": {
+      "name": "完美冻结之花",
+      "rarity": "LEGENDARY",
+      "season": "WINTER",
+      "growth_days": 28,
+      "base_price": 4500,
+      "stats": {"ATK": 5, "DEF": 5, "SPD": 5, "SPI": 5},
+      "traits": ["需完成琪露诺支线"],
+      "multi_harvest": false,
+      "unlock_condition": "quest_cirno_complete"
+    },
+    "crop_four_season_flower": {
+      "name": "四季花",
+      "rarity": "UNCOMMON",
+      "season": "ALL",
+      "growth_days": 7,
+      "base_price": 200,
+      "stats": {"SPI": 2},
+      "traits": ["全季可种", "花卉"],
+      "multi_harvest": false
+    },
+    "crop_eternal_grass": {
+      "name": "永远草",
+      "rarity": "RARE",
+      "season": "ALL",
+      "growth_days": 14,
+      "base_price": 600,
+      "stats": {"SPI": 5},
+      "traits": ["全季", "不枯萎"],
+      "multi_harvest": false
+    },
+    "crop_youkai_herb": {
+      "name": "妖怪草",
+      "rarity": "RARE",
+      "season": "SPRING_SUMMER_AUTUMN",
+      "growth_days": 10,
+      "base_price": 400,
+      "stats": {"ATK": 3, "SPI": 3},
+      "traits": ["春夏秋可种"],
+      "multi_harvest": false
+    },
+    "crop_lunar_tree": {
+      "name": "月之树",
+      "rarity": "LEGENDARY",
+      "season": "ALL",
+      "growth_days": 28,
+      "base_price": 5000,
+      "stats": {"ATK": 6, "DEF": 6, "SPD": 6, "SPI": 6},
+      "traits": ["全季", "需月都解锁"],
+      "multi_harvest": false,
+      "unlock_condition": "area_lunar_capital_unlocked"
+    },
+    "crop_wheat": {
+      "name": "小麦",
+      "rarity": "COMMON",
+      "season": "SUMMER",
+      "growth_days": 4,
+      "base_price": 35,
+      "stats": {"DEF": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_carrot": {
+      "name": "胡萝卜",
+      "rarity": "COMMON",
+      "season": "SPRING",
+      "growth_days": 3,
+      "base_price": 40,
+      "stats": {"SPD": 1},
+      "traits": [],
+      "multi_harvest": false
+    },
+    "crop_cherry": {
+      "name": "樱桃",
+      "rarity": "UNCOMMON",
+      "season": "SPRING",
+      "growth_days": 7,
+      "base_price": 150,
+      "stats": {"SPD": 2},
+      "traits": ["果树"],
+      "multi_harvest": true,
+      "harvest_count": 2
+    },
+    "crop_moon_herb": {
+      "name": "月见草",
+      "rarity": "UNCOMMON",
+      "season": "SUMMER",
+      "growth_days": 6,
+      "base_price": 100,
+      "stats": {"SPI": 2},
+      "traits": ["满月加速"],
+      "multi_harvest": false
+    },
+    "crop_fire_eggplant": {
+      "name": "火焰茄",
+      "rarity": "RARE",
+      "season": "SUMMER",
+      "growth_days": 8,
+      "base_price": 200,
+      "stats": {"ATK": 3},
+      "traits": ["火属性"],
+      "multi_harvest": false
+    },
+    "crop_spirit_bloom": {
+      "name": "灵花",
+      "rarity": "RARE",
+      "season": "SPRING_SUMMER_AUTUMN",
+      "growth_days": 10,
+      "base_price": 350,
+      "stats": {"SPI": 4},
+      "traits": ["灵力恢复", "战斗专属种子"],
+      "multi_harvest": false
+    },
+    "crop_shadow_root": {
+      "name": "暗根",
+      "rarity": "LEGENDARY",
+      "season": "ALL",
+      "growth_days": 14,
+      "base_price": 600,
+      "stats": {"ATK": 4, "DEF": 2},
+      "traits": ["Boss掉落", "战斗专属种子"],
+      "multi_harvest": false
+    }
+  }
+}

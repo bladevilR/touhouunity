@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 10:40 CST
+Last updated: 2026-06-25 10:49 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 10:40 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.8, NPC manager (registry + LocationOf) (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.8 (shop economy/hours, farm growth + harvest loop, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.9, crop database — real crops.json catalog loader (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.9 (shop economy/hours, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,34 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.9: Crop Database (real crops.json catalog loader)
+
+- Date: 2026-06-25 10:49 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Wire real crop content into farming — promote Godot `data/crops.json` (67 crops) and load it into `MigrationCropDefinition` entries a `MigrationFarmingManager` can register.
+
+Completed:
+
+- Promoted Godot `data/crops.json` → `Assets/TouhouMigration/Data/Farming/crops.json` (67 crops, verbatim).
+- New `MigrationCropDatabase` (`Runtime/Farming/`): `LoadFromPath` parses `{"crops": {...}}` via the shared `MigrationJson`, mapping `growth_days` from the JSON; the harvest item id strips the `crop_` prefix (+ `HARVEST_ITEM_OVERRIDES`, e.g. `crop_pepper`→`chili`); needs-daily-water defaults true; yield 1 for now. `GetCrop` / `GetAllCrops` / `CropCount` / `Errors`. Mirrors the `ItemDatabase` loader (reuses `MigrationJson`, `GetInt`, `ResolvePath`).
+
+TDD (red -> green):
+
+- New `CropDatabaseSmokeTests` (loads 60+ crops; `crop_turnip` growth_days 3 + needs water; unknown crop -> null; harvest id strips the `crop_` prefix + the `crop_pepper`->`chili` override).
+- RED: focused run failed to compile on the missing `MigrationCropDatabase` (CS0246).
+- GREEN: full regression 55/55 suites passed, 0 compile errors (54 prior + new crop-database suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Data/Farming/crops.json` (new, promoted from Godot)
+- `Assets/TouhouMigration/Scripts/Runtime/Farming/MigrationCropDatabase.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/CropDatabaseSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Map the remaining crops.json fields (per-crop season, `multi_harvest`/`harvest_count`, `base_price`) and derive real min/max yield; register the database into a `MigrationFarmingManager` + a Farm scene; water/quality yield scaling (Godot `_calculate_harvest_yield`).
 
 ### E4.8: NPC Manager (registry + LocationOf)
 
