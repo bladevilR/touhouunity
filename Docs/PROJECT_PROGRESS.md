@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:58 CST
+Last updated: 2026-06-25 10:06 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:58 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E5.6, live time-of-day in dialogue context (session 2). 12 session-2 slices shipped (all in the Milestone Log below): E5.2/E5.3/E5.4/E5.5/E5.6 (dialogue fx routing + story flags + conditions), E4.1/E4.2/E4.3 (shop economy/hours, farm growth), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E5.7, lunar phase + is_full_moon dialogue context (session 2). 13 session-2 slices shipped (all in the Milestone Log below): E5.2-E5.7 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/seen_events), E4.1/E4.2/E4.3 (shop economy/hours, farm growth), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,34 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.7: Lunar Phase + is_full_moon Dialogue Context
+
+- Date: 2026-06-25 10:06 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Feed `is_full_moon` into the dialogue context so the existing `is_full_moon` condition fires (Godot full-moon dialogue / bond events such as `kaguya_moon_memory`).
+
+Completed:
+
+- New `MigrationMoonPhase` (`Runtime/Foundation/`): `PhaseIndex(day) = (day % 32) / 4`; `IsFullMoon(day)` = phase index 4. An 8-phase, 32-day cycle (4 days/phase), normalizing negative days. Matches Godot `WeatherSystem._update_moon_phase` (MoonPhase `FULL_MOON` = index 4). Pure.
+- Owner `BuildDialogueContext` adds `["is_full_moon"] = MigrationMoonPhase.IsFullMoon(worldSimulation.GetTimeSnapshot().Day)`.
+
+TDD (red -> green):
+
+- New `MoonPhaseSmokeTests` (phase cycle, full-moon window days 16-19, 32-day wrap, negative-day normalization).
+- RED: focused run failed to compile on the missing `MigrationMoonPhase` (CS0103).
+- GREEN: full regression 51/51 suites passed, 0 compile errors (50 prior + new moon-phase suite). `GlobalUiSmokeTests` gates the owner change.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Foundation/MigrationMoonPhase.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MoonPhaseSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Dialogue context conditions now live: bond_level, humanity, time_of_day, is_full_moon, quests, seen_events. Remaining: `weather` / `weather_not` (needs the `WorldWeatherSnapshot` weather accessor wired into the context).
 
 ### E5.6: Live Time-Of-Day In Dialogue Context
 
