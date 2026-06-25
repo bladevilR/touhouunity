@@ -51,6 +51,11 @@ namespace TouhouMigration.Editor
             "Assets/TouhouMigration/Scenes/ScarletMansionFront.unity",
             "Assets/TouhouMigration/Scenes/DungeonEntrance.unity",
             "Assets/TouhouMigration/Scenes/Farm.unity",
+            "Assets/TouhouMigration/Scenes/MokouHouse3D.unity",
+            "Assets/TouhouMigration/Scenes/BambooHouse.unity",
+            "Assets/TouhouMigration/Scenes/CombatArena.unity",
+            "Assets/TouhouMigration/Scenes/CombatArenaHD2D.unity",
+            "Assets/TouhouMigration/Scenes/CirnoBossArena.unity",
             "Assets/TouhouMigration/Scenes/TitleScreen.unity",
         };
 

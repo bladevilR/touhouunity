@@ -22,5 +22,10 @@
 | ScarletMansionFront | yes | Verification/VisualChecks/ScarletMansionFront_PlayMode.png | 0 |
 | DungeonEntrance | yes | Verification/VisualChecks/DungeonEntrance_PlayMode.png | 0 |
 | Farm | yes | Verification/VisualChecks/Farm_PlayMode.png | 0 |
+| MokouHouse3D | yes | Verification/VisualChecks/MokouHouse3D_PlayMode.png | 0 |
+| BambooHouse | yes | Verification/VisualChecks/BambooHouse_PlayMode.png | 0 |
+| CombatArena | yes | Verification/VisualChecks/CombatArena_PlayMode.png | 0 |
+| CombatArenaHD2D | yes | Verification/VisualChecks/CombatArenaHD2D_PlayMode.png | 0 |
+| CirnoBossArena | yes | Verification/VisualChecks/CirnoBossArena_PlayMode.png | 0 |
 | TitleScreen | yes | Verification/VisualChecks/TitleScreen_PlayMode.png | 0 |
 

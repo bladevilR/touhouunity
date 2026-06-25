@@ -102,7 +102,7 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, foundBamboo, "Bamboo Home should be selectable because it has a Unity scene.");
             AssertEqual(true, foundTown, "Human Village/town should be selectable because it has a Unity scene.");
             AssertEqual(true, foundMagicForestAvailable, "Magic Forest is now migrated (E3) and should be selectable.");
-            AssertEqual(true, foundAnyDisabled, "Registry should still list at least one not-yet-migrated scene as disabled.");
+            AssertEqual(false, foundAnyDisabled, "All formal registry locations are now migrated (E3) and selectable.");
         }
 
         private static void TestRuntimeScenesContainGlobalUiAndTitleDoesNotContainHud()

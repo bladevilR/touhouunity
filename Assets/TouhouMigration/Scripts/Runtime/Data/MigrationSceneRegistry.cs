@@ -26,8 +26,11 @@ namespace TouhouMigration.Runtime.Data
             new MigrationSceneOption("fantasy_village", "幻想乡村", true, MigrationSceneId.FantasyVillage),
             new MigrationSceneOption("suntail_village_playable", "向尾村·可玩", true, MigrationSceneId.SuntailVillagePlayable),
             new MigrationSceneOption("suntail_village_imported", "向尾村·导入", true, MigrationSceneId.SuntailVillageImported),
-            new MigrationSceneOption("combat", "战斗竞技场", false, MigrationSceneId.BambooHomeVerticalSlice),
-            new MigrationSceneOption("cirno_mvp", "琪露诺试炼", false, MigrationSceneId.BambooHomeVerticalSlice)
+            new MigrationSceneOption("combat", "战斗竞技场", true, MigrationSceneId.CombatArena),
+            new MigrationSceneOption("combat_hd2d", "战斗竞技场HD2D", true, MigrationSceneId.CombatArenaHD2D),
+            new MigrationSceneOption("cirno_mvp", "琪露诺试炼", true, MigrationSceneId.CirnoBossArena),
+            new MigrationSceneOption("mokou_house3d", "妹红小屋", true, MigrationSceneId.MokouHouse3D),
+            new MigrationSceneOption("bamboo_house", "竹屋", true, MigrationSceneId.BambooHouse)
         };
 
         public static IReadOnlyList<MigrationSceneOption> GetAllOptions()

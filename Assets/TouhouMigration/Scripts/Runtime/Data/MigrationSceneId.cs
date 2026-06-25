@@ -22,6 +22,11 @@ namespace TouhouMigration.Runtime.Data
         HakureiShrine,
         ScarletMansionFront,
         DungeonEntrance,
-        Farm
+        Farm,
+        MokouHouse3D,
+        BambooHouse,
+        CombatArena,
+        CombatArenaHD2D,
+        CirnoBossArena
     }
 }

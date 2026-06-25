@@ -86,6 +86,11 @@ namespace TouhouMigration.Editor
         private const string ScarletMansionFrontScenePath = ScenesRoot + "/ScarletMansionFront.unity";
         private const string DungeonEntranceScenePath = ScenesRoot + "/DungeonEntrance.unity";
         private const string FarmScenePath = ScenesRoot + "/Farm.unity";
+        private const string MokouHouse3DScenePath = ScenesRoot + "/MokouHouse3D.unity";
+        private const string BambooHouseScenePath = ScenesRoot + "/BambooHouse.unity";
+        private const string CombatArenaScenePath = ScenesRoot + "/CombatArena.unity";
+        private const string CombatArenaHD2DScenePath = ScenesRoot + "/CombatArenaHD2D.unity";
+        private const string CirnoBossArenaScenePath = ScenesRoot + "/CirnoBossArena.unity";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -122,6 +127,8 @@ namespace TouhouMigration.Editor
             CreateBespokeNatureScenes();
             CreateVillageScenes();
             CreateLandmarkScenes();
+            CreateBambooVariantScenes();
+            CreateArenaScenes();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
@@ -140,6 +147,8 @@ namespace TouhouMigration.Editor
             CreateBespokeNatureScenes();
             CreateVillageScenes();
             CreateLandmarkScenes();
+            CreateBambooVariantScenes();
+            CreateArenaScenes();
             RegisterBuildScenes();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -1895,6 +1904,79 @@ namespace TouhouMigration.Editor
             FinishLocationScene(root, FarmScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.80f, 0.35f, 0.45f), scene);
         }
 
+        // Bamboo-home overworld variants (Mokou's house) reusing the Bamboo Home glb + prop set.
+        private static void CreateBambooVariantScenes()
+        {
+            CreateBambooHomeLikeScene(MigrationSceneCatalog.MokouHouse3D, MokouHouse3DScenePath);
+            CreateBambooHomeLikeScene(MigrationSceneCatalog.BambooHouse, BambooHouseScenePath);
+        }
+
+        private static void CreateBambooHomeLikeScene(string sceneName, string scenePath)
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = sceneName;
+            GameObject root = new GameObject(sceneName);
+            CreateWorldSimulation(root.transform);
+            CreateBlockoutGround(root.transform, sceneName + "Ground", new Vector3(6f, 1f, 6f));
+            CreateMigrationPlayer(root.transform, new Vector3(0f, 1f, 0f));
+            CreateFollowCamera(root.transform, new Vector3(0f, 6f, -8f), Quaternion.Euler(38f, 0f, 0f));
+            CreateGlobalUi(root.transform);
+
+            InstantiateAssetPrefab(BambooHousePath, "House3D", root.transform, new Vector3(4.8f, 0f, -3.7f), Quaternion.Euler(0f, 88.8f, 0f), new Vector3(12f, 12f, 12f));
+            GameObject props = new GameObject("Props");
+            props.transform.SetParent(root.transform);
+            CreateBambooHomeProps(props.transform);
+            CreatePortal(root.transform, "TownPortal", new Vector3(-10f, 1f, 15f), MigrationSceneId.HumanVillageVerticalSlice, new Color(0.2f, 0.55f, 1f, 0.45f));
+
+            EditorSceneManager.SaveScene(scene, scenePath);
+        }
+
+        // Combat/boss arenas: a walled flat arena + training dummies or a Cirno boss marker. The full
+        // Perfect Freeze encounter wiring is E6 (combat breadth, deprioritized) — kept as a marker here.
+        private static void CreateArenaScenes()
+        {
+            CreateArenaScene(MigrationSceneCatalog.CombatArena, CombatArenaScenePath, new Color(0.34f, 0.36f, 0.34f, 1f), false, new Color(0.80f, 0.40f, 0.30f, 1f));
+            CreateArenaScene(MigrationSceneCatalog.CombatArenaHD2D, CombatArenaHD2DScenePath, new Color(0.30f, 0.34f, 0.40f, 1f), false, new Color(0.70f, 0.50f, 0.85f, 1f));
+            CreateArenaScene(MigrationSceneCatalog.CirnoBossArena, CirnoBossArenaScenePath, new Color(0.62f, 0.74f, 0.82f, 1f), true, new Color(0.30f, 0.55f, 0.90f, 1f));
+        }
+
+        private static void CreateArenaScene(string sceneName, string scenePath, Color groundColor, bool boss, Color accentColor)
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = sceneName;
+            GameObject root = new GameObject(sceneName);
+            CreateWorldSimulation(root.transform);
+            string artRoot = LocationsArtRoot + "/" + sceneName;
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, sceneName + "Ground", artRoot + "/Materials/Ground.mat", groundColor);
+
+            Material wall = EnsureSimpleMaterial(artRoot + "/Materials/Wall.mat", new Color(0.40f, 0.40f, 0.45f, 1f));
+            Material accent = EnsureSimpleMaterial(artRoot + "/Materials/Accent.mat", accentColor);
+
+            GameObject lm = new GameObject("Arena");
+            lm.transform.SetParent(root.transform);
+            Transform t = lm.transform;
+            CreatePrimitiveBlock(t, "WallN", PrimitiveType.Cube, new Vector3(0f, 2f, 23f), new Vector3(48f, 4f, 1.5f), Vector3.zero, wall, true);
+            CreatePrimitiveBlock(t, "WallS", PrimitiveType.Cube, new Vector3(0f, 2f, -23f), new Vector3(48f, 4f, 1.5f), Vector3.zero, wall, true);
+            CreatePrimitiveBlock(t, "WallE", PrimitiveType.Cube, new Vector3(23f, 2f, 0f), new Vector3(1.5f, 4f, 48f), Vector3.zero, wall, true);
+            CreatePrimitiveBlock(t, "WallW", PrimitiveType.Cube, new Vector3(-23f, 2f, 0f), new Vector3(1.5f, 4f, 48f), Vector3.zero, wall, true);
+
+            if (boss)
+            {
+                CreatePrimitiveBlock(t, "CirnoBossMarker", PrimitiveType.Capsule, new Vector3(0f, 3f, 10f), new Vector3(2.6f, 3f, 2.6f), Vector3.zero, accent, true);
+                CreatePrimitiveBlock(t, "IcePillarL", PrimitiveType.Cube, new Vector3(-10f, 3f, 6f), new Vector3(1.4f, 6f, 1.4f), new Vector3(0f, 45f, 0f), accent, true);
+                CreatePrimitiveBlock(t, "IcePillarR", PrimitiveType.Cube, new Vector3(10f, 3f, 6f), new Vector3(1.4f, 6f, 1.4f), new Vector3(0f, 45f, 0f), accent, true);
+            }
+            else
+            {
+                CreatePrimitiveBlock(t, "Dummy1", PrimitiveType.Capsule, new Vector3(-6f, 1.6f, 6f), new Vector3(1.2f, 1.6f, 1.2f), Vector3.zero, accent, true);
+                CreatePrimitiveBlock(t, "Dummy2", PrimitiveType.Capsule, new Vector3(6f, 1.6f, 8f), new Vector3(1.2f, 1.6f, 1.2f), Vector3.zero, accent, true);
+                CreatePrimitiveBlock(t, "Dummy3", PrimitiveType.Capsule, new Vector3(0f, 1.6f, 12f), new Vector3(1.2f, 1.6f, 1.2f), Vector3.zero, accent, true);
+            }
+
+            FinishLocationScene(root, scenePath, MigrationSceneId.BambooHomeVerticalSlice, accentColor, scene);
+        }
+
         // Bespoke Godot nature locations that reuse the generic nature builder on flat ground with
         // distinctive palettes (Magic Forest = dark/teal woods; Misty Lake = blue-grey "misty water").
         private static void CreateBespokeNatureScenes()
@@ -3182,7 +3264,12 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(HakureiShrineScenePath, true),
                 new EditorBuildSettingsScene(ScarletMansionFrontScenePath, true),
                 new EditorBuildSettingsScene(DungeonEntranceScenePath, true),
-                new EditorBuildSettingsScene(FarmScenePath, true)
+                new EditorBuildSettingsScene(FarmScenePath, true),
+                new EditorBuildSettingsScene(MokouHouse3DScenePath, true),
+                new EditorBuildSettingsScene(BambooHouseScenePath, true),
+                new EditorBuildSettingsScene(CombatArenaScenePath, true),
+                new EditorBuildSettingsScene(CombatArenaHD2DScenePath, true),
+                new EditorBuildSettingsScene(CirnoBossArenaScenePath, true)
             };
         }
 

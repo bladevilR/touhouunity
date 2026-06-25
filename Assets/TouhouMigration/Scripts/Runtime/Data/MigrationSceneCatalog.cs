@@ -25,6 +25,11 @@ namespace TouhouMigration.Runtime.Data
         public const string ScarletMansionFront = "ScarletMansionFront";
         public const string DungeonEntrance = "DungeonEntrance";
         public const string Farm = "Farm";
+        public const string MokouHouse3D = "MokouHouse3D";
+        public const string BambooHouse = "BambooHouse";
+        public const string CombatArena = "CombatArena";
+        public const string CombatArenaHD2D = "CombatArenaHD2D";
+        public const string CirnoBossArena = "CirnoBossArena";
 
         public static string ToSceneName(MigrationSceneId sceneId)
         {
@@ -51,6 +56,11 @@ namespace TouhouMigration.Runtime.Data
                 MigrationSceneId.ScarletMansionFront => ScarletMansionFront,
                 MigrationSceneId.DungeonEntrance => DungeonEntrance,
                 MigrationSceneId.Farm => Farm,
+                MigrationSceneId.MokouHouse3D => MokouHouse3D,
+                MigrationSceneId.BambooHouse => BambooHouse,
+                MigrationSceneId.CombatArena => CombatArena,
+                MigrationSceneId.CombatArenaHD2D => CombatArenaHD2D,
+                MigrationSceneId.CirnoBossArena => CirnoBossArena,
                 _ => throw new ArgumentOutOfRangeException(nameof(sceneId), sceneId, "Unknown migration scene id.")
             };
         }
