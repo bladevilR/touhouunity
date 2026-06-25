@@ -65,6 +65,23 @@ namespace TouhouMigration.Runtime.Dialogue
 
         private bool ApplyEffect(string npcId, string effectId, object value)
         {
+            // Cross-NPC bond effects (Godot bond_<npcId>, e.g. bond_keine raised while talking to
+            // someone else). Plain "bond" (no target suffix) is handled by the switch below and
+            // applies to the current NPC.
+            if (effectId != null
+                && effectId.StartsWith("bond_", StringComparison.Ordinal)
+                && effectId.Length > "bond_".Length)
+            {
+                if (bondService == null)
+                {
+                    return false;
+                }
+
+                string targetNpcId = effectId.Substring("bond_".Length);
+                bondService.AddBondPoints(targetNpcId, "dialogue", ToInt(value));
+                return true;
+            }
+
             switch (effectId)
             {
                 case "bond":

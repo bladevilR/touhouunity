@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:35 CST
+Last updated: 2026-06-25 09:39 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:35 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.3, shop open-hours check (session 2). Recent session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E5.3, cross-NPC dialogue bond effects (session 2). Session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,32 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.3: Cross-NPC Dialogue Bond Effects
+
+- Date: 2026-06-25 09:39 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Route Godot `bond_<npcId>` dialogue effects (e.g. `bond_keine` raised while talking to Koishi). The router only handled plain `bond` (current NPC), silently dropping the cross-NPC bond effects used in story dialogues (`DialogueDatabaseExpanded`).
+
+Completed:
+
+- `DialogueEffectRouter.ApplyEffect` now recognizes the `bond_<npcId>` prefix and routes the value to `bondService.AddBondPoints(<targetNpcId>, "dialogue", value)`. Plain `bond` still applies to the current NPC via the existing switch.
+
+TDD (red -> green):
+
+- New `DialogueBondEffectSmokeTests` (plain `bond` → current NPC; `bond_keine` → Keine, not the current NPC).
+- RED: a genuine assertion failure (not a compile error) — `bond_keine` returned `false` and left Keine at 0 points.
+- GREEN: full regression 48/48 suites passed, 0 compile errors (47 prior + new bond-effect suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Dialogue/DialogueEffectRouter.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/DialogueBondEffectSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- The `event` dialogue effect (narrative flags, e.g. `mokou_fate` / `elixir_bad_end` / `keine_helps`) is still unrouted — needs a story-flag/event service (E5/E6).
 
 ### E4.3: Shop Open-Hours Check
 
