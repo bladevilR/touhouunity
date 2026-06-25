@@ -1,6 +1,6 @@
 # Current Handoff — Resume Point
 
-Last updated: 2026-06-25 (session 2)
+Last updated: 2026-06-25 (session 3)
 
 ## Objective & Ownership
 
@@ -9,14 +9,25 @@ Build the full Touhou Phantom game in `/Users/Shared/TouhouUnityMigration`, migr
 Standing goal: **complete all migration**, driven autonomously, user reviews final results only.
 
 - North-star roadmap: `Docs/superpowers/plans/2026-06-25-migration-completion-roadmap.md` (Phase 0 → E1…E8; all locations incl. PureNature/AngryMesh variants are in scope).
-- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit: `a74114c` (session-2 E6.1 card deck); the E6.2 card-deck-fidelity commit lands on top of this update.
+- GitHub: `git@github.com:bladevilR/touhouunity.git` (`main`). Latest commit: `1e9b7ed` (session-3 F1 fatigue system).
 
 ## Verified State
 
-- Tree clean, `main` in sync with origin. ~147 runtime C# files; **60 smoke-test suites**.
+- Tree clean, `main` in sync with origin. ~150 runtime C# files; **63 smoke-test suites** (session 3 added E6.4 cardbuild-run, H1 home-storage, F1 fatigue; extended the card-deck + farm-plot suites).
 - Last full regression: **60/60 green** (`MigrationSmokeTestRunner.RunAll`, session 2) — through the E6.2 card-deck-fidelity slice; 0 compile errors. (Session-2 added suites: E5.2 dialogue-humanity, E4.1 shop-service, E4.2 farm-plot, E4.3 shop-hours, E5.3 dialogue-bond, E5.4 story-flag, E5.6 time-of-day, E4.4 farming-manager, E4.5 fishing, E4.7 npc-schedule, E4.8 npc-manager, E4.9 crop-database, E4.10 shop-database, E4.11 shop-runtime, E3.1 npc-roster, E4.14 fish-database, E6.1 card-deck (60 total; E5.7's moon-phase suite was removed by the E5.8 correction); E2.4/E8.1/E8.2 extended `GameStateRulesSmokeTests`/`SaveOrchestratorSmokeTests`/`StoryFlagServiceSmokeTests`; E2.5/E5.5/E5.8/E5.9/E4.15 are owner-only wiring gated by `GlobalUiSmokeTests` + play-mode.)
 - 4 scenes (Bootstrap/BambooHome/HumanVillage/TitleScreen) **play-validated runtime-clean** via `MigrationPlayModeValidator` — **re-confirmed at the end of session 2** (Scenes: 4, Failed: False, 0 errors each) with all session-2 owner changes active (menu-mode `Update` polling, world-time scaling, `ModeChanged` subscription, humanity/story-flag context wiring, **+ E4.15 life-sim catalog loading** — crops/shops/fish/roster load runtime-clean in `Awake`). (Note: it can't capture Screen-Space-Overlay UI, so UI scenes screenshot black — a capture limitation, not a game error.)
-- Completion: **~17% by roadmap structure.** This is a multi-session, weeks-scale effort.
+- Completion: **~18% by roadmap structure.** This is a multi-session, weeks-scale effort.
+
+## Done (session 3 — pure-logic TDD slices, all additive, all green)
+
+5 grounded slices, each red→green + full regression (60→63 suites), committed + pushed:
+- **E6.3** (`3c631ad`): `MigrationCardDeck` retain/exhaust/cooldown piles — completes Godot `CardDeckController` method parity (RetainFromHand / ExhaustFromHand / MoveRetainedToHand / PutOnCooldown / TickCooldowns; `max(1, turns)` clamp; expired cooldown → discard; exhaust never reshuffles).
+- **E6.4** (`11398dd`): `MigrationCardBuildRun` — runtime deck seeded from `CardBuildProfile.ActiveDeck` + opening-hand draw (mirrors `CardBuildMvpRunController._apply_run_profile` layered path) + per-turn cycle (EndTurn discards hand + ticks cooldowns; StartTurn returns retained + draws). **Note:** the Cirno `CardBuildMvpRunController` (1284 lines of boss-specific real-time resolution) is the remaining E6 depth and is intentionally *not* started (depth-heavy area; chose breadth instead).
+- **E4.16** (`c5d1ff2`): `MigrationFarmPlot` water/fertilizer levels (0-100, daily decay 5 / 1.5) + crop quality tiers (`CropQuality`) + scaled `CalculateHarvestYield` (Godot `FarmPlot._calculate_harvest_yield`). **Additive** — manager API + its tests untouched. Deferred: soil-memory / spirit-crystal / mutant-seed / full-moon bonuses (Masterwork+), multi-harvest regrow, water-level growth-speed coupling.
+- **H1** (`4cc7b4b`): `MigrationHomeStorage` — bamboo-home storage box (Godot `HomeInteractionSystem` store/retrieve/capacity-200). New `Runtime/Home` area. Sleep/tea/meal/read interactions are signal/scene-coupled and deferred.
+- **F1** (`1e9b7ed`): `MigrationFatigueSystem` (`Runtime/Player`) — player fatigue stat (Godot `FatigueSystem`): accrual/clamp 0-100, Tired/Exhausted/Collapse bands at 60/80/100, sleep/rest recovery, exhausted/collapse latches. Previously-unported autoload. Unblocks the deferred Home interactions. Accrual drivers (TimeManager/mode signals), SignalBus warnings, and the collapse→teleport-home cutscene are deferred.
+
+**Open design decision (surfaced, not actioned) — farming harvest yield amount:** the Unity `MigrationFarmingManager` rolls a random range from the crop def (`MinYield`/`MaxYield`, loaded from crops.json, covered by `TestYieldRollHonorsRange`), whereas Godot `FarmPlot.harvest()` returns the deterministic plot formula (base 4 × water/fert condition × quality). E4.16 ported the plot formula as a tested capability but did **not** rewire the manager payout (doing so would break the deliberate Min/Max range model + 2 tests). Decide: switch payout to the plot formula, keep the range, or combine — then wire `MigrationFarmPlot.CalculateHarvestYield` / `QualityTier` into `MigrationFarmingManager.Harvest` + `MigrationHarvestResult`.
 
 ## Done (session 1)
 
