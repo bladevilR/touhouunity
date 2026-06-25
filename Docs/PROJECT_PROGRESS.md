@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 11:59 CST
+Last updated: 2026-06-25 (session 3)
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 11:59 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: F1, fatigue stat system (session 3). Session-3 slices (pure-logic TDD, additive, all green; see Milestone Log): E6.3 (card deck retain/exhaust/cooldown piles), E6.4 (cardbuild run state seeded from active_deck), E4.16 (farm-plot quality/yield), H1 (home storage box), F1 (fatigue system). Prior: E6.2, card deck draws from the front (Godot `pop_front` fidelity correction, session 2). Earlier session-2 work: E6.1 (CardBuild runtime deck), E4.15 (owner loads life-sim catalogs, play-mode verified), E4.14 (fish catalog), E3.1 (NPC roster), E4.1-E4.13 (shop/farm/NPC end-to-end), E5.2-E5.9 (dialogue, fully closed), E2.4/E2.5 (game-state gating), E8.1/E8.2 (saves) — all in the Milestone Log below. Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.11 (shop economy end-to-end: service/hours/catalog/runtime, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,136 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### F1: Fatigue Stat System (Godot FatigueSystem core)
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Port the previously-unported `FatigueSystem` autoload — the player fatigue stat the home interactions depend on. Pure-logic core only.
+
+Completed:
+
+- New `MigrationFatigueSystem` (`Runtime/Player/`): `CurrentFatigue` (0-100, `AddFatigue` clamps); `FatigueLevel` bands Normal/Tired/Exhausted/Collapse at 60/80/100 + `GetFatigueDescription`; `RestRecovery` (partial, clears exhausted below 80) and `SleepFullRecovery` (zero + clear latches); `IsExhausted`/`HasCollapsed` latch on first crossing (Godot `_check_fatigue_warnings`). Accrual rates exposed as constants. Free of UnityEngine.
+
+TDD (red -> green):
+
+- New `MigrationFatigueSystemSmokeTests` (clamp; level + description thresholds; exhausted/collapse latches; sleep reset; rest reduces + clears exhausted).
+- RED: genuine assertion failure (stub `CurrentFatigue` 0 vs 50), 0 compile errors.
+- GREEN: full regression 63/63 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Player/MigrationFatigueSystem.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationFatigueSystemSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Drive accrual on TimeManager hour ticks + combat per-minute + mode signals; SignalBus warnings; the collapse -> teleport-home cutscene; save/load. Wire into the deferred Home sleep/tea/meal/read interactions.
+
+### H1: Bamboo-Home Storage Box (Godot HomeInteractionSystem storage)
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: First slice of the home interaction system — the storage box pure logic. New `Runtime/Home` area (no prior Unity coverage).
+
+Completed:
+
+- New `MigrationHomeStorage` (`Runtime/Home/`): `StoreItem`/`RetrieveItem`/`GetStoredAmount`/`GetAllStoredItems`/`TotalStoredItems`, capacity-gated at `MaxStorageSlots` (200) with Godot semantics (capacity check on current total; entries removed at zero). Free of UnityEngine.
+
+TDD (red -> green):
+
+- New `MigrationHomeStorageSmokeTests` (store/retrieve/accumulate; missing/insufficient retrieve; retrieve-to-zero removes entry; full-box rejection; total sums).
+- RED: genuine assertion failure (stub store returns false), 0 compile errors.
+- GREEN: full regression 62/62 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Home/MigrationHomeStorage.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationHomeStorageSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- The sleep/tea/meal/read interactions (signal/scene-coupled: SignalBus / GameStateManager / FatigueSystem / TimeManager) + the MealArea/SleepArea/StorageArea/TeaArea scene zones.
+
+### E4.16: Farm Plot Water/Fertilizer + Crop Quality + Scaled Yield
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Port Godot `FarmPlot`'s quality/yield system onto `MigrationFarmPlot`. Additive — keep the manager API + tests untouched.
+
+Completed:
+
+- `MigrationFarmPlot`: `WaterLevel`/`FertilizerLevel` (0-100), `Water()` raises water +50, `Fertilize(power)` raises fertilizer, both decay daily in `AdvanceDay` (5 / 1.5); `CropQuality` tier recomputed from water/fertilizer each day (Godot `_update_quality_tier` thresholds); `CalculateHarvestYield` = `max(1, (int)(4 * water/fert-condition * quality_mult))` (Godot `_calculate_harvest_yield`), 0 when not ready; `GetQualityMultiplier`.
+
+TDD (red -> green):
+
+- Extended `FarmPlotSmokeTests` (watering/fertilizing clamp; daily decay; quality rises to Excellent; yield scales with conditions).
+- RED: genuine assertion failure (stub water level 0 vs 50), 0 compile errors.
+- GREEN: full regression 61/61 suites passed, 0 compile errors; the unchanged farming-manager suite still green.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Farming/MigrationFarmPlot.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/FarmPlotSmokeTests.cs`
+
+Known follow-ups:
+
+- **Open decision:** wire plot quality/yield into `MigrationFarmingManager.Harvest` + `MigrationHarvestResult` (vs the current crop Min/Max random-range payout — see `Docs/CURRENT_HANDOFF.md`). Deferred: soil-memory / spirit-crystal / mutant-seed / full-moon bonuses (Masterwork+), multi-harvest regrow, water-level growth-speed coupling.
+
+### E6.4: CardBuild Per-Turn Run State (seeded from active_deck)
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Compose `MigrationCardDeck` into a run seeded from the profile's active deck, with a per-turn cycle. Mirrors `CardBuildMvpRunController._apply_run_profile` (layered path).
+
+Completed:
+
+- New `MigrationCardBuildRun` (`Runtime/CardBuild/`): seeds the draw pile from `CardBuildProfile.ActiveDeck`, draws an opening hand from the front (remainder in draw pile, empty discard, profile deck not mutated); `EndTurn` discards the held hand + ticks cooldowns; `StartTurn(drawCount, rng)` returns retained cards + draws; play verbs (`Retain`/`Discard`/`Exhaust`/`Cooldown`) delegate to the deck. Retained survive the turn boundary; exhausted leave the run.
+
+TDD (red -> green):
+
+- New `MigrationCardBuildRunSmokeTests` (opening-hand seeding; no profile-deck mutation; EndTurn/StartTurn cycle; retained survives; exhausted leaves).
+- RED: genuine assertion failure (stub hand count 0 vs 6), 0 compile errors.
+- GREEN: full regression 61/61 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/CardBuild/MigrationCardBuildRun.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationCardBuildRunSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- The Cirno `CardBuildMvpRunController` (1284 lines: boss-specific real-time resolution, resources/statuses, terrain pressure, vulnerability, action loadout) — the remaining E6 depth, intentionally not started this session (depth-heavy; chose breadth).
+
+### E6.3: Card Deck Retain/Exhaust/Cooldown Piles (CardDeckController parity)
+
+- Date: 2026-06-25 (session 3)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Complete the Godot `CardDeckController` method parity on `MigrationCardDeck` — the remaining pile ops beyond draw/discard.
+
+Completed:
+
+- `MigrationCardDeck`: `RetainFromHand` -> retained pile (survives end-of-turn discard); `MoveRetainedToHand`; `ExhaustFromHand` -> exhaust pile (never reshuffles); `PutOnCooldown(card, turns)` clamped to `max(1, turns)`; `TickCooldowns` counts down, expired cards return to discard; `RetainedCount`/`ExhaustPileCount`/`CooldownCount`.
+
+TDD (red -> green):
+
+- Extended `MigrationCardDeckSmokeTests` (retain/exhaust move to the right pile + reject not-in-hand; move-retained-to-hand; cooldown clamp + return-to-discard; multi-turn countdown).
+- RED: genuine assertion failure (stub retain returns false), 0 compile errors.
+- GREEN: full regression 60/60 suites passed, 0 compile errors.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/CardBuild/MigrationCardDeck.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/MigrationCardDeckSmokeTests.cs`
+
+Known follow-ups:
+
+- Composed into the per-turn run loop by E6.4 (`MigrationCardBuildRun`).
 
 ### E6.2: Card Deck Draws From The Front (Godot pop_front fidelity)
 
