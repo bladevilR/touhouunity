@@ -436,7 +436,8 @@ namespace TouhouMigration.Runtime.UI
                 dialogueDatabase,
                 dialogueFacade,
                 socialBondService,
-                questDeliveryService);
+                questDeliveryService,
+                npcMemorySystem);
         }
 
         private void Update()

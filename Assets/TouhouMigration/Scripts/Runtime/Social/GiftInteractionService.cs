@@ -12,13 +12,26 @@ namespace TouhouMigration.Runtime.Social
         private readonly DialogueRuntimeFacade dialogueFacade;
         private readonly SocialBondService bondService;
         private readonly QuestDeliveryService questDeliveryService;
+        private readonly MigrationNpcMemorySystem npcMemory;
 
         public GiftInteractionService(
             GiftDatabase giftDatabase,
             InventoryService inventoryService,
             DialogueDatabase dialogueDatabase,
             DialogueRuntimeFacade dialogueFacade)
-            : this(giftDatabase, inventoryService, dialogueDatabase, dialogueFacade, null, null)
+            : this(giftDatabase, inventoryService, dialogueDatabase, dialogueFacade, null, null, null)
+        {
+        }
+
+        // 6-arg overload kept for existing (incl. reflection-based) callers that predate the npcMemory hook.
+        public GiftInteractionService(
+            GiftDatabase giftDatabase,
+            InventoryService inventoryService,
+            DialogueDatabase dialogueDatabase,
+            DialogueRuntimeFacade dialogueFacade,
+            SocialBondService bondService,
+            QuestDeliveryService questDeliveryService)
+            : this(giftDatabase, inventoryService, dialogueDatabase, dialogueFacade, bondService, questDeliveryService, null)
         {
         }
 
@@ -28,7 +41,8 @@ namespace TouhouMigration.Runtime.Social
             DialogueDatabase dialogueDatabase,
             DialogueRuntimeFacade dialogueFacade,
             SocialBondService bondService,
-            QuestDeliveryService questDeliveryService)
+            QuestDeliveryService questDeliveryService,
+            MigrationNpcMemorySystem npcMemory)
         {
             this.giftDatabase = giftDatabase;
             this.inventoryService = inventoryService;
@@ -36,6 +50,7 @@ namespace TouhouMigration.Runtime.Social
             this.dialogueFacade = dialogueFacade;
             this.bondService = bondService;
             this.questDeliveryService = questDeliveryService;
+            this.npcMemory = npcMemory;
         }
 
         public GiftDeliveryResult GiveGift(string npcId, string giftId)
@@ -76,6 +91,7 @@ namespace TouhouMigration.Runtime.Social
             };
             bondService?.ApplyGiftResult(result);
             questDeliveryService?.NotifyGiftDelivery(result, amount);
+            npcMemory?.AddMemory(npcId, NpcMemoryType.GiftReceived, new NpcMemoryContext { Liked = result.BondChange >= 0 });
             return result;
         }
 

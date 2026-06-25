@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using TouhouMigration.Runtime.Dialogue;
 using TouhouMigration.Runtime.Inventory;
+using TouhouMigration.Runtime.Social;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace TouhouMigration.Editor.Tests
         {
             TestGiftDatabaseLoadsPreferencesAndReactions();
             TestGiftInteractionRemovesInventoryAndStartsReactionDialogue();
+            TestGiftFormsNpcMemory();
             TestHumanVillageContainsConfiguredNpcInteractors();
             Debug.Log("Social gift smoke tests passed.");
         }
@@ -83,6 +85,23 @@ namespace TouhouMigration.Editor.Tests
 
             object missing = Invoke(service, "GiveGift", "marisa", "magic_crystal", 9);
             AssertEqual(false, GetProperty<bool>(missing, "Success"), "Gift interaction should fail without enough inventory.");
+        }
+
+        private static void TestGiftFormsNpcMemory()
+        {
+            GiftDatabase giftDatabase = new GiftDatabase();
+            AssertEqual(true, giftDatabase.LoadFromPath(GiftDataPath), "Gift database loads for the gift-memory test.");
+            ItemDatabase itemDatabase = new ItemDatabase();
+            AssertEqual(true, itemDatabase.LoadFromPath(ItemDataPath), "Item database loads for the gift-memory test.");
+            InventoryService inventory = new InventoryService(itemDatabase, 48);
+            AssertEqual(true, inventory.AddItem("magic_crystal", 1), "Inventory accepts the giftable item.");
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+
+            GiftInteractionService service = new GiftInteractionService(giftDatabase, inventory, null, null, null, null, memory);
+            GiftDeliveryResult result = service.GiveGift("marisa", "magic_crystal");
+
+            AssertEqual(true, result.Success, "Gift succeeds when the inventory has the gift.");
+            AssertEqual(1, memory.GetMemoryCountOfType("marisa", NpcMemoryType.GiftReceived), "Giving a gift forms a GiftReceived memory on the NPC.");
         }
 
         private static void TestHumanVillageContainsConfiguredNpcInteractors()
