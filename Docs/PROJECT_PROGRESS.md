@@ -416,6 +416,21 @@ Next recommended milestone:
 
 ## Milestone Log
 
+### E4/E8 owner integration + gameplay wiring (day-loop LIVE)
+
+- Date: 2026-06-25 (session 4)
+- Status: Complete — the life-sim day-loop is instantiated, wired into gameplay, runs live, and saves
+- Owner: Claude
+- Goal: Make the day-loop + comprehensive save actually function in `MigrationGlobalUiController` + driven by gameplay.
+
+Completed (`c140391`→`c8d7b4b`):
+
+- **Owner instantiation + save** (`c140391`, `c90ed64`): the owner now instantiates fatigue/companion/home/meta/NPC-relationship/NPC-memory; at end of `Awake` (once `worldSimulation`+farming resolve) builds `MigrationDayCycle` + `MigrationFatigueDriver` bound to the live world clock/weather, rebuilds the save orchestrator with the clock (comprehensive 7-service + calendar save), `Detach`es on `OnDestroy`, exposes `Sleep()` + `FatigueDriver`. The day-loop (per-hour fatigue accrual + per-day farming/quest/bond/memory-decay/weather resets) runs live in every gameplay scene.
+- **Gameplay triggers**: gift→`GiftReceived` memory (`69d4b85`); game-state mode→`FatigueDriver` activity so only active play accrues (`3c01d8b`); dialogue-effect→`DialogueChoice` memory (`e5b336a`); `MigrationBedInteractor` in the bamboo-home variants → `Sleep()` (`c8d7b4b`).
+- Each shipped with smoke tests (or play-validation for MonoBehaviour triggers); regression stayed 70/70; 29 scenes play-validated 0 runtime errors throughout. Note: a per-scene `UnityEditor.Search`/QuickSearch `ArgumentOutOfRange` is pre-existing editor-tooling noise (filtered by the validator).
+
+Remaining (minor): combat/quest→memory hooks; a bed in the canonical BambooHomeVerticalSlice. Bigger remaining epics: E4 production UIs, E5 portraits/dialogue breadth, E7 presentation.
+
 ### E8 save parity batch: 6 services now persist
 
 - Date: 2026-06-25 (session 4)
