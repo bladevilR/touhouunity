@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 10:49 CST
+Last updated: 2026-06-25 10:55 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 10:49 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E4.9, crop database — real crops.json catalog loader (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.9 (shop economy/hours, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E4.10, shop database — real shops.json catalog loader (session 2). Session-2 milestones (all in the Milestone Log below): E5.2-E5.9 (dialogue fx routing + story flags + live conditions: humanity/time_of_day/is_full_moon/weather/seen_events), E4.1-E4.10 (shop economy/hours/catalog, farm growth + harvest loop + 67-crop catalog, fishing weighted catch + level, NPC schedules + manager), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,37 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E4.10: Shop Database (real shops.json catalog loader)
+
+- Date: 2026-06-25 10:55 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Wire real shop content into the economy — promote Godot `data/shops.json` (7 shops) and load it into shop definitions (items/prices, buy_rate, open hours, owner) the shop service can use.
+
+Completed:
+
+- Promoted Godot `data/shops.json` → `Assets/TouhouMigration/Data/Shops/shops.json` (7 shops, verbatim).
+- New `MigrationShopDatabase` (`Runtime/Economy/`): `LoadFromPath` parses `shop_owner_npc_ids` + `shops` via `MigrationJson` into shop definitions. `GetShop` / `GetAllShops` / `ShopCount` / `Errors`.
+- New `MigrationShopDefinition` (ShopId, OwnerNpcId, BuyRate, OpenHourStart/End, Items) with `GetItemPrice(itemId)`, `SellsItem(itemId)`, `IsOpen(hour)` (via the shared `MigrationHourRange`). New `MigrationShopItem` (ItemId / Price / Stock).
+
+TDD (red -> green):
+
+- New `ShopDatabaseSmokeTests` (loads 7 shops; `nitori_combat` owner = `nitori`; unknown shop -> null; `town_general` buy_rate 0.5, sells `seed_tomato`@50, not `sword_steel`, open 6-20 / closed at 22).
+- RED: focused run failed to compile on the missing shop types (CS0246).
+- GREEN: full regression 56/56 suites passed, 0 compile errors (55 prior + new shop-database suite).
+
+Changed files:
+
+- `Assets/TouhouMigration/Data/Shops/shops.json` (new, promoted from Godot)
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/MigrationShopDatabase.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/MigrationShopDefinition.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Economy/MigrationShopItem.cs` (new)
+- `Assets/TouhouMigration/Scripts/Editor/Tests/ShopDatabaseSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Wire the shop DB into `MigrationShopService` (gate Buy on the shop's catalog/stock + `IsOpen`; Sell with the per-shop `buy_rate`); seasonal/festival items; shop UI.
 
 ### E4.9: Crop Database (real crops.json catalog loader)
 

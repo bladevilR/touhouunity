@@ -1,0 +1,187 @@
+{
+  "shop_owner_npc_ids": {
+    "town_general": "",
+    "town_blacksmith": "",
+    "nitori_combat": "nitori",
+    "magic_shop": "patchouli",
+    "ninzin_cooking": "mystia",
+    "rinnosuke_seeds": "rinnosuke",
+    "reimu_shrine_seeds": "reimu"
+  },
+  "shops": {
+    "town_general": {
+      "name": "人里杂货店",
+      "type": "GENERAL",
+      "owner": "雾雨店主",
+      "description": "村民们日常生活的好帮手",
+      "items": [
+        {"id": "seed_tomato", "price": 50, "stock": 99},
+        {"id": "seed_wheat", "price": 30, "stock": 99},
+        {"id": "seed_pumpkin", "price": 80, "stock": 50},
+        {"id": "seed_carrot", "price": 40, "stock": 99},
+        {"id": "fertilizer", "price": 100, "stock": 20},
+        {"id": "watering_can", "price": 500, "stock": 5}
+      ],
+      "buy_rate": 0.5,
+      "open_hours": {"start": 6, "end": 20}
+    },
+    "town_blacksmith": {
+      "name": "铁匠铺",
+      "type": "BLACKSMITH",
+      "owner": "铁匠",
+      "description": "打造和强化武器装备",
+      "items": [
+        {"id": "sword_basic", "price": 1000, "stock": 3},
+        {"id": "sword_steel", "price": 2500, "stock": 2},
+        {"id": "armor_leather", "price": 800, "stock": 5},
+        {"id": "armor_iron", "price": 2000, "stock": 3},
+        {"id": "pickaxe", "price": 600, "stock": 5},
+        {"id": "hoe_iron", "price": 400, "stock": 5}
+      ],
+      "buy_rate": 0.4,
+      "open_hours": {"start": 8, "end": 18}
+    },
+    "nitori_combat": {
+      "name": "河城商店",
+      "type": "COMBAT",
+      "owner": "河城荷取",
+      "description": "河童科技，品质保证！",
+      "items": [
+        {"id": "bomb_small", "price": 200, "stock": 10},
+        {"id": "bomb_large", "price": 500, "stock": 5},
+        {"id": "health_potion", "price": 150, "stock": 20},
+        {"id": "mana_potion", "price": 200, "stock": 15},
+        {"id": "shield_temp", "price": 300, "stock": 8},
+        {"id": "speed_boost", "price": 250, "stock": 10}
+      ],
+      "buy_rate": 0.6,
+      "open_hours": {"start": 10, "end": 22}
+    },
+    "magic_shop": {
+      "name": "魔法店",
+      "type": "MAGIC",
+      "owner": "帕秋莉",
+      "description": "各种魔法道具和符卡材料",
+      "items": [
+        {"id": "spell_card_basic", "price": 500, "stock": 10},
+        {"id": "magic_crystal", "price": 1000, "stock": 5},
+        {"id": "elemental_orb_fire", "price": 800, "stock": 3},
+        {"id": "elemental_orb_water", "price": 800, "stock": 3},
+        {"id": "scroll_teleport", "price": 1500, "stock": 2}
+      ],
+      "buy_rate": 0.3,
+      "open_hours": {"start": 12, "end": 24}
+    },
+    "ninzin_cooking": {
+      "name": "鲵吞亭",
+      "type": "COOKING",
+      "owner": "米斯蒂娅",
+      "description": "料理食材、调味料与炊具升级素材的枢纽",
+      "items": [
+        {"id": "salt", "price": 5, "stock": 99},
+        {"id": "soy_sauce", "price": 10, "stock": 99},
+        {"id": "miso", "price": 15, "stock": 99},
+        {"id": "sugar", "price": 12, "stock": 99},
+        {"id": "spice", "price": 15, "stock": 70},
+        {"id": "rice", "price": 10, "stock": 99},
+        {"id": "rice_flour", "price": 12, "stock": 99},
+        {"id": "flour", "price": 8, "stock": 99},
+        {"id": "oil", "price": 10, "stock": 99},
+        {"id": "tofu", "price": 8, "stock": 80},
+        {"id": "tea_leaves", "price": 20, "stock": 80},
+        {"id": "hot_water", "price": 2, "stock": 200},
+        {"id": "honey", "price": 18, "stock": 60},
+        {"id": "seed_pumpkin", "price": 80, "stock": 50},
+        {"id": "seed_chili", "price": 70, "stock": 50},
+        {"id": "seed_moon_herb", "price": 90, "stock": 40},
+        {"id": "seed_fire_eggplant", "price": 160, "stock": 15},
+        {"id": "fertilizer", "price": 100, "stock": 40},
+        {"id": "spirit_fertilizer", "price": 240, "stock": 16}
+      ],
+      "buy_rate": 0.55,
+      "open_hours": {"start": 7, "end": 24}
+    },
+    "rinnosuke_seeds": {
+      "name": "香霖堂·种子部",
+      "type": "SEED_GACHA",
+      "owner": "森近霖之助",
+      "description": "神秘的种子袋，开出什么全凭运气",
+      "items": [
+        {"id": "seed_bag_bamboo", "price": 50, "stock": 999},
+        {"id": "seed_bag_silver", "price": 200, "stock": 999},
+        {"id": "seed_bag_gold", "price": 500, "stock": 999}
+      ],
+      "buy_rate": 0.0,
+      "open_hours": {"start": 9, "end": 19}
+    },
+    "reimu_shrine_seeds": {
+      "name": "博丽神社·种子铺",
+      "type": "GENERAL",
+      "owner": "博丽灵梦",
+      "description": "神社维持经费来源之一，提供基础农作物种子",
+      "items": [
+        {"id": "seed_turnip", "price": 20, "stock": 99},
+        {"id": "seed_potato", "price": 30, "stock": 99},
+        {"id": "seed_strawberry", "price": 60, "stock": 50},
+        {"id": "seed_cabbage", "price": 35, "stock": 99},
+        {"id": "seed_spring_onion", "price": 20, "stock": 99},
+        {"id": "seed_radish", "price": 25, "stock": 99},
+        {"id": "seed_bamboo_shoot", "price": 80, "stock": 30},
+        {"id": "seed_cherry_blossom", "price": 120, "stock": 20},
+        {"id": "seed_tea_leaf", "price": 130, "stock": 40},
+        {"id": "seed_wasabi", "price": 100, "stock": 30},
+        {"id": "seed_lotus_root", "price": 90, "stock": 30},
+        {"id": "seed_spring_herb", "price": 200, "stock": 15},
+        {"id": "seed_fairy_carrot", "price": 250, "stock": 10},
+        {"id": "seed_tomato", "price": 50, "stock": 99},
+        {"id": "seed_pumpkin", "price": 80, "stock": 50},
+        {"id": "seed_chili", "price": 70, "stock": 60},
+        {"id": "seed_moon_herb", "price": 90, "stock": 40},
+        {"id": "seed_fire_eggplant", "price": 160, "stock": 15},
+        {"id": "seed_wheat", "price": 30, "stock": 99},
+        {"id": "seed_carrot", "price": 40, "stock": 99},
+        {"id": "seed_watermelon", "price": 120, "stock": 40},
+        {"id": "seed_cherry", "price": 200, "stock": 20},
+        {"id": "seed_mushroom", "price": 100, "stock": 30},
+        {"id": "fertilizer", "price": 100, "stock": 50},
+        {"id": "hoe_iron", "price": 400, "stock": 3},
+        {"id": "watering_can", "price": 500, "stock": 3}
+      ],
+      "buy_rate": 0.6,
+      "open_hours": {"start": 6, "end": 20}
+    }
+  },
+  "seasonal_items": {
+    "spring": [
+      {"id": "seed_cherry", "price": 200, "stock": 10},
+      {"id": "flower_bouquet", "price": 150, "stock": 20}
+    ],
+    "summer": [
+      {"id": "seed_watermelon", "price": 120, "stock": 15},
+      {"id": "firework", "price": 80, "stock": 50}
+    ],
+    "autumn": [
+      {"id": "seed_mushroom", "price": 100, "stock": 20},
+      {"id": "maple_leaf", "price": 50, "stock": 99}
+    ],
+    "winter": [
+      {"id": "hot_drink", "price": 60, "stock": 30},
+      {"id": "warm_coat", "price": 800, "stock": 5}
+    ]
+  },
+  "festival_items": {
+    "new_year": [
+      {"id": "lucky_charm", "price": 500, "stock": 10},
+      {"id": "mochi", "price": 100, "stock": 50}
+    ],
+    "flower_festival": [
+      {"id": "sakura_branch", "price": 300, "stock": 20}
+    ],
+    "tanabata": [
+      {"id": "wish_paper", "price": 50, "stock": 99}
+    ],
+    "moon_festival": [
+      {"id": "moon_cake", "price": 150, "stock": 30}
+    ]
+  }
+}
