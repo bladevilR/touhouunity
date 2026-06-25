@@ -19,6 +19,10 @@ namespace TouhouMigration.Editor.Tests
             TestRemoveFromPartyFreesTheSlot();
             TestRemoveUnrecruitedOrAbsentFails();
             TestGetAllRecruited();
+            TestSkillStartsReady();
+            TestPutSkillOnCooldownRequiresRecruitment();
+            TestTickReducesCooldownToReady();
+            TestTickAffectsEachSkillIndependently();
             Debug.Log("Migration companion roster smoke tests passed.");
         }
 
@@ -78,6 +82,48 @@ namespace TouhouMigration.Editor.Tests
             roster.Recruit("reimu");
             roster.Recruit("marisa");
             AssertEqual(2, roster.GetAllRecruited().Count, "All recruited companions are listed.");
+        }
+
+        private static void TestSkillStartsReady()
+        {
+            MigrationCompanionRoster roster = new MigrationCompanionRoster();
+            roster.Recruit("reimu");
+            AssertEqual(0.0, roster.GetSkillCooldown("reimu", "spell"), "An unused skill has no cooldown.");
+            AssertEqual(true, roster.IsSkillReady("reimu", "spell"), "An un-cooled skill is ready.");
+        }
+
+        private static void TestPutSkillOnCooldownRequiresRecruitment()
+        {
+            MigrationCompanionRoster roster = new MigrationCompanionRoster();
+            roster.PutSkillOnCooldown("reimu", "spell", 5.0);
+            AssertEqual(0.0, roster.GetSkillCooldown("reimu", "spell"), "An unrecruited companion holds no cooldown.");
+            roster.Recruit("reimu");
+            roster.PutSkillOnCooldown("reimu", "spell", 5.0);
+            AssertEqual(5.0, roster.GetSkillCooldown("reimu", "spell"), "Using a skill puts it on cooldown.");
+            AssertEqual(false, roster.IsSkillReady("reimu", "spell"), "A skill on cooldown is not ready.");
+        }
+
+        private static void TestTickReducesCooldownToReady()
+        {
+            MigrationCompanionRoster roster = new MigrationCompanionRoster();
+            roster.Recruit("reimu");
+            roster.PutSkillOnCooldown("reimu", "spell", 5.0);
+            roster.TickSkillCooldowns(2.0);
+            AssertEqual(3.0, roster.GetSkillCooldown("reimu", "spell"), "Ticking reduces the cooldown by the delta.");
+            roster.TickSkillCooldowns(5.0);
+            AssertEqual(0.0, roster.GetSkillCooldown("reimu", "spell"), "The cooldown clamps at zero.");
+            AssertEqual(true, roster.IsSkillReady("reimu", "spell"), "A counted-down skill is ready again.");
+        }
+
+        private static void TestTickAffectsEachSkillIndependently()
+        {
+            MigrationCompanionRoster roster = new MigrationCompanionRoster();
+            roster.Recruit("reimu");
+            roster.PutSkillOnCooldown("reimu", "spell1", 4.0);
+            roster.PutSkillOnCooldown("reimu", "spell2", 6.0);
+            roster.TickSkillCooldowns(4.0);
+            AssertEqual(true, roster.IsSkillReady("reimu", "spell1"), "The shorter cooldown is ready.");
+            AssertEqual(2.0, roster.GetSkillCooldown("reimu", "spell2"), "The longer cooldown still has time left.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
