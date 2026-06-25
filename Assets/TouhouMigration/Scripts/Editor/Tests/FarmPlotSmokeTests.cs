@@ -14,6 +14,10 @@ namespace TouhouMigration.Editor.Tests
             TestDailyWateringGatesGrowth();
             TestReachesHarvestThenHarvestClearsPlot();
             TestCannotPlantOnOccupiedPlotOrHarvestUnready();
+            TestWateringAndFertilizingRaiseLevelsAndClamp();
+            TestAdvanceDayDecaysWaterAndFertilizer();
+            TestQualityTierRisesWithWaterAndFertilizer();
+            TestHarvestYieldScalesWithConditions();
             Debug.Log("Farm plot smoke tests passed.");
         }
 
@@ -77,6 +81,62 @@ namespace TouhouMigration.Editor.Tests
 
             MigrationFarmPlot empty = new MigrationFarmPlot();
             AssertEqual(false, empty.Harvest(), "Harvesting an empty plot should fail.");
+        }
+
+        private static void TestWateringAndFertilizingRaiseLevelsAndClamp()
+        {
+            MigrationFarmPlot plot = new MigrationFarmPlot();
+            plot.Plant("crop_turnip", 5, false);
+            plot.Water();
+            AssertEqual(50.0, plot.WaterLevel, "Watering raises the water level by 50 (Godot water()).");
+            plot.Water();
+            AssertEqual(100.0, plot.WaterLevel, "Water level clamps at 100.");
+
+            plot.Fertilize(30.0);
+            AssertEqual(30.0, plot.FertilizerLevel, "Fertilizing raises the fertilizer level by its power.");
+            plot.Fertilize(80.0);
+            AssertEqual(100.0, plot.FertilizerLevel, "Fertilizer level clamps at 100.");
+        }
+
+        private static void TestAdvanceDayDecaysWaterAndFertilizer()
+        {
+            MigrationFarmPlot plot = new MigrationFarmPlot();
+            plot.Plant("crop_turnip", 5, false);
+            plot.Water();
+            plot.Water(); // 100
+            plot.Fertilize(30.0); // 30
+            plot.AdvanceDay();
+            AssertEqual(95.0, plot.WaterLevel, "Water level decays by 5 each day (Godot WATER_DECAY).");
+            AssertEqual(28.5, plot.FertilizerLevel, "Fertilizer decays by 1.5 each day.");
+        }
+
+        private static void TestQualityTierRisesWithWaterAndFertilizer()
+        {
+            MigrationFarmPlot plot = new MigrationFarmPlot();
+            plot.Plant("crop_turnip", 5, false);
+            plot.Water();
+            plot.Water(); // 100
+            plot.Fertilize(30.0);
+            plot.Fertilize(30.0);
+            plot.Fertilize(30.0); // 90
+            plot.AdvanceDay(); // water 95, fert 88.5
+            AssertEqual(CropQuality.Excellent, plot.QualityTier, "High water (>=80) and fertilizer (>=60) give Excellent quality.");
+            AssertEqual(1.5, plot.GetQualityMultiplier(), "Excellent quality yields a 1.5x multiplier.");
+        }
+
+        private static void TestHarvestYieldScalesWithConditions()
+        {
+            MigrationFarmPlot plot = new MigrationFarmPlot();
+            plot.Plant("crop_turnip", 1, false);
+            plot.Water();
+            plot.Water(); // 100
+            plot.Fertilize(30.0);
+            plot.Fertilize(30.0); // 60
+            plot.AdvanceDay(); // water 95, fert 58.5, grows to ready
+            AssertEqual(true, plot.IsReadyToHarvest, "Precondition: the crop is ready after one growth day.");
+            AssertEqual(CropQuality.Good, plot.QualityTier, "Good water with fertilizer 30-59 gives Good quality.");
+            // yield = max(1, (int)(4 * (95/100)*(0.5 + (58.5/100)*0.5) * 1.25)) = (int)3.764 = 3
+            AssertEqual(3, plot.CalculateHarvestYield(), "Harvest yield scales with water, fertilizer, and quality.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
