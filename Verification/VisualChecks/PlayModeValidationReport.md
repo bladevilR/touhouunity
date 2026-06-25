@@ -27,5 +27,8 @@
 | CombatArena | yes | Verification/VisualChecks/CombatArena_PlayMode.png | 0 |
 | CombatArenaHD2D | yes | Verification/VisualChecks/CombatArenaHD2D_PlayMode.png | 0 |
 | CirnoBossArena | yes | Verification/VisualChecks/CirnoBossArena_PlayMode.png | 0 |
+| MainMenu | yes | Verification/VisualChecks/MainMenu_PlayMode.png | 0 |
+| LoadingScreen | yes | Verification/VisualChecks/LoadingScreen_PlayMode.png | 0 |
+| World | yes | Verification/VisualChecks/World_PlayMode.png | 0 |
 | TitleScreen | yes | Verification/VisualChecks/TitleScreen_PlayMode.png | 0 |
 

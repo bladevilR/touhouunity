@@ -83,4 +83,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouhouMigration/Scenes/CirnoBossArena.unity
     guid: 0e4f4b8d835414d2e836ae3686916768
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/MainMenu.unity
+    guid: 910d31cf3765046e5bb84357491c8c9e
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/LoadingScreen.unity
+    guid: 117899ac9c09a4266b04271110dcbb77
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/World.unity
+    guid: 4b21192aed7d94d8a9f4788ea6320fc3
   m_configObjects: {}

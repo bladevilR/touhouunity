@@ -30,6 +30,9 @@ namespace TouhouMigration.Runtime.Data
         public const string CombatArena = "CombatArena";
         public const string CombatArenaHD2D = "CombatArenaHD2D";
         public const string CirnoBossArena = "CirnoBossArena";
+        public const string MainMenu = "MainMenu";
+        public const string LoadingScreen = "LoadingScreen";
+        public const string World = "World";
 
         public static string ToSceneName(MigrationSceneId sceneId)
         {
@@ -61,6 +64,9 @@ namespace TouhouMigration.Runtime.Data
                 MigrationSceneId.CombatArena => CombatArena,
                 MigrationSceneId.CombatArenaHD2D => CombatArenaHD2D,
                 MigrationSceneId.CirnoBossArena => CirnoBossArena,
+                MigrationSceneId.MainMenu => MainMenu,
+                MigrationSceneId.LoadingScreen => LoadingScreen,
+                MigrationSceneId.World => World,
                 _ => throw new ArgumentOutOfRangeException(nameof(sceneId), sceneId, "Unknown migration scene id.")
             };
         }

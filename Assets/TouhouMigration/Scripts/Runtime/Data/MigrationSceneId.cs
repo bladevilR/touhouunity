@@ -27,6 +27,9 @@ namespace TouhouMigration.Runtime.Data
         BambooHouse,
         CombatArena,
         CombatArenaHD2D,
-        CirnoBossArena
+        CirnoBossArena,
+        MainMenu,
+        LoadingScreen,
+        World
     }
 }

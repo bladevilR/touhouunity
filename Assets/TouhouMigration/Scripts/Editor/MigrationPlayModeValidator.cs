@@ -56,6 +56,9 @@ namespace TouhouMigration.Editor
             "Assets/TouhouMigration/Scenes/CombatArena.unity",
             "Assets/TouhouMigration/Scenes/CombatArenaHD2D.unity",
             "Assets/TouhouMigration/Scenes/CirnoBossArena.unity",
+            "Assets/TouhouMigration/Scenes/MainMenu.unity",
+            "Assets/TouhouMigration/Scenes/LoadingScreen.unity",
+            "Assets/TouhouMigration/Scenes/World.unity",
             "Assets/TouhouMigration/Scenes/TitleScreen.unity",
         };
 

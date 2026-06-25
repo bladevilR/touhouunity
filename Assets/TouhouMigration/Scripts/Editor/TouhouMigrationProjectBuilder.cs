@@ -91,6 +91,10 @@ namespace TouhouMigration.Editor
         private const string CombatArenaScenePath = ScenesRoot + "/CombatArena.unity";
         private const string CombatArenaHD2DScenePath = ScenesRoot + "/CombatArenaHD2D.unity";
         private const string CirnoBossArenaScenePath = ScenesRoot + "/CirnoBossArena.unity";
+        private const string MainMenuScenePath = ScenesRoot + "/MainMenu.unity";
+        private const string LoadingScreenScenePath = ScenesRoot + "/LoadingScreen.unity";
+        private const string WorldScenePath = ScenesRoot + "/World.unity";
+        private const string LoadingScreenBackgroundPath = Root + "/Art/UI/Backgrounds/loading_screen_bg.png";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -129,6 +133,7 @@ namespace TouhouMigration.Editor
             CreateLandmarkScenes();
             CreateBambooVariantScenes();
             CreateArenaScenes();
+            CreateMainEntryScenes();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
@@ -149,6 +154,7 @@ namespace TouhouMigration.Editor
             CreateLandmarkScenes();
             CreateBambooVariantScenes();
             CreateArenaScenes();
+            CreateMainEntryScenes();
             RegisterBuildScenes();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -1904,6 +1910,123 @@ namespace TouhouMigration.Editor
             FinishLocationScene(root, FarmScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.80f, 0.35f, 0.45f), scene);
         }
 
+        // Main/entry flow scenes: post-title main menu, loading screen, and the overworld hub.
+        private static void CreateMainEntryScenes()
+        {
+            CreateMainMenuScene();
+            CreateLoadingScreenScene();
+            CreateWorldScene();
+        }
+
+        private static void CreateMainMenuScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.MainMenu;
+
+            GameObject cameraObject = new GameObject("Main Camera");
+            cameraObject.tag = "MainCamera";
+            Camera camera = cameraObject.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = Color.black;
+
+            GameObject menuObject = new GameObject("MainMenu");
+            TitleScreenController titleController = menuObject.AddComponent<TitleScreenController>();
+            MigrationSettingsController settingsController = menuObject.AddComponent<MigrationSettingsController>();
+            MokouDeckEditorController deckEditorController = menuObject.AddComponent<MokouDeckEditorController>();
+
+            SerializedObject s = new SerializedObject(titleController);
+            s.FindProperty("background").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>(MainMenuBackgroundPath);
+            s.FindProperty("titleFont").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Font>(TitleFontPath);
+            s.FindProperty("newGameScene").enumValueIndex = (int)MigrationSceneId.World;
+            s.FindProperty("settingsController").objectReferenceValue = settingsController;
+            s.FindProperty("deckEditorController").objectReferenceValue = deckEditorController;
+            s.ApplyModifiedPropertiesWithoutUndo();
+
+            EditorSceneManager.SaveScene(scene, MainMenuScenePath);
+        }
+
+        private static void CreateLoadingScreenScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.LoadingScreen;
+
+            GameObject cameraObject = new GameObject("Main Camera");
+            cameraObject.tag = "MainCamera";
+            cameraObject.transform.position = new Vector3(0f, 0f, -10f);
+            Camera camera = cameraObject.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.04f, 0.04f, 0.06f, 1f);
+            camera.orthographic = true;
+            camera.orthographicSize = 5f;
+
+            EnsureAssetFolder(LocationsArtRoot + "/LoadingScreen/Materials");
+            string matPath = LocationsArtRoot + "/LoadingScreen/Materials/LoadingBg.mat";
+            Material loadingMat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
+            if (loadingMat == null)
+            {
+                Shader unlit = Shader.Find("Unlit/Texture") ?? Shader.Find("Sprites/Default") ?? Shader.Find("Standard");
+                loadingMat = new Material(unlit);
+                AssetDatabase.CreateAsset(loadingMat, matPath);
+            }
+            loadingMat.mainTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(LoadingScreenBackgroundPath);
+            EditorUtility.SetDirty(loadingMat);
+
+            GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            quad.name = "LoadingBackground";
+            quad.transform.position = Vector3.zero;
+            quad.transform.localScale = new Vector3(17.8f, 10f, 1f);
+            Object.DestroyImmediate(quad.GetComponent<Collider>());
+            quad.GetComponent<Renderer>().sharedMaterial = loadingMat;
+
+            EditorSceneManager.SaveScene(scene, LoadingScreenScenePath);
+        }
+
+        private static void CreateWorldScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.World;
+            GameObject root = new GameObject("World");
+            CreateWorldSimulation(root.transform);
+            string artRoot = LocationsArtRoot + "/World";
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, "WorldGround", artRoot + "/Materials/Ground.mat", new Color(0.32f, 0.46f, 0.26f, 1f));
+
+            Material nature = EnsureSimpleMaterial(artRoot + "/Materials/Nature.mat", new Color(0.20f, 0.42f, 0.22f, 1f));
+            GameObject dress = new GameObject("WorldDressing");
+            dress.transform.SetParent(root.transform);
+            Transform d = dress.transform;
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_1.fbx", "Tree1", d, -34f, 18f, 0f, 15f, nature, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_2.fbx", "Tree2", d, 34f, 20f, 25f, 15f, nature, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_3.fbx", "Tree3", d, 0f, 36f, -30f, 15f, nature, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Bush_1.fbx", "Bush1", d, -16f, 10f, 0f, 4f, nature, false);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Bush_2.fbx", "Bush2", d, 16f, 10f, 0f, 4f, nature, false);
+
+            // Hub portals to the key destinations, arranged in front of the spawn.
+            GameObject portals = new GameObject("HubPortals");
+            portals.transform.SetParent(root.transform);
+            Transform pt = portals.transform;
+            CreateHubPortal(pt, "ToBambooHome", -24f, 8f, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.95f, 0.66f, 0.25f, 0.5f));
+            CreateHubPortal(pt, "ToHumanVillage", -8f, 14f, MigrationSceneId.HumanVillageVerticalSlice, new Color(0.30f, 0.70f, 0.95f, 0.5f));
+            CreateHubPortal(pt, "ToMagicForest", 8f, 14f, MigrationSceneId.MagicForest, new Color(0.55f, 0.45f, 0.85f, 0.5f));
+            CreateHubPortal(pt, "ToMistyLake", 24f, 8f, MigrationSceneId.MistyLake, new Color(0.45f, 0.72f, 0.85f, 0.5f));
+            CreateHubPortal(pt, "ToHakureiShrine", -16f, 22f, MigrationSceneId.HakureiShrine, new Color(0.90f, 0.30f, 0.28f, 0.5f));
+            CreateHubPortal(pt, "ToScarletMansion", 16f, 22f, MigrationSceneId.ScarletMansionFront, new Color(0.75f, 0.20f, 0.30f, 0.5f));
+            CreateHubPortal(pt, "ToFarm", 0f, 28f, MigrationSceneId.Farm, new Color(0.55f, 0.80f, 0.35f, 0.5f));
+
+            float playerGroundY = SampleGroundY(0f, -6f, 0f);
+            CreateMigrationPlayer(root.transform, new Vector3(0f, playerGroundY + 2f, -6f));
+            CreateFollowCamera(root.transform, new Vector3(0f, 30f, -58f), Quaternion.Euler(28f, 0f, 0f));
+            CreateGlobalUi(root.transform);
+
+            EditorSceneManager.SaveScene(scene, WorldScenePath);
+        }
+
+        private static void CreateHubPortal(Transform parent, string name, float x, float z, MigrationSceneId target, Color color)
+        {
+            float groundY = SampleGroundY(x, z, 0f);
+            CreatePortal(parent, name, new Vector3(x, groundY + 2f, z), target, color);
+        }
+
         // Bamboo-home overworld variants (Mokou's house) reusing the Bamboo Home glb + prop set.
         private static void CreateBambooVariantScenes()
         {
@@ -3269,7 +3392,10 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(BambooHouseScenePath, true),
                 new EditorBuildSettingsScene(CombatArenaScenePath, true),
                 new EditorBuildSettingsScene(CombatArenaHD2DScenePath, true),
-                new EditorBuildSettingsScene(CirnoBossArenaScenePath, true)
+                new EditorBuildSettingsScene(CirnoBossArenaScenePath, true),
+                new EditorBuildSettingsScene(MainMenuScenePath, true),
+                new EditorBuildSettingsScene(LoadingScreenScenePath, true),
+                new EditorBuildSettingsScene(WorldScenePath, true)
             };
         }
 
