@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 namespace TouhouMigration.Runtime.CardBuild
 {
-    // Runtime card deck for a CardBuild run: a draw pile, a hand, and a discard pile. Draw moves cards
-    // from the top of the draw pile to the hand, reshuffling the discard pile back into the draw pile
-    // (Fisher-Yates via an injected randomIndex) when the draw pile empties. Free of UnityEngine.
+    // Runtime card deck for a CardBuild run: draw / hand / discard piles plus retained, exhaust, and
+    // cooldown tracks (mirroring Godot CardDeckController). Draw moves cards from the top of the draw pile
+    // to the hand, reshuffling the discard pile back into the draw pile (Fisher-Yates via an injected
+    // randomIndex) when the draw pile empties. Free of UnityEngine.
     public sealed class MigrationCardDeck
     {
         private readonly List<string> drawPile = new List<string>();
         private readonly List<string> hand = new List<string>();
         private readonly List<string> discardPile = new List<string>();
+        private readonly List<string> retainedCards = new List<string>();
+        private readonly List<string> exhaustPile = new List<string>();
+        private readonly List<(string Card, int Turns)> cooldownCards = new List<(string, int)>();
 
         public MigrationCardDeck(IEnumerable<string> cards)
         {
@@ -77,6 +81,77 @@ namespace TouhouMigration.Runtime.CardBuild
         {
             discardPile.AddRange(hand);
             hand.Clear();
+        }
+
+        public int RetainedCount => retainedCards.Count;
+        public int ExhaustPileCount => exhaustPile.Count;
+        public int CooldownCount => cooldownCards.Count;
+
+        // Move a held card to the retained pile (Godot CardDeckController.retain_from_hand). Retained cards
+        // survive the end-of-turn discard and are returned to the hand by MoveRetainedToHand.
+        public bool RetainFromHand(string cardId)
+        {
+            int index = hand.IndexOf(cardId);
+            if (index < 0)
+            {
+                return false;
+            }
+
+            hand.RemoveAt(index);
+            retainedCards.Add(cardId);
+            return true;
+        }
+
+        // Move a held card to the exhaust pile (Godot CardDeckController.exhaust_from_hand). Exhausted cards
+        // leave the run: they never reshuffle back into the draw pile.
+        public bool ExhaustFromHand(string cardId)
+        {
+            int index = hand.IndexOf(cardId);
+            if (index < 0)
+            {
+                return false;
+            }
+
+            hand.RemoveAt(index);
+            exhaustPile.Add(cardId);
+            return true;
+        }
+
+        // Return all retained cards to the hand (Godot CardDeckController.move_retained_to_hand), e.g. at the
+        // start of the next turn.
+        public void MoveRetainedToHand()
+        {
+            hand.AddRange(retainedCards);
+            retainedCards.Clear();
+        }
+
+        // Put a card on cooldown for max(1, turns) turns (Godot CardDeckController.put_on_cooldown). The card
+        // is held out of play until TickCooldowns counts it down to zero, then it returns to the discard pile.
+        public void PutOnCooldown(string cardId, int turns)
+        {
+            cooldownCards.Add((cardId, Math.Max(1, turns)));
+        }
+
+        // Count every cooldown down by one turn (Godot CardDeckController.tick_cooldowns). Cards whose cooldown
+        // reaches zero return to the discard pile; the rest stay on cooldown with their reduced count.
+        public void TickCooldowns()
+        {
+            List<(string Card, int Turns)> remaining = new List<(string, int)>();
+            foreach ((string card, int turns) in cooldownCards)
+            {
+                int next = turns - 1;
+                if (next <= 0)
+                {
+                    discardPile.Add(card);
+                }
+                else
+                {
+                    remaining.Add((card, next));
+                }
+            }
+
+            cooldownCards.Clear();
+            cooldownCards.AddRange(remaining);
         }
 
         private void ReshuffleDiscardIntoDraw(Func<int, int> randomIndex)
