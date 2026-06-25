@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TouhouMigration.Runtime.Audio;
 using TouhouMigration.Runtime.Bootstrap;
 using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Cooking;
@@ -73,6 +74,7 @@ namespace TouhouMigration.Runtime.UI
         private MigrationFarmingManager farmingManager;
         private MigrationShopDatabase shopDatabase;
         private MigrationShopService shopService;
+        private MigrationAudioManager audioManager;
         private MigrationFishDatabase fishDatabase;
         private MigrationFishingService fishingService;
         private MigrationNpcRoster npcRoster;
@@ -82,6 +84,7 @@ namespace TouhouMigration.Runtime.UI
         public MigrationShopDatabase ShopCatalog => shopDatabase;
         public MigrationFishingService Fishing => fishingService;
         public MigrationNpcManager NpcManager => npcManager;
+        public MigrationAudioManager Audio => audioManager;
 
         public bool BlocksGameplayInput =>
             (giftSelectionController != null && giftSelectionController.IsOpen) ||
@@ -267,6 +270,10 @@ namespace TouhouMigration.Runtime.UI
             giftSelectionController ??= GetComponent<MigrationGiftSelectionController>();
             shopController ??= GetComponent<MigrationShopController>();
             projectileSettlement ??= GetComponent<MigrationProjectileSpecialSettlement>();
+
+            // E7 audio: created at runtime (like the other services) so it needs no per-scene serialization.
+            // Its Start auto-plays the active scene's BGM; every play is null-safe until the clips exist.
+            audioManager ??= GetComponent<MigrationAudioManager>() ?? gameObject.AddComponent<MigrationAudioManager>();
 
             WorldSimulationBehaviour simulation = FindAnyObjectByType<WorldSimulationBehaviour>();
             worldSimulation = simulation;
