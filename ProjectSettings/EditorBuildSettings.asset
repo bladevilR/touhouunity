@@ -56,4 +56,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouhouMigration/Scenes/SuntailVillageImported.unity
     guid: 284314a7d00724bbeb19e07fa467a5c2
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/HakureiShrine.unity
+    guid: 86a91aa36177d4ea299ae75c86a20ee7
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/ScarletMansionFront.unity
+    guid: e369408daab7741cd9825db16d89980f
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/DungeonEntrance.unity
+    guid: 60493f4e4f67f4b54aef93994616e542
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/Farm.unity
+    guid: dff707262198d49918908018501b4bed
   m_configObjects: {}

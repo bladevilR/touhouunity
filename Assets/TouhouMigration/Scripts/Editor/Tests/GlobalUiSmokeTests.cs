@@ -69,7 +69,7 @@ namespace TouhouMigration.Editor.Tests
             bool foundBamboo = false;
             bool foundTown = false;
             bool foundMagicForestAvailable = false;
-            bool foundFarmDisabled = false;
+            bool foundAnyDisabled = false;
 
             foreach (object option in (IEnumerable)allOptions)
             {
@@ -92,9 +92,9 @@ namespace TouhouMigration.Editor.Tests
                     foundMagicForestAvailable = true;
                 }
 
-                if (key == "farm" && !isAvailable)
+                if (!isAvailable)
                 {
-                    foundFarmDisabled = true;
+                    foundAnyDisabled = true;
                 }
             }
 
@@ -102,7 +102,7 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, foundBamboo, "Bamboo Home should be selectable because it has a Unity scene.");
             AssertEqual(true, foundTown, "Human Village/town should be selectable because it has a Unity scene.");
             AssertEqual(true, foundMagicForestAvailable, "Magic Forest is now migrated (E3) and should be selectable.");
-            AssertEqual(true, foundFarmDisabled, "Farm should be listed but disabled until migrated.");
+            AssertEqual(true, foundAnyDisabled, "Registry should still list at least one not-yet-migrated scene as disabled.");
         }
 
         private static void TestRuntimeScenesContainGlobalUiAndTitleDoesNotContainHud()

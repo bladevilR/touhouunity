@@ -18,6 +18,10 @@ namespace TouhouMigration.Runtime.Data
         TownWorld,
         FantasyVillage,
         SuntailVillagePlayable,
-        SuntailVillageImported
+        SuntailVillageImported,
+        HakureiShrine,
+        ScarletMansionFront,
+        DungeonEntrance,
+        Farm
     }
 }

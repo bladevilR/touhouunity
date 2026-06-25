@@ -47,6 +47,10 @@ namespace TouhouMigration.Editor
             "Assets/TouhouMigration/Scenes/FantasyVillage.unity",
             "Assets/TouhouMigration/Scenes/SuntailVillagePlayable.unity",
             "Assets/TouhouMigration/Scenes/SuntailVillageImported.unity",
+            "Assets/TouhouMigration/Scenes/HakureiShrine.unity",
+            "Assets/TouhouMigration/Scenes/ScarletMansionFront.unity",
+            "Assets/TouhouMigration/Scenes/DungeonEntrance.unity",
+            "Assets/TouhouMigration/Scenes/Farm.unity",
             "Assets/TouhouMigration/Scenes/TitleScreen.unity",
         };
 

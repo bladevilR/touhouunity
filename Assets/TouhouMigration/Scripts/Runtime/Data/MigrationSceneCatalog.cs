@@ -21,6 +21,10 @@ namespace TouhouMigration.Runtime.Data
         public const string FantasyVillage = "FantasyVillage";
         public const string SuntailVillagePlayable = "SuntailVillagePlayable";
         public const string SuntailVillageImported = "SuntailVillageImported";
+        public const string HakureiShrine = "HakureiShrine";
+        public const string ScarletMansionFront = "ScarletMansionFront";
+        public const string DungeonEntrance = "DungeonEntrance";
+        public const string Farm = "Farm";
 
         public static string ToSceneName(MigrationSceneId sceneId)
         {
@@ -43,6 +47,10 @@ namespace TouhouMigration.Runtime.Data
                 MigrationSceneId.FantasyVillage => FantasyVillage,
                 MigrationSceneId.SuntailVillagePlayable => SuntailVillagePlayable,
                 MigrationSceneId.SuntailVillageImported => SuntailVillageImported,
+                MigrationSceneId.HakureiShrine => HakureiShrine,
+                MigrationSceneId.ScarletMansionFront => ScarletMansionFront,
+                MigrationSceneId.DungeonEntrance => DungeonEntrance,
+                MigrationSceneId.Farm => Farm,
                 _ => throw new ArgumentOutOfRangeException(nameof(sceneId), sceneId, "Unknown migration scene id.")
             };
         }

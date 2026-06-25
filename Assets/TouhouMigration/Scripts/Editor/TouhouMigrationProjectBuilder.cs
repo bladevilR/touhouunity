@@ -82,6 +82,10 @@ namespace TouhouMigration.Editor
         private const string FantasyVillageScenePath = ScenesRoot + "/FantasyVillage.unity";
         private const string SuntailVillagePlayableScenePath = ScenesRoot + "/SuntailVillagePlayable.unity";
         private const string SuntailVillageImportedScenePath = ScenesRoot + "/SuntailVillageImported.unity";
+        private const string HakureiShrineScenePath = ScenesRoot + "/HakureiShrine.unity";
+        private const string ScarletMansionFrontScenePath = ScenesRoot + "/ScarletMansionFront.unity";
+        private const string DungeonEntranceScenePath = ScenesRoot + "/DungeonEntrance.unity";
+        private const string FarmScenePath = ScenesRoot + "/Farm.unity";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -117,6 +121,7 @@ namespace TouhouMigration.Editor
             CreatePureNatureVariantScenes();
             CreateBespokeNatureScenes();
             CreateVillageScenes();
+            CreateLandmarkScenes();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
@@ -134,6 +139,7 @@ namespace TouhouMigration.Editor
             CreatePureNatureVariantScenes();
             CreateBespokeNatureScenes();
             CreateVillageScenes();
+            CreateLandmarkScenes();
             RegisterBuildScenes();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -1706,6 +1712,189 @@ namespace TouhouMigration.Editor
             EditorSceneManager.SaveScene(scene, scenePath);
         }
 
+        // Landmark structure locations (shrine/mansion/dungeon/farm): flat ground + a signature
+        // primitive-built landmark + Suntail nature dressing. Blockout-grade; E7 swaps in real models.
+        private static void CreateLandmarkScenes()
+        {
+            CreateShrineScene();
+            CreateMansionScene();
+            CreateDungeonEntranceScene();
+            CreateFarmScene();
+        }
+
+        private static GameObject CreatePrimitiveBlock(Transform parent, string name, PrimitiveType type, Vector3 pos, Vector3 scale, Vector3 euler, Material mat, bool collider)
+        {
+            GameObject go = GameObject.CreatePrimitive(type);
+            go.name = name;
+            go.transform.SetParent(parent);
+            go.transform.localPosition = pos;
+            go.transform.localScale = scale;
+            go.transform.localEulerAngles = euler;
+            Renderer renderer = go.GetComponent<Renderer>();
+            if (renderer != null && mat != null)
+            {
+                renderer.sharedMaterial = mat;
+            }
+            if (!collider)
+            {
+                Collider c = go.GetComponent<Collider>();
+                if (c != null)
+                {
+                    Object.DestroyImmediate(c);
+                }
+            }
+            return go;
+        }
+
+        private static void FinishLocationScene(GameObject root, string scenePath, MigrationSceneId returnTo, Color portalColor, Scene scene)
+        {
+            float playerGroundY = SampleGroundY(0f, -8f, 0f);
+            CreateMigrationPlayer(root.transform, new Vector3(0f, playerGroundY + 2f, -8f));
+            CreateFollowCamera(root.transform, new Vector3(0f, 34f, -66f), Quaternion.Euler(27f, 0f, 0f));
+            CreateGlobalUi(root.transform);
+            float portalGroundY = SampleGroundY(-20f, -16f, 0f);
+            CreatePortal(root.transform, "BambooHomeReturnPortal", new Vector3(-20f, portalGroundY + 2f, -16f), returnTo, portalColor);
+            EditorSceneManager.SaveScene(scene, scenePath);
+        }
+
+        private static void CreateShrineScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.HakureiShrine;
+            GameObject root = new GameObject(MigrationSceneCatalog.HakureiShrine);
+            CreateWorldSimulation(root.transform);
+            string artRoot = LocationsArtRoot + "/HakureiShrine";
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, "ShrineGround", artRoot + "/Materials/Ground.mat", new Color(0.40f, 0.44f, 0.30f, 1f));
+
+            Material red = EnsureSimpleMaterial(artRoot + "/Materials/Red.mat", new Color(0.80f, 0.18f, 0.16f, 1f));
+            Material white = EnsureSimpleMaterial(artRoot + "/Materials/White.mat", new Color(0.92f, 0.90f, 0.86f, 1f));
+            Material stone = EnsureSimpleMaterial(artRoot + "/Materials/Stone.mat", new Color(0.50f, 0.50f, 0.48f, 1f));
+            Material nature = EnsureSimpleMaterial(artRoot + "/Materials/Nature.mat", new Color(0.20f, 0.42f, 0.22f, 1f));
+
+            GameObject lm = new GameObject("ShrineLandmark");
+            lm.transform.SetParent(root.transform);
+            Transform t = lm.transform;
+            // Torii gate at the approach.
+            CreatePrimitiveBlock(t, "ToriiPillarL", PrimitiveType.Cylinder, new Vector3(-4f, 3f, 18f), new Vector3(0.5f, 3f, 0.5f), Vector3.zero, red, true);
+            CreatePrimitiveBlock(t, "ToriiPillarR", PrimitiveType.Cylinder, new Vector3(4f, 3f, 18f), new Vector3(0.5f, 3f, 0.5f), Vector3.zero, red, true);
+            CreatePrimitiveBlock(t, "ToriiTop", PrimitiveType.Cube, new Vector3(0f, 6.2f, 18f), new Vector3(11f, 0.7f, 0.9f), Vector3.zero, red, false);
+            CreatePrimitiveBlock(t, "ToriiTie", PrimitiveType.Cube, new Vector3(0f, 5.2f, 18f), new Vector3(9f, 0.5f, 0.6f), Vector3.zero, red, false);
+            // Shrine hall.
+            CreatePrimitiveBlock(t, "ShrineHall", PrimitiveType.Cube, new Vector3(0f, 2.5f, -8f), new Vector3(12f, 5f, 9f), Vector3.zero, white, true);
+            CreatePrimitiveBlock(t, "ShrineRoof", PrimitiveType.Cube, new Vector3(0f, 5.4f, -8f), new Vector3(14f, 0.7f, 11f), Vector3.zero, red, false);
+            CreatePrimitiveBlock(t, "LanternL", PrimitiveType.Cube, new Vector3(-7f, 1f, 8f), new Vector3(0.9f, 2f, 0.9f), Vector3.zero, stone, true);
+            CreatePrimitiveBlock(t, "LanternR", PrimitiveType.Cube, new Vector3(7f, 1f, 8f), new Vector3(0.9f, 2f, 0.9f), Vector3.zero, stone, true);
+
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_1.fbx", "Tree1", t, -18f, 6f, 0f, 14f, nature, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_2.fbx", "Tree2", t, 18f, 10f, 25f, 14f, nature, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Stone_1.fbx", "Stone1", t, -12f, -16f, 0f, 3f, stone, true);
+
+            FinishLocationScene(root, HakureiShrineScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.90f, 0.30f, 0.28f, 0.45f), scene);
+        }
+
+        private static void CreateMansionScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.ScarletMansionFront;
+            GameObject root = new GameObject(MigrationSceneCatalog.ScarletMansionFront);
+            CreateWorldSimulation(root.transform);
+            string artRoot = LocationsArtRoot + "/ScarletMansionFront";
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, "MansionGround", artRoot + "/Materials/Ground.mat", new Color(0.26f, 0.30f, 0.24f, 1f));
+
+            Material wall = EnsureSimpleMaterial(artRoot + "/Materials/Wall.mat", new Color(0.55f, 0.14f, 0.16f, 1f));
+            Material roof = EnsureSimpleMaterial(artRoot + "/Materials/Roof.mat", new Color(0.30f, 0.10f, 0.12f, 1f));
+            Material stone = EnsureSimpleMaterial(artRoot + "/Materials/Stone.mat", new Color(0.42f, 0.40f, 0.42f, 1f));
+            Material nature = EnsureSimpleMaterial(artRoot + "/Materials/Nature.mat", new Color(0.16f, 0.32f, 0.20f, 1f));
+
+            GameObject lm = new GameObject("MansionLandmark");
+            lm.transform.SetParent(root.transform);
+            Transform t = lm.transform;
+            CreatePrimitiveBlock(t, "MansionMain", PrimitiveType.Cube, new Vector3(0f, 6f, -10f), new Vector3(26f, 12f, 14f), Vector3.zero, wall, true);
+            CreatePrimitiveBlock(t, "MansionRoof", PrimitiveType.Cube, new Vector3(0f, 12.4f, -10f), new Vector3(28f, 1f, 16f), Vector3.zero, roof, false);
+            CreatePrimitiveBlock(t, "TowerL", PrimitiveType.Cube, new Vector3(-12f, 10f, -10f), new Vector3(5f, 20f, 5f), Vector3.zero, wall, true);
+            CreatePrimitiveBlock(t, "TowerR", PrimitiveType.Cube, new Vector3(12f, 10f, -10f), new Vector3(5f, 20f, 5f), Vector3.zero, wall, true);
+            CreatePrimitiveBlock(t, "TowerRoofL", PrimitiveType.Cylinder, new Vector3(-12f, 21f, -10f), new Vector3(3.5f, 3f, 3.5f), Vector3.zero, roof, false);
+            CreatePrimitiveBlock(t, "TowerRoofR", PrimitiveType.Cylinder, new Vector3(12f, 21f, -10f), new Vector3(3.5f, 3f, 3.5f), Vector3.zero, roof, false);
+            CreatePrimitiveBlock(t, "GatePillarL", PrimitiveType.Cube, new Vector3(-9f, 2.5f, 12f), new Vector3(1.2f, 5f, 1.2f), Vector3.zero, stone, true);
+            CreatePrimitiveBlock(t, "GatePillarR", PrimitiveType.Cube, new Vector3(9f, 2.5f, 12f), new Vector3(1.2f, 5f, 1.2f), Vector3.zero, stone, true);
+
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_1.fbx", "Tree1", t, -22f, 8f, 0f, 13f, nature, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_3.fbx", "Tree2", t, 22f, 8f, -30f, 13f, nature, true);
+
+            FinishLocationScene(root, ScarletMansionFrontScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.75f, 0.20f, 0.30f, 0.45f), scene);
+        }
+
+        private static void CreateDungeonEntranceScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.DungeonEntrance;
+            GameObject root = new GameObject(MigrationSceneCatalog.DungeonEntrance);
+            CreateWorldSimulation(root.transform);
+            string artRoot = LocationsArtRoot + "/DungeonEntrance";
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, "DungeonGround", artRoot + "/Materials/Ground.mat", new Color(0.28f, 0.30f, 0.26f, 1f));
+
+            Material rock = EnsureSimpleMaterial(artRoot + "/Materials/Rock.mat", new Color(0.34f, 0.34f, 0.36f, 1f));
+            Material dark = EnsureSimpleMaterial(artRoot + "/Materials/Dark.mat", new Color(0.05f, 0.05f, 0.06f, 1f));
+            Material nature = EnsureSimpleMaterial(artRoot + "/Materials/Nature.mat", new Color(0.18f, 0.34f, 0.20f, 1f));
+
+            GameObject lm = new GameObject("DungeonLandmark");
+            lm.transform.SetParent(root.transform);
+            Transform t = lm.transform;
+            // Rocky cliff face with a dark cave mouth.
+            CreatePrimitiveBlock(t, "Cliff", PrimitiveType.Cube, new Vector3(0f, 9f, -12f), new Vector3(34f, 18f, 10f), Vector3.zero, rock, true);
+            CreatePrimitiveBlock(t, "CaveMouth", PrimitiveType.Cube, new Vector3(0f, 4f, -6f), new Vector3(8f, 8f, 4f), Vector3.zero, dark, false);
+            CreatePrimitiveBlock(t, "BoulderL", PrimitiveType.Sphere, new Vector3(-9f, 2f, -2f), new Vector3(5f, 4f, 5f), Vector3.zero, rock, true);
+            CreatePrimitiveBlock(t, "BoulderR", PrimitiveType.Sphere, new Vector3(9f, 2.5f, -1f), new Vector3(6f, 5f, 6f), Vector3.zero, rock, true);
+            CreatePrimitiveBlock(t, "TorchL", PrimitiveType.Cylinder, new Vector3(-5f, 2f, -3.5f), new Vector3(0.3f, 2f, 0.3f), Vector3.zero, dark, false);
+            CreatePrimitiveBlock(t, "TorchR", PrimitiveType.Cylinder, new Vector3(5f, 2f, -3.5f), new Vector3(0.3f, 2f, 0.3f), Vector3.zero, dark, false);
+
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Stone_1.fbx", "Stone1", t, -16f, 6f, 0f, 4f, rock, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Stone_2.fbx", "Stone2", t, 16f, 8f, 30f, 4f, rock, true);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_2.fbx", "Tree1", t, -20f, 14f, 0f, 12f, nature, true);
+
+            FinishLocationScene(root, DungeonEntranceScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.45f, 0.30f, 0.45f), scene);
+        }
+
+        private static void CreateFarmScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.Farm;
+            GameObject root = new GameObject(MigrationSceneCatalog.Farm);
+            CreateWorldSimulation(root.transform);
+            string artRoot = LocationsArtRoot + "/Farm";
+            EnsureAssetFolder(artRoot + "/Materials");
+            CreateFlatGround(root.transform, "FarmGround", artRoot + "/Materials/Ground.mat", new Color(0.36f, 0.46f, 0.24f, 1f));
+
+            Material soil = EnsureSimpleMaterial(artRoot + "/Materials/Soil.mat", new Color(0.34f, 0.24f, 0.16f, 1f));
+            Material crop = EnsureSimpleMaterial(artRoot + "/Materials/Crop.mat", new Color(0.30f, 0.60f, 0.26f, 1f));
+            Material wood = EnsureSimpleMaterial(artRoot + "/Materials/Wood.mat", new Color(0.52f, 0.38f, 0.24f, 1f));
+            Material nature = EnsureSimpleMaterial(artRoot + "/Materials/Nature.mat", new Color(0.20f, 0.42f, 0.22f, 1f));
+
+            GameObject lm = new GameObject("FarmLandmark");
+            lm.transform.SetParent(root.transform);
+            Transform t = lm.transform;
+            // Tilled plot rows with crop rows on top.
+            for (int row = 0; row < 4; row++)
+            {
+                float z = -4f + row * 6f;
+                CreatePrimitiveBlock(t, $"Plot_{row}", PrimitiveType.Cube, new Vector3(0f, 0.15f, z), new Vector3(20f, 0.3f, 3.2f), Vector3.zero, soil, false);
+                for (int col = -2; col <= 2; col++)
+                {
+                    CreatePrimitiveBlock(t, $"Crop_{row}_{col}", PrimitiveType.Cube, new Vector3(col * 4f, 0.7f, z), new Vector3(0.8f, 1.1f, 0.8f), Vector3.zero, crop, false);
+                }
+            }
+            // Barn (Suntail house) + fences.
+            InstantiateLocationProp($"{HumanVillageBuildingPrefabsRoot}/House_7.prefab", "Barn", t, -16f, 18f, 40f, 11f, wood, true);
+            InstantiateLocationProp($"{HumanVillageEnvironmentModelsRoot}/Fence_1.fbx", "FenceA", t, -12f, -10f, 90f, 2.5f, wood, false);
+            InstantiateLocationProp($"{HumanVillageEnvironmentModelsRoot}/Fence_2.fbx", "FenceB", t, 12f, -10f, 90f, 2.5f, wood, false);
+            InstantiateLocationProp($"{HumanVillageNatureModelsRoot}/Broadleaf_1.fbx", "Tree1", t, 20f, 16f, 0f, 13f, nature, true);
+
+            FinishLocationScene(root, FarmScenePath, MigrationSceneId.BambooHomeVerticalSlice, new Color(0.55f, 0.80f, 0.35f, 0.45f), scene);
+        }
+
         // Bespoke Godot nature locations that reuse the generic nature builder on flat ground with
         // distinctive palettes (Magic Forest = dark/teal woods; Misty Lake = blue-grey "misty water").
         private static void CreateBespokeNatureScenes()
@@ -2989,7 +3178,11 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(TownWorldScenePath, true),
                 new EditorBuildSettingsScene(FantasyVillageScenePath, true),
                 new EditorBuildSettingsScene(SuntailVillagePlayableScenePath, true),
-                new EditorBuildSettingsScene(SuntailVillageImportedScenePath, true)
+                new EditorBuildSettingsScene(SuntailVillageImportedScenePath, true),
+                new EditorBuildSettingsScene(HakureiShrineScenePath, true),
+                new EditorBuildSettingsScene(ScarletMansionFrontScenePath, true),
+                new EditorBuildSettingsScene(DungeonEntranceScenePath, true),
+                new EditorBuildSettingsScene(FarmScenePath, true)
             };
         }
 

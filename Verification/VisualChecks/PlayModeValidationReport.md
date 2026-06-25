@@ -18,5 +18,9 @@
 | FantasyVillage | yes | Verification/VisualChecks/FantasyVillage_PlayMode.png | 0 |
 | SuntailVillagePlayable | yes | Verification/VisualChecks/SuntailVillagePlayable_PlayMode.png | 0 |
 | SuntailVillageImported | yes | Verification/VisualChecks/SuntailVillageImported_PlayMode.png | 0 |
+| HakureiShrine | yes | Verification/VisualChecks/HakureiShrine_PlayMode.png | 0 |
+| ScarletMansionFront | yes | Verification/VisualChecks/ScarletMansionFront_PlayMode.png | 0 |
+| DungeonEntrance | yes | Verification/VisualChecks/DungeonEntrance_PlayMode.png | 0 |
+| Farm | yes | Verification/VisualChecks/Farm_PlayMode.png | 0 |
 | TitleScreen | yes | Verification/VisualChecks/TitleScreen_PlayMode.png | 0 |
 
