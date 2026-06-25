@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
+using TouhouMigration.Runtime.Progression;
 using TouhouMigration.Runtime.Social;
 
 namespace TouhouMigration.Runtime.Save
@@ -32,6 +33,7 @@ namespace TouhouMigration.Runtime.Save
         public MigrationCalendarSnapshot calendar = new MigrationCalendarSnapshot();
         public CompanionRosterSnapshot companions = new CompanionRosterSnapshot();
         public HomeStorageSnapshot home_storage = new HomeStorageSnapshot();
+        public MetaProgressionSnapshot meta_progression = new MetaProgressionSnapshot();
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -161,6 +163,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => home_storage;
             set => home_storage = value ?? new HomeStorageSnapshot();
+        }
+
+        public MetaProgressionSnapshot MetaProgression
+        {
+            get => meta_progression;
+            set => meta_progression = value ?? new MetaProgressionSnapshot();
         }
 
         public static MigrationSaveData CreateDefault()

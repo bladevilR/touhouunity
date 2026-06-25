@@ -3,6 +3,7 @@ using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Player;
+using TouhouMigration.Runtime.Progression;
 using TouhouMigration.Runtime.Social;
 
 namespace TouhouMigration.Runtime.Save
@@ -24,6 +25,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly GameClock clock;
         private readonly MigrationCompanionRoster companions;
         private readonly MigrationHomeStorage homeStorage;
+        private readonly MigrationMetaProgression meta;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -35,7 +37,8 @@ namespace TouhouMigration.Runtime.Save
             MigrationFatigueSystem fatigue = null,
             GameClock clock = null,
             MigrationCompanionRoster companions = null,
-            MigrationHomeStorage homeStorage = null)
+            MigrationHomeStorage homeStorage = null,
+            MigrationMetaProgression meta = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -47,6 +50,7 @@ namespace TouhouMigration.Runtime.Save
             this.clock = clock;
             this.companions = companions;
             this.homeStorage = homeStorage;
+            this.meta = meta;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -99,6 +103,10 @@ namespace TouhouMigration.Runtime.Save
             {
                 data.HomeStorage = homeStorage.CreateSnapshot();
             }
+            if (meta != null)
+            {
+                data.MetaProgression = meta.CreateSnapshot();
+            }
             return data;
         }
 
@@ -148,6 +156,10 @@ namespace TouhouMigration.Runtime.Save
             if (homeStorage != null && data.home_storage != null)
             {
                 homeStorage.LoadSnapshot(data.home_storage);
+            }
+            if (meta != null && data.meta_progression != null)
+            {
+                meta.LoadSnapshot(data.meta_progression);
             }
         }
     }

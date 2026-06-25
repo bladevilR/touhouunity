@@ -161,5 +161,53 @@ namespace TouhouMigration.Runtime.Progression
         {
             return upgrades.TryGetValue(id ?? string.Empty, out MigrationMetaUpgrade upgrade) ? upgrade : null;
         }
+
+        // Snapshot the meta currency + per-upgrade levels for save/load (the registered upgrade catalog
+        // is rebuilt at startup, not persisted).
+        public MetaProgressionSnapshot CreateSnapshot()
+        {
+            MetaProgressionSnapshot snapshot = new MetaProgressionSnapshot { currency = currency };
+            foreach (KeyValuePair<string, int> entry in levels)
+            {
+                snapshot.upgradeIds.Add(entry.Key);
+                snapshot.upgradeLevels.Add(entry.Value);
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(MetaProgressionSnapshot snapshot)
+        {
+            levels.Clear();
+            currency = 0;
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            currency = snapshot.currency;
+            if (snapshot.upgradeIds == null || snapshot.upgradeLevels == null)
+            {
+                return;
+            }
+
+            int count = Math.Min(snapshot.upgradeIds.Count, snapshot.upgradeLevels.Count);
+            for (int i = 0; i < count; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(snapshot.upgradeIds[i]))
+                {
+                    levels[snapshot.upgradeIds[i]] = snapshot.upgradeLevels[i];
+                }
+            }
+        }
+    }
+
+    // Persisted meta-progression state: currency + per-upgrade levels.
+    [Serializable]
+    public sealed class MetaProgressionSnapshot
+    {
+        public int currency;
+        public List<string> upgradeIds = new List<string>();
+        public List<int> upgradeLevels = new List<int>();
     }
 }

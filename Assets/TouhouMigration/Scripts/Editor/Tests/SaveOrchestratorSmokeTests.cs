@@ -2,6 +2,7 @@ using System;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Player;
+using TouhouMigration.Runtime.Progression;
 using TouhouMigration.Runtime.Save;
 using TouhouMigration.Runtime.Social;
 using UnityEditor;
@@ -20,6 +21,7 @@ namespace TouhouMigration.Editor.Tests
             TestCalendarRoundTripsThroughSaveData();
             TestCompanionRosterRoundTripsThroughSaveData();
             TestHomeStorageRoundTripsThroughSaveData();
+            TestMetaProgressionRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -115,6 +117,27 @@ namespace TouhouMigration.Editor.Tests
             applyOrchestrator.Apply(data);
             AssertEqual(12, restored.GetStoredAmount("wood"), "Apply restores stored item amounts.");
             AssertEqual(5, restored.GetStoredAmount("mushroom"), "Apply restores all stored items.");
+        }
+
+        private static void TestMetaProgressionRoundTripsThroughSaveData()
+        {
+            MigrationMetaProgression source = new MigrationMetaProgression();
+            source.AddCurrency(250);
+            source.RegisterUpgrade(new MigrationMetaUpgrade("hp_boost", 5, 100, 1.5, 10.0, "max_hp"));
+            source.PurchaseUpgrade("hp_boost");
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+            AssertEqual(150, data.meta_progression.currency, "Capture stores remaining currency after the purchase.");
+            AssertEqual(1, data.meta_progression.upgradeIds.Count, "Capture stores purchased upgrade levels.");
+
+            MigrationMetaProgression restored = new MigrationMetaProgression();
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+            AssertEqual(150, restored.Currency, "Apply restores the meta currency.");
+            AssertEqual(1, restored.GetUpgradeLevel("hp_boost"), "Apply restores the purchased upgrade level.");
         }
 
         private static void TestBondStateRoundTripsThroughSaveData()
