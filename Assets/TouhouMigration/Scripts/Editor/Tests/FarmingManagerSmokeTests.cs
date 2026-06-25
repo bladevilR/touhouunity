@@ -21,6 +21,7 @@ namespace TouhouMigration.Editor.Tests
             TestPlantUnknownCropFails();
             TestYieldRollHonorsRange();
             TestRegisterCropsFromDatabaseGrowsRealCrop();
+            TestHarvestYieldScalesWithPlotQuality();
             Debug.Log("Farming manager smoke tests passed.");
         }
 
@@ -108,6 +109,30 @@ namespace TouhouMigration.Editor.Tests
             MigrationHarvestResult result = manager.Harvest(0, (lo, hi) => lo);
             AssertEqual(true, result.Success, "The grown crop should be harvestable.");
             AssertEqual("turnip", result.ItemId, "Harvest produces the crop's item (crop_turnip -> turnip).");
+        }
+
+        private static void TestHarvestYieldScalesWithPlotQuality()
+        {
+            InventoryService inventory = BuildInventory();
+            MigrationFarmingManager manager = new MigrationFarmingManager(inventory, 2);
+            // Fixed base yield of 4 (MinYield == MaxYield), growth 1 day, no daily water needed.
+            manager.RegisterCrop(new MigrationCropDefinition("crop_fixed", 1, false, ProduceItemId, 4, 4));
+
+            // Neglected plot (Normal quality, 1.0x) yields the base amount unchanged.
+            manager.Plant(0, "crop_fixed");
+            manager.AdvanceDay();
+            AssertEqual(CropQuality.Normal, manager.GetPlot(0).QualityTier, "An untended plot stays Normal quality.");
+            AssertEqual(4, manager.Harvest(0, (lo, hi) => lo).Amount, "A Normal plot yields the unscaled base amount.");
+
+            // Well-tended plot: water to 100 + fertilizer 70 -> Excellent (1.5x) after a day's decay.
+            manager.Plant(1, "crop_fixed");
+            MigrationFarmPlot plot = manager.GetPlot(1);
+            plot.Water();
+            plot.Water();
+            plot.Fertilize(70.0);
+            manager.AdvanceDay();
+            AssertEqual(CropQuality.Excellent, plot.QualityTier, "High water + fertilizer reaches Excellent quality.");
+            AssertEqual(6, manager.Harvest(1, (lo, hi) => lo).Amount, "An Excellent plot scales the base 4 by 1.5x -> 6.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

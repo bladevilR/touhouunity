@@ -7,8 +7,9 @@ namespace TouhouMigration.Runtime.Farming
     // Owns a set of farm plots + the crop catalog and runs the farming loop (Godot FarmingManager
     // intent): plant a registered crop, water it, advance the calendar day to grow all plots, and
     // harvest produce (yield range -> inventory). Free of UnityEngine so it is unit-testable; harvest
-    // randomness is injected. Water/fertilizer/quality yield scaling (Godot _calculate_harvest_yield)
-    // is a later slice.
+    // randomness is injected. Harvest yield = the crop's Min/Max range roll scaled by the plot's
+    // water/fertilizer quality multiplier (Godot _calculate_harvest_yield): a well-tended plot
+    // (Good/Excellent/Masterwork/Legendary) yields proportionally more than a neglected (Normal) one.
     public sealed class MigrationFarmingManager
     {
         private readonly InventoryService inventory;
@@ -97,7 +98,12 @@ namespace TouhouMigration.Runtime.Farming
                 return MigrationHarvestResult.Fail("unknown_crop");
             }
 
-            int amount = RollYield(crop, randomRange);
+            int baseAmount = RollYield(crop, randomRange);
+            // Scale the base range roll by the plot's water/fertilizer quality multiplier (1.0 for a
+            // Normal plot, up to 3.0 for Legendary). A neglected plot is unchanged; a tended one yields more.
+            int amount = baseAmount > 0
+                ? Math.Max(1, (int)Math.Round(baseAmount * plot.GetQualityMultiplier(), MidpointRounding.AwayFromZero))
+                : 0;
             string itemId = crop.HarvestItemId;
             plot.Harvest();
 
