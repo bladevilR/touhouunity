@@ -8,6 +8,7 @@ namespace TouhouMigration.Runtime.UI.Dialogue
     {
         private DialogueRuntimeFacade facade;
         private DialogueViewModel currentModel = new DialogueViewModel();
+        private readonly MigrationPortraitCatalog portraits = new MigrationPortraitCatalog();
         private GUIStyle shadeStyle;
         private GUIStyle panelStyle;
         private GUIStyle nameplateStyle;
@@ -31,6 +32,10 @@ namespace TouhouMigration.Runtime.UI.Dialogue
         public int SessionId => currentModel.SessionId;
         public string PortraitExpression => currentModel.Expression;
         public string PortraitMotion { get; private set; } = "hidden";
+        // E5 portrait slot: the Resources key + loaded texture for the current speaker. Texture stays null
+        // until the generated portrait art exists (Codex/image2 fills Resources/Portraits/<npc>/<expr>.png).
+        public string PortraitResourceKey { get; private set; }
+        public Texture2D PortraitTexture { get; private set; }
 
         public void Bind(DialogueRuntimeFacade dialogueFacade)
         {
@@ -62,6 +67,22 @@ namespace TouhouMigration.Runtime.UI.Dialogue
             IsTyping = FullText.Length > 0;
             selectedChoiceIndex = 0;
             PortraitMotion = ResolvePortraitMotion(currentModel.Expression);
+            UpdatePortrait();
+        }
+
+        // Resolve the portrait slot for the current speaker. A narration line (blank speaker) clears it;
+        // otherwise the texture is loaded from Resources (null until the art is generated).
+        private void UpdatePortrait()
+        {
+            if (portraits.IsNarration(currentModel.Speaker))
+            {
+                PortraitResourceKey = null;
+                PortraitTexture = null;
+                return;
+            }
+
+            PortraitResourceKey = portraits.ResolveResourceKey(currentModel.NpcId, currentModel.Expression);
+            PortraitTexture = portraits.LoadPortrait(currentModel.NpcId, currentModel.Expression);
         }
 
         public void HideDialogue()
@@ -69,6 +90,8 @@ namespace TouhouMigration.Runtime.UI.Dialogue
             IsVisible = false;
             IsTyping = false;
             PortraitMotion = "hidden";
+            PortraitResourceKey = null;
+            PortraitTexture = null;
         }
 
         public void CompleteTypewriter()
@@ -156,6 +179,24 @@ namespace TouhouMigration.Runtime.UI.Dialogue
             float panelLeft = Mathf.Clamp(Screen.width * 0.255f, 360f, 500f);
             float panelWidth = Screen.width - panelLeft - Mathf.Clamp(Screen.width * 0.05f, 54f, 96f);
             Rect panel = new Rect(panelLeft, Screen.height - panelHeight - 36f, panelWidth, panelHeight);
+
+            // Portrait slot: render the current speaker's portrait in the reserved left region, anchored to
+            // the panel. Drawn only when the generated art is present (Codex/image2); otherwise the layout
+            // is unchanged. Height-driven aspect keeps portraits from stretching.
+            if (PortraitTexture != null)
+            {
+                float portraitHeight = Mathf.Clamp(Screen.height * 0.46f, 280f, 520f);
+                float aspect = PortraitTexture.height > 0 ? (float)PortraitTexture.width / PortraitTexture.height : 0.7f;
+                float portraitWidth = portraitHeight * aspect;
+                Rect portraitRect = new Rect(panelLeft - portraitWidth - 18f, panel.yMax - portraitHeight, portraitWidth, portraitHeight);
+                if (portraitRect.x < 12f)
+                {
+                    portraitRect.x = 12f;
+                }
+
+                GUI.DrawTexture(portraitRect, PortraitTexture, ScaleMode.ScaleToFit);
+            }
+
             GUI.Box(panel, GUIContent.none, panelStyle);
 
             Rect nameplate = new Rect(panel.x + 34f, panel.y - 48f, 322f, 64f);
