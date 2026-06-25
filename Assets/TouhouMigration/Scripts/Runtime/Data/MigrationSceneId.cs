@@ -5,6 +5,7 @@ namespace TouhouMigration.Runtime.Data
         Bootstrap,
         TitleScreen,
         BambooHomeVerticalSlice,
-        HumanVillageVerticalSlice
+        HumanVillageVerticalSlice,
+        PureNatureMeadows
     }
 }

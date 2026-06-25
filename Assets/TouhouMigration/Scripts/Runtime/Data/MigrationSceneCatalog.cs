@@ -8,6 +8,7 @@ namespace TouhouMigration.Runtime.Data
         public const string TitleScreen = "TitleScreen";
         public const string BambooHomeVerticalSlice = "BambooHomeVerticalSlice";
         public const string HumanVillageVerticalSlice = "HumanVillageVerticalSlice";
+        public const string PureNatureMeadows = "PureNatureMeadows";
 
         public static string ToSceneName(MigrationSceneId sceneId)
         {
@@ -17,6 +18,7 @@ namespace TouhouMigration.Runtime.Data
                 MigrationSceneId.TitleScreen => TitleScreen,
                 MigrationSceneId.BambooHomeVerticalSlice => BambooHomeVerticalSlice,
                 MigrationSceneId.HumanVillageVerticalSlice => HumanVillageVerticalSlice,
+                MigrationSceneId.PureNatureMeadows => PureNatureMeadows,
                 _ => throw new ArgumentOutOfRangeException(nameof(sceneId), sceneId, "Unknown migration scene id.")
             };
         }

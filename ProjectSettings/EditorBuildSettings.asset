@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TouhouMigration/Scenes/HumanVillageVerticalSlice.unity
     guid: c3171c3c31d3b44bc9946781a4faf797
+  - enabled: 1
+    path: Assets/TouhouMigration/Scenes/PureNatureMeadows.unity
+    guid: 4c2f21e9e2c6940d0a82c6a61579d494
   m_configObjects: {}

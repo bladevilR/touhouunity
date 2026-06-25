@@ -31,6 +31,7 @@ namespace TouhouMigration.Editor
         private const string BambooHomeScenePath = ScenesRoot + "/BambooHomeVerticalSlice.unity";
         private const string HumanVillageScenePath = ScenesRoot + "/HumanVillageVerticalSlice.unity";
         private const string MokouCharacterValidationScenePath = ScenesRoot + "/MokouCharacterValidation.unity";
+        private const string PureNatureMeadowsScenePath = ScenesRoot + "/PureNatureMeadows.unity";
         private const string EnemyPrefabsRoot = Root + "/Prefabs/Enemies";
         private const string CombatFeedbackPrefabsRoot = Root + "/Prefabs/CombatFeedback";
         private const string EncounterPrefabsRoot = Root + "/Prefabs/Encounters";
@@ -59,6 +60,14 @@ namespace TouhouMigration.Editor
         private const string HumanVillageBackgroundModelsRoot = Root + "/Art/HumanVillage/Suntail/Models/BackgroundTerrains";
         private const string HumanVillageBuildingPrefabsRoot = Root + "/Art/HumanVillage/Suntail/Prefabs/Buildings";
         private const string HumanVillageMaterialsRoot = Root + "/Art/HumanVillage/Materials";
+        private const string MeadowsArtRoot = Root + "/Art/Locations/PureNatureMeadows";
+        private const string MeadowsTerrainPath = MeadowsArtRoot + "/Terrain/TerrainMeadows.obj";
+        private const string MeadowsTreesRoot = MeadowsArtRoot + "/Trees";
+        private const string MeadowsPlantsRoot = MeadowsArtRoot + "/Plants";
+        private const string MeadowsRocksRoot = MeadowsArtRoot + "/Rocks";
+        private const string MeadowsMushroomRoot = MeadowsArtRoot + "/Mushroom";
+        private const string MeadowsMountainsRoot = MeadowsArtRoot + "/Mountains";
+        private const string MeadowsMaterialsRoot = MeadowsArtRoot + "/Materials";
         private const string MokouVisualPath = Root + "/Art/Characters/Mokou/Models/mokou.glb";
         private const string MokouReferenceRigPath = Root + "/Art/Characters/ReferenceRigs/ReimuMokouCc/reimu_mokou_cc.glb";
         private const string MokouValidationAnimationsRoot = Root + "/Animations/Characters/MokouValidation";
@@ -90,12 +99,25 @@ namespace TouhouMigration.Editor
             CreateTitleScreenScene();
             CreateBambooHomeVerticalSlice();
             CreateHumanVillageVerticalSlice();
+            CreatePureNatureMeadowsScene();
             CreateMokouCharacterValidationScene();
             RegisterBuildScenes();
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("Touhou Unity migration initial project built.");
+        }
+
+        [MenuItem("Touhou Migration/Build Location Scenes")]
+        public static void BuildLocationScenes()
+        {
+            EnsureFolders();
+            AssetDatabase.Refresh();
+            CreatePureNatureMeadowsScene();
+            RegisterBuildScenes();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("Touhou Unity migration location scenes built.");
         }
 
         [MenuItem("Touhou Migration/Build Enemy Catalog Prefabs")]
@@ -185,6 +207,15 @@ namespace TouhouMigration.Editor
                 Root + "/Art/HumanVillage/Terrain",
                 Root + "/Art/HumanVillage/Terrain/Suntail",
                 Root + "/Art/HumanVillage/Terrain/PureNatureMeadows",
+                Root + "/Art/Locations",
+                Root + "/Art/Locations/PureNatureMeadows",
+                Root + "/Art/Locations/PureNatureMeadows/Terrain",
+                Root + "/Art/Locations/PureNatureMeadows/Trees",
+                Root + "/Art/Locations/PureNatureMeadows/Plants",
+                Root + "/Art/Locations/PureNatureMeadows/Rocks",
+                Root + "/Art/Locations/PureNatureMeadows/Mushroom",
+                Root + "/Art/Locations/PureNatureMeadows/Mountains",
+                Root + "/Art/Locations/PureNatureMeadows/Materials",
                 Root + "/Art/HumanVillage/Suntail",
                 Root + "/Art/HumanVillage/Suntail/Models",
                 Root + "/Art/HumanVillage/Suntail/Models/Environment",
@@ -1317,6 +1348,190 @@ namespace TouhouMigration.Editor
             EditorSceneManager.SaveScene(scene, MokouCharacterValidationScenePath);
         }
 
+        private static void CreatePureNatureMeadowsScene()
+        {
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            scene.name = MigrationSceneCatalog.PureNatureMeadows;
+
+            GameObject root = new GameObject("PureNatureMeadows");
+            CreateWorldSimulation(root.transform);
+
+            if (!CreatePureNatureMeadowsTerrain(root.transform))
+            {
+                CreateBlockoutGround(root.transform, "MeadowsBlockoutGround", new Vector3(12f, 1f, 12f));
+            }
+
+            CreatePureNatureMeadowsSetDressing(root.transform);
+
+            float playerGroundY = SampleGroundY(0f, 0f, 0f);
+            CreateMigrationPlayer(root.transform, new Vector3(0f, playerGroundY + 2f, 0f));
+            // Low establishing angle centered on the grove: shows skybox + horizon mountains behind
+            // the trees so the meadow reads as a place rather than a top-down field of fog.
+            CreateFollowCamera(root.transform, new Vector3(0f, 32f, -62f), Quaternion.Euler(26f, 0f, 0f));
+            CreateGlobalUi(root.transform);
+
+            float portalGroundY = SampleGroundY(-16f, -10f, 0f);
+            CreatePortal(
+                root.transform,
+                "BambooHomeReturnPortal",
+                new Vector3(-16f, portalGroundY + 2f, -10f),
+                MigrationSceneId.BambooHomeVerticalSlice,
+                new Color(0.45f, 0.85f, 0.5f, 0.45f));
+
+            EditorSceneManager.SaveScene(scene, PureNatureMeadowsScenePath);
+        }
+
+        private static bool CreatePureNatureMeadowsTerrain(Transform parent)
+        {
+            Material terrainMaterial = EnsureSimpleMaterial(
+                MeadowsMaterialsRoot + "/MeadowsTerrain.mat",
+                new Color(0.31f, 0.47f, 0.23f, 1f));
+
+            GameObject terrain = InstantiateAssetPrefab(
+                MeadowsTerrainPath,
+                "PureNatureMeadowsTerrain",
+                parent,
+                Vector3.zero,
+                Quaternion.identity,
+                Vector3.one);
+
+            if (terrain == null)
+            {
+                return false;
+            }
+
+            ApplyMaterialToRenderers(terrain, terrainMaterial);
+            AddMeshColliders(terrain);
+            CenterGroundOnPlane(terrain);
+            // Sync so the freshly added terrain MeshCollider is queryable by the prop-grounding raycasts.
+            Physics.SyncTransforms();
+
+            // Drop the terrain so the spawn column (world origin) rests at y=0, regardless of where
+            // this terrain's hills fall. This keeps the proven follow-camera framing valid for every
+            // promoted environment variant.
+            float originSurface = SampleGroundY(0f, 0f, float.NaN);
+            if (!float.IsNaN(originSurface))
+            {
+                terrain.transform.position += new Vector3(0f, -originSurface, 0f);
+                Physics.SyncTransforms();
+            }
+
+            return true;
+        }
+
+        private static void CreatePureNatureMeadowsSetDressing(Transform parent)
+        {
+            GameObject setDressing = new GameObject("MeadowsSetDressing");
+            setDressing.transform.SetParent(parent);
+
+            Material treeMaterial = EnsureSimpleMaterial(MeadowsMaterialsRoot + "/MeadowsTree.mat", new Color(0.18f, 0.40f, 0.20f, 1f));
+            Material grassMaterial = EnsureSimpleMaterial(MeadowsMaterialsRoot + "/MeadowsGrass.mat", new Color(0.30f, 0.55f, 0.26f, 1f));
+            Material flowerMaterial = EnsureSimpleMaterial(MeadowsMaterialsRoot + "/MeadowsFlower.mat", new Color(0.62f, 0.46f, 0.72f, 1f));
+            Material rockMaterial = EnsureSimpleMaterial(MeadowsMaterialsRoot + "/MeadowsRock.mat", new Color(0.45f, 0.45f, 0.43f, 1f));
+            Material mushroomMaterial = EnsureSimpleMaterial(MeadowsMaterialsRoot + "/MeadowsMushroom.mat", new Color(0.72f, 0.27f, 0.22f, 1f));
+            Material mountainMaterial = EnsureSimpleMaterial(MeadowsMaterialsRoot + "/MeadowsMountain.mat", new Color(0.38f, 0.40f, 0.43f, 1f));
+
+            Transform p = setDressing.transform;
+
+            // Foreground grove clustered tightly around the spawn (within ~100u of the follow
+            // camera at z=-90) so the exponential distance fog reads it crisply, mirroring the
+            // proven Human Village framing. Trees are canopy-dominant: one flat foliage material.
+            InstantiateMeadowProp(MeadowsTreesRoot, "Oak1", "Oak1", p, -30f, -10f, 20f, 16f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Oak2", "Oak2", p, 35f, -25f, -35f, 17f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Oak3", "Oak3", p, -48f, 12f, 60f, 16f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Birch1", "Birch1", p, 20f, 5f, 0f, 18f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Birch2", "Birch2", p, -14f, 25f, 120f, 17f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Birch3", "Birch3", p, 45f, 18f, -20f, 18f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Willow1", "Willow1", p, -55f, -20f, 200f, 15f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Elm1", "Elm1", p, 30f, 30f, -60f, 17f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Cypres1", "Cypres1", p, 52f, 0f, 0f, 19f, treeMaterial, true);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Bush1", "Bush1", p, -8f, -18f, 0f, 3.5f, treeMaterial, false);
+            InstantiateMeadowProp(MeadowsTreesRoot, "Bush2", "Bush2", p, 10f, -12f, 45f, 4f, treeMaterial, false);
+
+            // Rocks.
+            InstantiateMeadowProp(MeadowsRocksRoot, "Stone1", "Stone1", p, -22f, -28f, 10f, 3f, rockMaterial, true);
+            InstantiateMeadowProp(MeadowsRocksRoot, "Stone2", "Stone2", p, 18f, -30f, -15f, 2.8f, rockMaterial, true);
+            InstantiateMeadowProp(MeadowsRocksRoot, "Stone3", "Stone3", p, -40f, 20f, 30f, 3.5f, rockMaterial, true);
+            InstantiateMeadowProp(MeadowsRocksRoot, "Cliff1", "Cliff1", p, 60f, 28f, 30f, 10f, rockMaterial, true);
+
+            // Mushrooms.
+            InstantiateMeadowProp(MeadowsMushroomRoot, "Mushroom1", "Mushroom1", p, -6f, -8f, 0f, 2.2f, mushroomMaterial, false);
+            InstantiateMeadowProp(MeadowsMushroomRoot, "Mushroom2", "Mushroom2", p, 6f, -2f, 90f, 2.4f, mushroomMaterial, false);
+
+            // Plants, grass, flowers near the spawn.
+            InstantiateMeadowProp(MeadowsPlantsRoot, "Grass1", "Grass1", p, -16f, -6f, 0f, 2f, grassMaterial, false);
+            InstantiateMeadowProp(MeadowsPlantsRoot, "Grass2", "Grass2", p, 14f, 8f, 0f, 2f, grassMaterial, false);
+            InstantiateMeadowProp(MeadowsPlantsRoot, "FlowerMeadow1", "FlowerMeadow1", p, -10f, 2f, 0f, 1.8f, flowerMaterial, false);
+            InstantiateMeadowProp(MeadowsPlantsRoot, "FlowerMeadow2", "FlowerMeadow2", p, 22f, -4f, 0f, 1.8f, flowerMaterial, false);
+            InstantiateMeadowProp(MeadowsPlantsRoot, "Lupin1", "Lupin1", p, 4f, 14f, 0f, 2.4f, flowerMaterial, false);
+            InstantiateMeadowProp(MeadowsPlantsRoot, "Daisy", "Daisy", p, -20f, 8f, 0f, 1.6f, flowerMaterial, false);
+            InstantiateMeadowProp(MeadowsPlantsRoot, "Lavender", "Lavender", p, 26f, 6f, 0f, 2f, flowerMaterial, false);
+
+            // Background hills on the near horizon (deliberately faint behind the fog).
+            InstantiateMeadowProp(MeadowsMountainsRoot, "Mountain1", "Mountain1", p, -90f, 150f, 20f, 90f, mountainMaterial, false);
+            InstantiateMeadowProp(MeadowsMountainsRoot, "Mountain2", "Mountain2", p, 95f, 165f, -30f, 90f, mountainMaterial, false);
+        }
+
+        private static GameObject InstantiateMeadowProp(
+            string folderRoot,
+            string fileName,
+            string instanceName,
+            Transform parent,
+            float x,
+            float z,
+            float yaw,
+            float targetHeight,
+            Material material,
+            bool addCollider)
+        {
+            GameObject instance = InstantiateAssetPrefab(
+                $"{folderRoot}/{fileName}.fbx",
+                instanceName,
+                parent,
+                Vector3.zero,
+                Quaternion.Euler(0f, yaw, 0f),
+                Vector3.one);
+
+            if (instance == null)
+            {
+                return null;
+            }
+
+            ApplyMaterialToRenderers(instance, material);
+            float groundY = SampleGroundY(x, z, 0f);
+            NormalizeVisualBounds(instance, new Vector3(x, groundY, z), targetHeight);
+            if (addCollider)
+            {
+                AddMeshColliders(instance);
+            }
+
+            return instance;
+        }
+
+        // Raycasts straight down onto the already-built terrain collider to find ground height.
+        // Falls back gracefully when edit-mode physics can't resolve a hit.
+        private static float SampleGroundY(float x, float z, float fallback)
+        {
+            if (Physics.Raycast(new Vector3(x, 2000f, z), Vector3.down, out RaycastHit hit, 8000f))
+            {
+                return hit.point.y;
+            }
+
+            return fallback;
+        }
+
+        // Re-centers a ground mesh so its XZ bounds sit on the world origin and its base rests on y=0.
+        private static void CenterGroundOnPlane(GameObject go)
+        {
+            if (!TryCalculateRendererBounds(go, out Bounds bounds))
+            {
+                return;
+            }
+
+            Vector3 shift = new Vector3(-bounds.center.x, -bounds.min.y, -bounds.center.z);
+            go.transform.position += shift;
+        }
+
         private static bool CreateHumanVillageTerrain(Transform parent)
         {
             Material terrainMaterial = EnsureSimpleMaterial(
@@ -2378,7 +2593,8 @@ namespace TouhouMigration.Editor
                 new EditorBuildSettingsScene(BootstrapScenePath, true),
                 new EditorBuildSettingsScene(TitleScreenScenePath, true),
                 new EditorBuildSettingsScene(BambooHomeScenePath, true),
-                new EditorBuildSettingsScene(HumanVillageScenePath, true)
+                new EditorBuildSettingsScene(HumanVillageScenePath, true),
+                new EditorBuildSettingsScene(PureNatureMeadowsScenePath, true)
             };
         }
 

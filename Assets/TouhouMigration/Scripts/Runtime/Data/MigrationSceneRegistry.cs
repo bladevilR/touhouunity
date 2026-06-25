@@ -20,7 +20,7 @@ namespace TouhouMigration.Runtime.Data
             new MigrationSceneOption("pure_nature_mountains", "纯自然·群山", false, MigrationSceneId.BambooHomeVerticalSlice),
             new MigrationSceneOption("pure_nature_islands", "纯自然·群岛", false, MigrationSceneId.BambooHomeVerticalSlice),
             new MigrationSceneOption("pure_nature_jungle", "纯自然·雨林", false, MigrationSceneId.BambooHomeVerticalSlice),
-            new MigrationSceneOption("pure_nature_meadows", "纯自然·草甸", false, MigrationSceneId.BambooHomeVerticalSlice),
+            new MigrationSceneOption("pure_nature_meadows", "纯自然·草甸", true, MigrationSceneId.PureNatureMeadows),
             new MigrationSceneOption("town_world", "旧版城镇", false, MigrationSceneId.BambooHomeVerticalSlice),
             new MigrationSceneOption("combat", "战斗竞技场", false, MigrationSceneId.BambooHomeVerticalSlice),
             new MigrationSceneOption("cirno_mvp", "琪露诺试炼", false, MigrationSceneId.BambooHomeVerticalSlice)

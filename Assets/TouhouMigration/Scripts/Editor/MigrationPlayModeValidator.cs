@@ -34,6 +34,7 @@ namespace TouhouMigration.Editor
             "Assets/TouhouMigration/Scenes/Bootstrap.unity",
             "Assets/TouhouMigration/Scenes/BambooHomeVerticalSlice.unity",
             "Assets/TouhouMigration/Scenes/HumanVillageVerticalSlice.unity",
+            "Assets/TouhouMigration/Scenes/PureNatureMeadows.unity",
             "Assets/TouhouMigration/Scenes/TitleScreen.unity",
         };
 
