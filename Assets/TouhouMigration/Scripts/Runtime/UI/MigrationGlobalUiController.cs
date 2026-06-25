@@ -50,6 +50,7 @@ namespace TouhouMigration.Runtime.UI
         private MigrationGameStateMachine gameState;
         private WorldSimulationBehaviour worldSimulation;
         private DialogueEffectRouter dialogueEffectRouter;
+        private bool menuModePushed;
 
         public bool BlocksGameplayInput =>
             (giftSelectionController != null && giftSelectionController.IsOpen) ||
@@ -327,6 +328,8 @@ namespace TouhouMigration.Runtime.UI
             playerHealthRuntime?.Tick(Time.deltaTime);
             phoenixGaugeRuntime?.Tick(Time.deltaTime);
 
+            SyncMenuGameState();
+
             if (giftSelectionController != null && giftSelectionController.IsOpen)
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
@@ -479,6 +482,33 @@ namespace TouhouMigration.Runtime.UI
         private void ApplyWorldTimeScaleForMode(MigrationGameStateMode mode)
         {
             worldSimulation?.SetExternalTimeScale(MigrationGameStateRules.WorldTimeScale(mode));
+        }
+
+        // E2: reflect the pause/unified menu in the game-state stack so opening it freezes world-time
+        // and hides the HUD via MigrationGameStateRules. Polled each frame (the menu has no open/close
+        // event); the menuModePushed guard keeps the push/pop idempotent across frames.
+        private void SyncMenuGameState()
+        {
+            if (gameState == null || unifiedMenuController == null)
+            {
+                return;
+            }
+
+            bool menuOpen = unifiedMenuController.IsOpen;
+            if (menuOpen && !menuModePushed && gameState.CurrentMode != MigrationGameStateMode.Menu)
+            {
+                gameState.Push(MigrationGameStateMode.Menu);
+                menuModePushed = true;
+            }
+            else if (!menuOpen && menuModePushed)
+            {
+                if (gameState.CurrentMode == MigrationGameStateMode.Menu)
+                {
+                    gameState.Pop();
+                }
+
+                menuModePushed = false;
+            }
         }
 
         private Dictionary<string, object> BuildDialogueContext(string npcId)
