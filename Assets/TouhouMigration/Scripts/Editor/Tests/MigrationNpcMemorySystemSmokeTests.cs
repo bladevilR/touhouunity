@@ -26,6 +26,9 @@ namespace TouhouMigration.Editor.Tests
             TestGreetingStyleReflectsImpression();
             TestTrustLevelReflectsTrust();
             TestSpecialAndAvoidTopicsFromMemories();
+            TestNotableMemoryCount();
+            TestHasFirstMeetingMemory();
+            TestMemoryCountOfType();
             Debug.Log("Migration NPC memory smoke tests passed.");
         }
 
@@ -178,6 +181,36 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual("festival", mod.SpecialTopics[0], "The special topic is the notable memory's topic.");
             AssertEqual(1, mod.AvoidTopics.Count, "A negative memory contributes an avoid topic.");
             AssertEqual("badgift", mod.AvoidTopics[0], "The avoid topic is the negative memory's topic.");
+        }
+
+        private static void TestNotableMemoryCount()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            memory.AddMemory("npc", NpcMemoryType.SpecialEvent);   // weight 80 -> notable
+            AssertEqual(1, memory.GetNotableMemoryCount("npc"), "A high-weight memory is notable.");
+            memory.AddMemory("npc", NpcMemoryType.GiftReceived);   // weight 30 -> not notable
+            AssertEqual(1, memory.GetNotableMemoryCount("npc"), "A low-weight memory is not notable.");
+            memory.AddMemory("npc", NpcMemoryType.Betrayal);       // weight 150 -> notable
+            AssertEqual(2, memory.GetNotableMemoryCount("npc"), "Another high-weight memory is notable.");
+        }
+
+        private static void TestHasFirstMeetingMemory()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            AssertEqual(false, memory.HasFirstMeetingMemory("npc"), "A never-met NPC has no first-meeting memory.");
+            memory.AddMemory("npc", NpcMemoryType.FirstMeeting);   // weight 100 -> notable
+            AssertEqual(true, memory.HasFirstMeetingMemory("npc"), "A first meeting is recalled as a notable memory.");
+        }
+
+        private static void TestMemoryCountOfType()
+        {
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            memory.AddMemory("npc", NpcMemoryType.GiftReceived);
+            memory.AddMemory("npc", NpcMemoryType.GiftReceived);
+            memory.AddMemory("npc", NpcMemoryType.CombatTogether);
+            AssertEqual(2, memory.GetMemoryCountOfType("npc", NpcMemoryType.GiftReceived), "Counts memories of a given type.");
+            AssertEqual(1, memory.GetMemoryCountOfType("npc", NpcMemoryType.CombatTogether), "Counts a single memory of a type.");
+            AssertEqual(0, memory.GetMemoryCountOfType("npc", NpcMemoryType.Betrayal), "Counts zero for an unformed type.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

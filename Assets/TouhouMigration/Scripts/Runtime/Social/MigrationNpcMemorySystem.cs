@@ -288,6 +288,41 @@ namespace TouhouMigration.Runtime.Social
             return EnsureNpc(npcId).Memories.Count;
         }
 
+        // Number of high-weight "notable" memories (Godot get_notable_memories).
+        public int GetNotableMemoryCount(string npcId)
+        {
+            return EnsureNpc(npcId).NotableMemories.Count;
+        }
+
+        // Whether the NPC remembers first meeting the player (Godot recall_first_meeting non-empty).
+        public bool HasFirstMeetingMemory(string npcId)
+        {
+            foreach (Memory memory in EnsureNpc(npcId).NotableMemories)
+            {
+                if (memory.Type == NpcMemoryType.FirstMeeting)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Number of memories of a given type (Godot get_memories_of_type).
+        public int GetMemoryCountOfType(string npcId, NpcMemoryType type)
+        {
+            int count = 0;
+            foreach (Memory memory in EnsureNpc(npcId).Memories)
+            {
+                if (memory.Type == type)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public bool HasMemoryOf(string npcId, NpcMemoryType type)
         {
             foreach (Memory memory in EnsureNpc(npcId).Memories)
