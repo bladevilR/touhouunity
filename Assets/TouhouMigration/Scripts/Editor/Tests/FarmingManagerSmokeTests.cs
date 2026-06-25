@@ -9,6 +9,7 @@ namespace TouhouMigration.Editor.Tests
     public static class FarmingManagerSmokeTests
     {
         private const string ItemDataPath = "Assets/TouhouMigration/Data/Items/items.json";
+        private const string CropDataPath = "Assets/TouhouMigration/Data/Farming/crops.json";
         // A known stackable item (used by the dialogue inventory smoke tests) to stand in as produce.
         private const string ProduceItemId = "health_potion_small";
 
@@ -19,6 +20,7 @@ namespace TouhouMigration.Editor.Tests
             TestHarvestBeforeReadyFails();
             TestPlantUnknownCropFails();
             TestYieldRollHonorsRange();
+            TestRegisterCropsFromDatabaseGrowsRealCrop();
             Debug.Log("Farming manager smoke tests passed.");
         }
 
@@ -82,6 +84,30 @@ namespace TouhouMigration.Editor.Tests
             manager.AdvanceDay();
             MigrationHarvestResult high = manager.Harvest(1, (lo, hi) => hi - 1);
             AssertEqual(5, high.Amount, "Yield uses the high (inclusive) bound of the range.");
+        }
+
+        private static void TestRegisterCropsFromDatabaseGrowsRealCrop()
+        {
+            InventoryService inventory = BuildInventory();
+            MigrationCropDatabase database = new MigrationCropDatabase();
+            AssertEqual(true, database.LoadFromPath(CropDataPath), "crops.json should load for the farming manager.");
+
+            MigrationFarmingManager manager = new MigrationFarmingManager(inventory, 4);
+            manager.RegisterCropsFrom(database);
+
+            AssertEqual(true, manager.Plant(0, "crop_turnip"), "A crop from the database should be plantable by id.");
+            AssertEqual(false, manager.Plant(1, "crop_nonexistent"), "An unregistered crop id should not plant.");
+
+            // crop_turnip: growth_days 3, needs daily water.
+            for (int day = 0; day < 3; day++)
+            {
+                manager.Water(0);
+                manager.AdvanceDay();
+            }
+
+            MigrationHarvestResult result = manager.Harvest(0, (lo, hi) => lo);
+            AssertEqual(true, result.Success, "The grown crop should be harvestable.");
+            AssertEqual("turnip", result.ItemId, "Harvest produces the crop's item (crop_turnip -> turnip).");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

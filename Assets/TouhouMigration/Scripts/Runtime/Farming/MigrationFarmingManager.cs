@@ -36,6 +36,20 @@ namespace TouhouMigration.Runtime.Farming
             }
         }
 
+        // Register every crop from a loaded MigrationCropDatabase so crops can be planted by id.
+        public void RegisterCropsFrom(MigrationCropDatabase database)
+        {
+            if (database == null)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<string, MigrationCropDefinition> pair in database.GetAllCrops())
+            {
+                RegisterCrop(pair.Value);
+            }
+        }
+
         public MigrationFarmPlot GetPlot(int plotIndex)
         {
             return plotIndex >= 0 && plotIndex < plots.Length ? plots[plotIndex] : null;
