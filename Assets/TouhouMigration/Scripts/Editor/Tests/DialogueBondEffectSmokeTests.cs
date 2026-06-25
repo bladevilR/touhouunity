@@ -14,6 +14,7 @@ namespace TouhouMigration.Editor.Tests
         {
             TestPlainBondRoutesToCurrentNpc();
             TestPrefixedBondRoutesToNamedNpc();
+            TestDialogueEffectFormsNpcMemory();
             Debug.Log("Dialogue bond effect smoke tests passed.");
         }
 
@@ -41,6 +42,19 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, handled, "A bond_<npc> effect should be handled.");
             AssertEqual(30, bonds.GetBondPoints("keine"), "bond_keine should add to Keine (10 base + 20).");
             AssertEqual(0, bonds.GetBondPoints("koishi"), "bond_keine should not add to the current NPC.");
+        }
+
+        private static void TestDialogueEffectFormsNpcMemory()
+        {
+            SocialBondService bonds = new SocialBondService();
+            MigrationNpcMemorySystem memory = new MigrationNpcMemorySystem();
+            DialogueEffectRouter router = new DialogueEffectRouter(bonds, null);
+            router.BindMemory(memory);
+
+            bool handled = router.Apply("marisa", new Dictionary<string, object> { ["bond"] = 5 });
+
+            AssertEqual(true, handled, "The dialogue bond effect should be handled.");
+            AssertEqual(1, memory.GetMemoryCountOfType("marisa", NpcMemoryType.DialogueChoice), "An applied dialogue effect forms a DialogueChoice memory.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

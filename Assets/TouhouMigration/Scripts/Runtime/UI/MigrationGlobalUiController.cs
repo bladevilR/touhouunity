@@ -414,6 +414,7 @@ namespace TouhouMigration.Runtime.UI
             dialogueEffectRouter.BindInventory(inventoryService);
             dialogueEffectRouter.BindHumanity(humanityService);
             dialogueEffectRouter.BindStoryFlags(storyFlagService);
+            dialogueEffectRouter.BindMemory(npcMemorySystem);
 
             saveService = new MigrationSaveService(null);
             // clock/calendar save is wired alongside the day-cycle once worldSimulation is resolved (see Awake).

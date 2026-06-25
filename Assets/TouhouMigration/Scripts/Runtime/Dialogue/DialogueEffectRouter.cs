@@ -14,6 +14,7 @@ namespace TouhouMigration.Runtime.Dialogue
         private InventoryService inventoryService;
         private HumanityService humanityService;
         private MigrationStoryFlagService storyFlagService;
+        private MigrationNpcMemorySystem npcMemory;
 
         public DialogueEffectRouter(SocialBondService bondService, QuestDeliveryService questDeliveryService)
         {
@@ -41,6 +42,13 @@ namespace TouhouMigration.Runtime.Dialogue
             storyFlagService = storyFlags;
         }
 
+        // Optional NPC-memory routing: a dialogue interaction that applies effects forms a
+        // DialogueChoice memory for that NPC (non-breaking; unbound callers keep current behavior).
+        public void BindMemory(MigrationNpcMemorySystem memory)
+        {
+            npcMemory = memory;
+        }
+
         public bool Apply(string npcId, Dictionary<string, object> effects)
         {
             if (effects == null || effects.Count == 0)
@@ -52,6 +60,11 @@ namespace TouhouMigration.Runtime.Dialogue
             foreach (KeyValuePair<string, object> effect in effects)
             {
                 handledAny = ApplyEffect(npcId, NormalizeId(effect.Key), effect.Value) || handledAny;
+            }
+
+            if (handledAny && !string.IsNullOrEmpty(npcId))
+            {
+                npcMemory?.AddMemory(npcId, NpcMemoryType.DialogueChoice);
             }
 
             return handledAny;
