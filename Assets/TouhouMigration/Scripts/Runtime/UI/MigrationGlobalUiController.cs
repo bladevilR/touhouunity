@@ -28,6 +28,7 @@ namespace TouhouMigration.Runtime.UI
         private ItemDatabase itemDatabase;
         private InventoryService inventoryService;
         private MigrationPlayerProgressService playerProgressService;
+        private HumanityService humanityService;
         private DialogueDatabase dialogueDatabase;
         private DialogueRuntimeFacade dialogueFacade;
         private GiftDatabase giftDatabase;
@@ -291,8 +292,10 @@ namespace TouhouMigration.Runtime.UI
                 projectileSettlement.BindGauge(phoenixGaugeRuntime);
             }
             itemUseService = new ItemUseService(inventoryService, itemDatabase, cookingBuffService, playerHealthRuntime);
+            humanityService = new HumanityService();
             dialogueEffectRouter = new DialogueEffectRouter(socialBondService, questDeliveryService);
             dialogueEffectRouter.BindInventory(inventoryService);
+            dialogueEffectRouter.BindHumanity(humanityService);
 
             saveService = new MigrationSaveService(null);
             saveOrchestrator = new MigrationSaveOrchestrator(
@@ -476,7 +479,7 @@ namespace TouhouMigration.Runtime.UI
             return new Dictionary<string, object>
             {
                 ["bond_level"] = socialBondService != null ? socialBondService.GetBondLevel(npcId) : 0,
-                ["humanity"] = 100,
+                ["humanity"] = humanityService != null ? humanityService.Humanity : 100,
                 ["time_of_day"] = "afternoon",
                 ["active_quests"] = activeQuestIds,
                 ["completed_quests"] = completedQuestIds,

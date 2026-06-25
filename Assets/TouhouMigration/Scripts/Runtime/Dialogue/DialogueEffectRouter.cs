@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TouhouMigration.Runtime.Inventory;
+using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Social;
 
 namespace TouhouMigration.Runtime.Dialogue
@@ -10,6 +11,7 @@ namespace TouhouMigration.Runtime.Dialogue
         private readonly SocialBondService bondService;
         private readonly QuestDeliveryService questDeliveryService;
         private InventoryService inventoryService;
+        private HumanityService humanityService;
 
         public DialogueEffectRouter(SocialBondService bondService, QuestDeliveryService questDeliveryService)
         {
@@ -22,6 +24,13 @@ namespace TouhouMigration.Runtime.Dialogue
         public void BindInventory(InventoryService inventory)
         {
             inventoryService = inventory;
+        }
+
+        // Optional humanity routing for dialogue "humanity" fx (non-breaking; callers that never
+        // bind a humanity service keep their current no-op behavior for that effect).
+        public void BindHumanity(HumanityService humanity)
+        {
+            humanityService = humanity;
         }
 
         public bool Apply(string npcId, Dictionary<string, object> effects)
@@ -65,6 +74,14 @@ namespace TouhouMigration.Runtime.Dialogue
                     }
 
                     bondService.AddBondPoints(npcId, "dialogue", ToInt(value));
+                    return true;
+                case "humanity":
+                    if (humanityService == null)
+                    {
+                        return false;
+                    }
+
+                    humanityService.Adjust(ToInt(value));
                     return true;
                 case "quest":
                 case "start_quest":

@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 05:04 CST
+Last updated: 2026-06-25 08:52 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 05:04 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: M58, Perfect Freeze Phase-Outcome Presenter.
+- Latest completed milestone: E5.2, dialogue humanity stat routing (session 2). Prior milestone M58 (Perfect Freeze Phase-Outcome Presenter) plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,37 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.2: Dialogue Humanity Stat Routing
+
+- Date: 2026-06-25 08:52 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Route the dialogue `humanity` fx to a real stat target. Session 1 wired `bond` but left `humanity` unrouted (no stat target). Godot `DialogueDatabaseExpanded` uses `humanity` +/- deltas; `MokouMonologueSystem` gates Mokou behavior on humanity-level thresholds.
+
+Completed:
+
+- New `HumanityService` (`Runtime/Player/HumanityService.cs`): Mokou's global humanity stat — default 100, clamped 0..100, `Adjust(delta)` bidirectional, `Set(value)`, and `Level` -> `HumanityLevel {Low,Medium,High}` at the Godot `MokouMonologueSystem` thresholds (>=70 High, >=40 Medium, else Low).
+- `DialogueEffectRouter`: added `BindHumanity(...)` + a `case "humanity"` routing the data value through `HumanityService.Adjust` (mirrors the optional `BindInventory` pattern; no-op when unbound).
+- `MigrationGlobalUiController`: constructs + binds `HumanityService`; `BuildDialogueContext` now reads the live `humanity` value instead of a hardcoded `100`, so `humanity_min`/`humanity_max` dialogue conditions react to accumulated effects.
+
+TDD (red -> green):
+
+- New `DialogueHumanityEffectSmokeTests` (5 cases): service default/clamp, level thresholds, effect routing, live `ActionRequested` path, and unbound no-op.
+- RED: focused run failed to compile on missing `HumanityService` / `HumanityLevel` / `BindHumanity` (feature-missing red).
+- GREEN: full regression `MigrationSmokeTestRunner.RunAll` = 44/44 suites passed, 0 compile errors (43 prior + new humanity suite). `GlobalUiSmokeTests` green gates the controller change.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Player/HumanityService.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Dialogue/DialogueEffectRouter.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/DialogueHumanityEffectSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Humanity is not yet in the save schema (`MigrationSaveData`) — fold into E8 save parity.
+- No HUD surface for humanity yet (E7 presentation); Mokou monologue-level consumers (E5/E6) can read `HumanityService.Level`.
 
 ### M57: Snowball Damage And Arena Bounce
 
