@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:39 CST
+Last updated: 2026-06-25 09:43 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:39 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E5.3, cross-NPC dialogue bond effects (session 2). Session-2 slices: E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E5.4, narrative event (story flag) routing (session 2). Session-2 slices (9): E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects), E5.4 (narrative events). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,36 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.4: Narrative Event (Story Flag) Routing
+
+- Date: 2026-06-25 09:43 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Route the Godot dialogue `event` effect (narrative events like `mokou_fate` / `elixir_bad_end` / `keine_helps`) to a story-flag service. It was the last unrouted dialogue fx after E5.2/E5.3 — so all known Godot dialogue fx are now routed.
+
+Completed:
+
+- New `MigrationStoryFlagService` (`Runtime/Narrative/`): `MarkEvent(id)` records a fired narrative event (idempotent), `HasEvent(id)`, `EventCount`. Free of UnityEngine.
+- `DialogueEffectRouter.BindStoryFlags` + a `case "event"` routes the event id to `MarkEvent`. The owner constructs + binds it (mirrors the E5.2 humanity wiring).
+- Dialogue fx now fully routed: bond, `bond_<npc>`, humanity, quest/start/complete, counter, unlock_npc, quest_progress, give/take_item, and event.
+
+TDD (red -> green):
+
+- New `StoryFlagServiceSmokeTests` (mark/query incl. idempotency; the `event` effect routes to the bound service; no-op when unbound).
+- RED: focused run failed to compile on the missing `Narrative` namespace (CS0234).
+- GREEN: full regression 49/49 suites passed, 0 compile errors (48 prior + new story-flag suite). `GlobalUiSmokeTests` gates the owner wiring.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Narrative/MigrationStoryFlagService.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/Dialogue/DialogueEffectRouter.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/StoryFlagServiceSmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Consumers: gate dialogue/quests/content on `HasEvent` (add story-flag dialogue conditions; the dialogue context already carries quest/bond/humanity). Save round-trip for fired events (fold into E8).
 
 ### E5.3: Cross-NPC Dialogue Bond Effects
 

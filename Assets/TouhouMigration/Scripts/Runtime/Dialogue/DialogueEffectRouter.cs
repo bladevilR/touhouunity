@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TouhouMigration.Runtime.Inventory;
+using TouhouMigration.Runtime.Narrative;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Social;
 
@@ -12,6 +13,7 @@ namespace TouhouMigration.Runtime.Dialogue
         private readonly QuestDeliveryService questDeliveryService;
         private InventoryService inventoryService;
         private HumanityService humanityService;
+        private MigrationStoryFlagService storyFlagService;
 
         public DialogueEffectRouter(SocialBondService bondService, QuestDeliveryService questDeliveryService)
         {
@@ -31,6 +33,12 @@ namespace TouhouMigration.Runtime.Dialogue
         public void BindHumanity(HumanityService humanity)
         {
             humanityService = humanity;
+        }
+
+        // Optional story-flag routing for dialogue "event" fx (narrative events); no-op when unbound.
+        public void BindStoryFlags(MigrationStoryFlagService storyFlags)
+        {
+            storyFlagService = storyFlags;
         }
 
         public bool Apply(string npcId, Dictionary<string, object> effects)
@@ -99,6 +107,20 @@ namespace TouhouMigration.Runtime.Dialogue
                     }
 
                     humanityService.Adjust(ToInt(value));
+                    return true;
+                case "event":
+                    if (storyFlagService == null)
+                    {
+                        return false;
+                    }
+
+                    string eventId = Convert.ToString(value) ?? string.Empty;
+                    if (string.IsNullOrWhiteSpace(eventId))
+                    {
+                        return false;
+                    }
+
+                    storyFlagService.MarkEvent(eventId);
                     return true;
                 case "quest":
                 case "start_quest":

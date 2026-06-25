@@ -5,6 +5,7 @@ using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Dialogue;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Inventory;
+using TouhouMigration.Runtime.Narrative;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Quest;
 using TouhouMigration.Runtime.Save;
@@ -29,6 +30,7 @@ namespace TouhouMigration.Runtime.UI
         private InventoryService inventoryService;
         private MigrationPlayerProgressService playerProgressService;
         private HumanityService humanityService;
+        private MigrationStoryFlagService storyFlagService;
         private DialogueDatabase dialogueDatabase;
         private DialogueRuntimeFacade dialogueFacade;
         private GiftDatabase giftDatabase;
@@ -296,9 +298,11 @@ namespace TouhouMigration.Runtime.UI
             }
             itemUseService = new ItemUseService(inventoryService, itemDatabase, cookingBuffService, playerHealthRuntime);
             humanityService = new HumanityService();
+            storyFlagService = new MigrationStoryFlagService();
             dialogueEffectRouter = new DialogueEffectRouter(socialBondService, questDeliveryService);
             dialogueEffectRouter.BindInventory(inventoryService);
             dialogueEffectRouter.BindHumanity(humanityService);
+            dialogueEffectRouter.BindStoryFlags(storyFlagService);
 
             saveService = new MigrationSaveService(null);
             saveOrchestrator = new MigrationSaveOrchestrator(
