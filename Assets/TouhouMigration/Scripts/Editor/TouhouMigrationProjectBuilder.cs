@@ -2416,14 +2416,45 @@ namespace TouhouMigration.Editor
             InstantiateHumanVillageBackground("Mountain_3", "BackgroundMountain3", setDressing.transform, new Vector3(96f, -3f, -100f), Quaternion.Euler(0f, 180f, 0f), Vector3.one * 5f, stoneMaterial);
         }
 
+        // Canonical Human Village NPC cast — ids match the dialogue/gift/bond systems (_npc_*.json),
+        // with Chinese display names. (The E3.1 roster JSON uses display-name ids that don't map to
+        // these canonical ids, so markers use the canonical cast for system integration.)
+        private static readonly string[] HumanVillageNpcIds =
+        {
+            "marisa", "reimu", "keine", "sakuya", "kaguya", "koishi", "akyuu", "kosuzu",
+            "nitori", "alice", "patchouli", "remilia", "sanae", "cirno", "aya",
+        };
+
+        private static readonly string[] HumanVillageNpcNames =
+        {
+            "雾雨魔理沙", "博丽灵梦", "上白泽慧音", "十六夜咲夜", "蓬莱山辉夜", "古明地恋", "稗田阿求", "本居小铃",
+            "河城荷取", "爱丽丝·玛格特罗依德", "帕秋莉·诺蕾姬", "蕾米莉亚·斯卡蕾特", "东风谷早苗", "琪露诺", "射命丸文",
+        };
+
+        // Per-NPC preferred gift (parallel to HumanVillageNpcIds). marisa/reimu/keine use their
+        // canonical loved gifts; the rest are sensible defaults until GiftDatabase preferences wire in (E5).
+        private static readonly string[] HumanVillageNpcGifts =
+        {
+            "magic_crystal", "green_tea", "history_book", "sake", "moon_cake", "dango", "youkan", "manjuu",
+            "mushroom_stew", "cherry_blossom", "black_tea", "rice_ball", "sunflower", "herbal_tea", "lily",
+        };
+
         private static void CreateHumanVillageNpcMarkers(Transform parent)
         {
             GameObject npcRoot = new GameObject("NPCMarkers");
             npcRoot.transform.SetParent(parent);
 
-            CreateNpcMarker(npcRoot.transform, "marisa", "雾雨魔理沙", "magic_crystal", new Vector3(-8f, 2.4f, 15f), new Color(0.95f, 0.86f, 0.22f, 1f));
-            CreateNpcMarker(npcRoot.transform, "reimu", "博丽灵梦", "green_tea", new Vector3(9f, 2.4f, 12f), new Color(0.90f, 0.18f, 0.18f, 1f));
-            CreateNpcMarker(npcRoot.transform, "keine", "上白泽慧音", "history_book", new Vector3(2f, 2.4f, -7f), new Color(0.28f, 0.55f, 0.96f, 1f));
+            // Spawn the canonical Human Village cast as interactable markers in a ring around the
+            // market square. Real character models (VRM/glb) are an E5/E7 follow-up.
+            int n = HumanVillageNpcIds.Length;
+            for (int i = 0; i < n; i++)
+            {
+                float angle = (i / (float)n) * Mathf.PI * 2f;
+                float radius = 12f + (i % 3) * 7f;
+                Vector3 pos = new Vector3(Mathf.Cos(angle) * radius, 2.4f, Mathf.Sin(angle) * radius);
+                Color color = Color.HSVToRGB((i * 0.137f) % 1f, 0.62f, 0.92f);
+                CreateNpcMarker(npcRoot.transform, HumanVillageNpcIds[i], HumanVillageNpcNames[i], HumanVillageNpcGifts[i], pos, color);
+            }
         }
 
         private static void CreateNpcMarker(
