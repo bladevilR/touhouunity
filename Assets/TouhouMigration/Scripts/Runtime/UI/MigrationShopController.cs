@@ -21,6 +21,7 @@ namespace TouhouMigration.Runtime.UI
         private ItemDatabase itemDatabase;
         private MigrationPlayerProgressService progress;
         private Func<int> hourProvider;
+        private Action<string> playSfx;
 
         private bool isOpen;
         private string shopId = string.Empty;
@@ -47,7 +48,8 @@ namespace TouhouMigration.Runtime.UI
             InventoryService inventory,
             ItemDatabase items,
             MigrationPlayerProgressService playerProgress,
-            Func<int> hour)
+            Func<int> hour,
+            Action<string> sfx = null)
         {
             shopDatabase = database;
             shopService = service;
@@ -55,6 +57,7 @@ namespace TouhouMigration.Runtime.UI
             itemDatabase = items;
             progress = playerProgress;
             hourProvider = hour;
+            playSfx = sfx;
         }
 
         // Resolve a shop by id and open the modal scoped to it. Returns false if the shop is unknown or
@@ -92,6 +95,11 @@ namespace TouhouMigration.Runtime.UI
 
             ShopTransactionResult result = shop.Buy(itemId, quantity, CurrentHour());
             lastMessage = DescribeResult(result, true);
+            if (result.Success)
+            {
+                playSfx?.Invoke("coin");
+            }
+
             return result;
         }
 
@@ -104,6 +112,11 @@ namespace TouhouMigration.Runtime.UI
 
             ShopTransactionResult result = shop.Sell(itemId, quantity, CurrentHour());
             lastMessage = DescribeResult(result, false);
+            if (result.Success)
+            {
+                playSfx?.Invoke("coin");
+            }
+
             return result;
         }
 

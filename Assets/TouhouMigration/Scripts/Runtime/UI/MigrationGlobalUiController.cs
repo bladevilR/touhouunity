@@ -298,7 +298,8 @@ namespace TouhouMigration.Runtime.UI
                 inventoryService,
                 itemDatabase,
                 playerProgressService,
-                () => worldSimulation != null ? worldSimulation.GetTimeSnapshot().Hour : 12);
+                () => worldSimulation != null ? worldSimulation.GetTimeSnapshot().Hour : 12,
+                sfx => audioManager?.PlaySfx(sfx));
 
             if (settingsController != null)
             {
@@ -616,6 +617,7 @@ namespace TouhouMigration.Runtime.UI
             }
 
             giftSelectionController.OpenForNpc(npcId, displayName);
+            audioManager?.PlaySfx("ui_open");
             return true;
         }
 
@@ -628,6 +630,7 @@ namespace TouhouMigration.Runtime.UI
             }
 
             unifiedMenuController.Open("cooking");
+            audioManager?.PlaySfx("ui_open");
             return true;
         }
 
@@ -643,21 +646,36 @@ namespace TouhouMigration.Runtime.UI
                 return false;
             }
 
-            return shopController.OpenForShop(shopId);
+            bool opened = shopController.OpenForShop(shopId);
+            if (opened)
+            {
+                audioManager?.PlaySfx("ui_open");
+            }
+
+            return opened;
         }
 
         public MigrationShopController ShopWindow => shopController;
 
         public GiftDeliveryResult SelectGiftForCurrentNpc(string giftId)
         {
-            return giftSelectionController != null
-                ? giftSelectionController.SelectGift(giftId)
-                : new GiftDeliveryResult
+            if (giftSelectionController == null)
+            {
+                return new GiftDeliveryResult
                 {
                     Success = false,
                     GiftId = giftId,
                     FailureReason = "gift_selection_missing"
                 };
+            }
+
+            GiftDeliveryResult result = giftSelectionController.SelectGift(giftId);
+            if (result.Success)
+            {
+                audioManager?.PlaySfx("bond_up");
+            }
+
+            return result;
         }
 
         public bool GiveGiftToNpc(string npcId, string giftId)
@@ -668,7 +686,11 @@ namespace TouhouMigration.Runtime.UI
             }
 
             GiftDeliveryResult result = giftInteractionService.GiveGift(npcId, giftId);
-            if (!result.Success)
+            if (result.Success)
+            {
+                audioManager?.PlaySfx("bond_up");
+            }
+            else
             {
                 Debug.LogWarning($"Gift delivery failed for {npcId}/{giftId}: {result.FailureReason}");
             }
