@@ -536,7 +536,9 @@ namespace TouhouMigration.Runtime.UI
             {
                 ["bond_level"] = socialBondService != null ? socialBondService.GetBondLevel(npcId) : 0,
                 ["humanity"] = humanityService != null ? humanityService.Humanity : 100,
-                ["time_of_day"] = "afternoon",
+                ["time_of_day"] = worldSimulation != null
+                    ? MigrationTimeOfDay.FromHour(worldSimulation.GetTimeSnapshot().Hour)
+                    : "afternoon",
                 ["active_quests"] = activeQuestIds,
                 ["completed_quests"] = completedQuestIds,
                 ["started_quests"] = startedQuestIds,

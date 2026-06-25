@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:54 CST
+Last updated: 2026-06-25 09:58 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:54 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E5.5, story flags gate dialogue (session 2). Session-2 slices (11): E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects), E5.4 (narrative events), E8.2 (story flag save), E5.5 (story flags gate dialogue). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E5.6, live time-of-day in dialogue context (session 2). 12 session-2 slices shipped (all in the Milestone Log below): E5.2/E5.3/E5.4/E5.5/E5.6 (dialogue fx routing + story flags + conditions), E4.1/E4.2/E4.3 (shop economy/hours, farm growth), E2.4/E2.5 (world-time + menu game-state gating), E8.1/E8.2 (humanity + story-flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,34 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E5.6: Live Time-Of-Day In Dialogue Context
+
+- Date: 2026-06-25 09:58 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Feed the live world-clock hour into the dialogue `time_of_day` condition. `BuildDialogueContext` hardcoded `"afternoon"`, so time-gated dialogue never varied with the in-game clock.
+
+Completed:
+
+- New `MigrationTimeOfDay.FromHour(hour)` (`Runtime/Foundation/`): maps a clock hour to the Godot `TimeManager.get_time_period` band (midnight 0-5, dawn 5-7, morning 7-12, noon 12-14, afternoon 14-17, evening 17-20, night 20-24), normalizing out-of-range hours. Pure.
+- Owner `BuildDialogueContext` now sets `time_of_day = MigrationTimeOfDay.FromHour(worldSimulation.GetTimeSnapshot().Hour)` (falls back to `"afternoon"` if no world simulation is present).
+
+TDD (red -> green):
+
+- New `TimeOfDaySmokeTests` (every band + boundary hours + negative/overflow normalization).
+- RED: focused run failed to compile on the missing `MigrationTimeOfDay` (CS0103).
+- GREEN: full regression 50/50 suites passed, 0 compile errors (49 prior + new time-of-day suite). `GlobalUiSmokeTests` gates the owner change.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Foundation/MigrationTimeOfDay.cs` (new)
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/TimeOfDaySmokeTests.cs` (new)
+
+Known follow-ups:
+
+- Surface weather + `is_full_moon` into the dialogue context (those conditions already exist). HUD/lighting can also consume `MigrationTimeOfDay`.
 
 ### E5.5: Story Flags Gate Dialogue (seen_events context)
 
