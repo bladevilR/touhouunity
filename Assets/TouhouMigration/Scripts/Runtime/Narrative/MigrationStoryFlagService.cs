@@ -24,6 +24,29 @@ namespace TouhouMigration.Runtime.Narrative
             return normalized.Length > 0 && firedEvents.Contains(normalized);
         }
 
+        public List<string> CreateSnapshot()
+        {
+            return new List<string>(firedEvents);
+        }
+
+        public void LoadSnapshot(IEnumerable<string> events)
+        {
+            firedEvents.Clear();
+            if (events == null)
+            {
+                return;
+            }
+
+            foreach (string eventId in events)
+            {
+                string normalized = Normalize(eventId);
+                if (normalized.Length > 0)
+                {
+                    firedEvents.Add(normalized);
+                }
+            }
+        }
+
         private static string Normalize(string value)
         {
             return string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim().ToLowerInvariant();

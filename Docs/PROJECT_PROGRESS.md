@@ -1,6 +1,6 @@
 # Touhou Unity Migration Progress
 
-Last updated: 2026-06-25 09:43 CST
+Last updated: 2026-06-25 09:48 CST
 
 ## Working Discipline
 
@@ -25,7 +25,7 @@ Last updated: 2026-06-25 09:43 CST
 - Objective: build the formal Touhou game experience in an independent Unity project while preserving Godot source-traceability, using Godot as gameplay/content reference rather than a shape to copy, improving architecture where Unity has a cleaner native path, and updating this progress document at every milestone.
 - Unity migration project: `/Users/Shared/TouhouUnityMigration`
 - Godot source project: `/Users/Shared/Touhougodot`
-- Latest completed milestone: E5.4, narrative event (story flag) routing (session 2). Session-2 slices (9): E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects), E5.4 (narrative events). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
+- Latest completed milestone: E8.2, story flag save persistence (session 2). Session-2 slices (10): E5.2 (dialogue humanity routing), E2.4 (world-time gating), E4.1 (shop economy service), E8.1 (humanity save persistence), E2.5 (menu mode gate), E4.2 (farm plot crop growth), E4.3 (shop open-hours), E5.3 (cross-NPC bond effects), E5.4 (narrative events), E8.2 (story flag save). Prior milestone M58 plus the session-1 epic slices (Phase 0 / E1 / E2 / E5.1 / E4-E8) are tracked in `Docs/CURRENT_HANDOFF.md`.
 - Current overall status: foundation and several vertical slices are migrated, but the full formal game is not complete yet.
 
 Done at handoff:
@@ -415,6 +415,36 @@ Next recommended milestone:
 - Stopping condition for M58: the boss slice gains production phase-outcome consumers, player-side i-frame ownership, or polished boss/snowball presentation without breaking `BuildInitialProject` regeneration.
 
 ## Milestone Log
+
+### E8.2: Story Flag Save Persistence
+
+- Date: 2026-06-25 09:48 CST (session 2)
+- Status: Complete (slice)
+- Owner: Claude
+- Goal: Persist fired narrative events (E5.4). Without saving, a reloaded game forgets story beats (`mokou_fate`, `elixir_bad_end`) — the same correctness gap humanity had before E8.1.
+
+Completed:
+
+- `MigrationStoryFlagService.CreateSnapshot()` / `LoadSnapshot(IEnumerable<string>)` round-trip the fired-event set (LoadSnapshot replaces prior flags).
+- `MigrationSaveData.story_flags` (`List<string>`) + `StoryFlags` property.
+- Owner `SaveGame` captures `data.StoryFlags = storyFlagService.CreateSnapshot()` (alongside HP); `LoadGame` restores via `storyFlagService.LoadSnapshot(data.StoryFlags)`. Kept owner-direct (like the HP scalar) to avoid growing the save-orchestrator constructor arity.
+
+TDD (red -> green):
+
+- Extended `StoryFlagServiceSmokeTests` with a snapshot round-trip (snapshot count; restore into a fresh service, replacing a prior stale flag).
+- RED: focused run failed to compile on the missing `CreateSnapshot` / `LoadSnapshot` (CS1061).
+- GREEN: full regression 49/49 suites passed, 0 compile errors (suite count unchanged — extended in place). `GlobalUiSmokeTests` gates the owner save/load.
+
+Changed files:
+
+- `Assets/TouhouMigration/Scripts/Runtime/Narrative/MigrationStoryFlagService.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/Save/MigrationSaveData.cs`
+- `Assets/TouhouMigration/Scripts/Runtime/UI/MigrationGlobalUiController.cs`
+- `Assets/TouhouMigration/Scripts/Editor/Tests/StoryFlagServiceSmokeTests.cs`
+
+Known follow-ups:
+
+- `save_schema` stays 3 (`story_flags` defaults empty, backward-compatible). If the orchestrator construction is later refactored (DI/builder), fold humanity + story flags back into it to remove the owner-direct split.
 
 ### E5.4: Narrative Event (Story Flag) Routing
 

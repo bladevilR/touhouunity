@@ -79,6 +79,11 @@ namespace TouhouMigration.Runtime.UI
                 data.current_hp = Mathf.RoundToInt(playerHealthRuntime.CurrentHp);
             }
 
+            if (storyFlagService != null)
+            {
+                data.StoryFlags = storyFlagService.CreateSnapshot();
+            }
+
             return saveService.SaveSlot(slot, data);
         }
 
@@ -97,6 +102,7 @@ namespace TouhouMigration.Runtime.UI
 
             saveOrchestrator.Apply(data);
             playerHealthRuntime?.SetHealth(data.current_hp, data.max_hp);
+            storyFlagService?.LoadSnapshot(data.StoryFlags);
             return true;
         }
 

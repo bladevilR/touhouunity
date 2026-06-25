@@ -15,6 +15,7 @@ namespace TouhouMigration.Editor.Tests
             TestMarkAndQueryEvents();
             TestEventEffectRoutesToStoryFlags();
             TestEventEffectNoOpWithoutBoundService();
+            TestSnapshotRoundTrip();
             Debug.Log("Story flag service smoke tests passed.");
         }
 
@@ -48,6 +49,24 @@ namespace TouhouMigration.Editor.Tests
             DialogueEffectRouter router = new DialogueEffectRouter(null, null);
             bool handled = router.Apply("mokou", new Dictionary<string, object> { ["event"] = "elixir_rejection" });
             AssertEqual(false, handled, "An event effect is a no-op when no story flag service is bound.");
+        }
+
+        private static void TestSnapshotRoundTrip()
+        {
+            MigrationStoryFlagService source = new MigrationStoryFlagService();
+            source.MarkEvent("mokou_fate");
+            source.MarkEvent("keine_helps");
+
+            List<string> snapshot = source.CreateSnapshot();
+            AssertEqual(2, snapshot.Count, "Snapshot should contain both fired events.");
+
+            MigrationStoryFlagService restored = new MigrationStoryFlagService();
+            restored.MarkEvent("stale_flag");
+            restored.LoadSnapshot(snapshot);
+            AssertEqual(true, restored.HasEvent("mokou_fate"), "LoadSnapshot should restore a fired event.");
+            AssertEqual(true, restored.HasEvent("keine_helps"), "LoadSnapshot should restore all fired events.");
+            AssertEqual(false, restored.HasEvent("stale_flag"), "LoadSnapshot should replace any prior flags.");
+            AssertEqual(2, restored.EventCount, "Restored service should hold exactly the snapshot's events.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

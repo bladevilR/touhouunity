@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TouhouMigration.Runtime.Cooking;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Social;
@@ -26,6 +27,7 @@ namespace TouhouMigration.Runtime.Save
         public float play_time;
         public int total_kills;
         public int humanity = 100;
+        public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
         public string GameVersion => version;
@@ -124,6 +126,12 @@ namespace TouhouMigration.Runtime.Save
         {
             get => humanity;
             set => humanity = Math.Clamp(value, 0, 100);
+        }
+
+        public List<string> StoryFlags
+        {
+            get => story_flags;
+            set => story_flags = value ?? new List<string>();
         }
 
         public static MigrationSaveData CreateDefault()
