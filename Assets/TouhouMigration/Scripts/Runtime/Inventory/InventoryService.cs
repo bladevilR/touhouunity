@@ -19,6 +19,33 @@ namespace TouhouMigration.Runtime.Inventory
 
         public int UsedSlots => slots.Count(slot => slot != null && !slot.IsEmpty);
 
+        // Slot access / drag-to-reorder swap / clear (Godot InventoryRuntime get_slot / swap_slots / clear).
+        public int SlotCount => slots.Length;
+
+        public InventorySlotData GetSlot(int index)
+        {
+            return index >= 0 && index < slots.Length ? slots[index] : null;
+        }
+
+        public bool SwapSlots(int indexA, int indexB)
+        {
+            if (indexA < 0 || indexA >= slots.Length || indexB < 0 || indexB >= slots.Length)
+            {
+                return false;
+            }
+
+            (slots[indexA], slots[indexB]) = (slots[indexB], slots[indexA]);
+            return true;
+        }
+
+        public void Clear()
+        {
+            for (int index = 0; index < slots.Length; index++)
+            {
+                slots[index] = null;
+            }
+        }
+
         public bool AddItem(string itemId, int amount)
         {
             return AddItem(itemId, amount, 0);
