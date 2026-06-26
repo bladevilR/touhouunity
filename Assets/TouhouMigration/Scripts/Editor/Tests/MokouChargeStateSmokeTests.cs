@@ -21,6 +21,8 @@ namespace TouhouMigration.Editor.Tests
             TestReleaseGatesAndScaling();
             TestReleaseBlockedReasons();
             TestProcessModifierAndTriggers();
+            TestDodgeIgniteAndHitTrigger();
+            TestTakeDamageAshAndRevive();
             Debug.Log("Mokou charge state smoke tests passed.");
         }
 
@@ -138,6 +140,63 @@ namespace TouhouMigration.Editor.Tests
             chain.InstallTrigger("after_perfect_dodge");
             chain.InstallTrigger("on_overheat");
             AssertEqual(2, chain.TriggerCount, "Installed triggers are tracked.");
+        }
+
+        private static void TestDodgeIgniteAndHitTrigger()
+        {
+            // Perfect dodge while charging retains charge * dodge-retain and grants energy + ember.
+            MigrationMokouChargeState chain = new MigrationMokouChargeState();
+            chain.ApplyProcessModifier(chargeDodgeRetain: 0.5);
+            chain.SetEnergy(90);
+            chain.BeginCharge();
+            chain.AdvanceCharge(1.6); // charge 100
+            double retained = chain.RegisterDodge(perfect: true);
+            AssertTrue(Math.Abs(50.0 - retained) < Tol, "A 0.5-retain dodge keeps half the charge.");
+            AssertTrue(Math.Abs(50.0 - chain.Charge) < Tol, "Charge is reduced to the retained amount.");
+            AssertEqual(100.0, chain.Energy, "A perfect dodge grants +10 energy (capped at 100).");
+            AssertEqual(1, chain.Ember, "A perfect dodge grants an ember.");
+
+            // Ignite consumes up to 10 flame for 2.5 damage each.
+            MigrationMokouChargeState ig = new MigrationMokouChargeState();
+            ig.BindTerminal(0, 0, 4, 1.0);
+            ig.BeginCharge();
+            ig.AdvanceCharge(1.6);
+            ig.ReleaseCharge(); // applies 4 flame to enemy
+            double dmg = ig.Ignite();
+            AssertTrue(Math.Abs(10.0 - dmg) < Tol, "Igniting 4 flame deals 4 * 2.5 = 10.");
+            AssertEqual(0, ig.GetStatus("flame"), "Ignite consumes the flame.");
+            AssertEqual(0.0, ig.Ignite(), "Igniting with no flame deals nothing.");
+
+            // Hit trigger adds energy_gain * coefficient (capped).
+            MigrationMokouChargeState ht = new MigrationMokouChargeState();
+            ht.SetEnergy(90);
+            double gained = ht.ResolveHitTrigger(coefficient: 2.0, energyGain: 8.0);
+            AssertTrue(Math.Abs(16.0 - gained) < Tol, "Hit trigger reports gain = energy_gain * coefficient.");
+            AssertEqual(100.0, ht.Energy, "Hit-trigger energy caps at the max.");
+        }
+
+        private static void TestTakeDamageAshAndRevive()
+        {
+            // Taking 50 damage drops HP and converts lost HP into ash (floor(50/20) = 2).
+            MigrationMokouChargeState chain = new MigrationMokouChargeState();
+            bool revived = chain.TakeDamage(50.0);
+            AssertEqual(false, revived, "A survivable hit does not revive.");
+            AssertEqual(50.0, chain.Hp, "50 damage from full HP leaves 50.");
+            AssertEqual(2, chain.Ash, "Lost HP accrues ash at 1 per 20.");
+
+            // Lethal with a full immortal gauge revives to the revive HP.
+            MigrationMokouChargeState immortal = new MigrationMokouChargeState();
+            immortal.AddImmortalGauge(100.0);
+            bool r = immortal.TakeDamage(999.0);
+            AssertEqual(true, r, "A lethal hit with a full immortal gauge revives.");
+            AssertEqual(35.0, immortal.Hp, "Revive restores the default revive HP.");
+            AssertEqual(1, immortal.RevivesUsed, "The revive is counted.");
+            AssertEqual(0.0, immortal.ImmortalGauge, "Reviving spends the immortal gauge.");
+
+            // Lethal without the gauge dies (HP clamped at 0, no revive).
+            MigrationMokouChargeState mortal = new MigrationMokouChargeState();
+            AssertEqual(false, mortal.TakeDamage(999.0), "A lethal hit without the gauge does not revive.");
+            AssertEqual(0.0, mortal.Hp, "Fatal damage clamps HP at 0.");
         }
 
         private static void AssertTrue(bool condition, string message)

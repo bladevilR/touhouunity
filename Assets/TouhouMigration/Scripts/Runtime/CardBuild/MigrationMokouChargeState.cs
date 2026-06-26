@@ -55,6 +55,9 @@ namespace TouhouMigration.Runtime.CardBuild
         private const double PerfectReleaseBonus = 0.20;
         private const double OverheatSelfDamagePerSecond = 4.0;
         private const double OverheatDamagePer10Charge = 0.06;
+        private const int MaxEmber = 10;
+        private const int MaxAsh = 6;
+        private const double DefaultReviveHp = 35.0;
 
         private readonly System.Collections.Generic.Dictionary<string, int> statuses =
             new System.Collections.Generic.Dictionary<string, int>();
@@ -79,6 +82,11 @@ namespace TouhouMigration.Runtime.CardBuild
         public double Hp { get; private set; } = MaxHp;
         public double Energy { get; private set; } = MaxEnergy;
         public double ImmortalGauge { get; private set; }
+        public int Ember { get; private set; }
+        public int Ash { get; private set; }
+        public int RevivesUsed { get; private set; }
+        public int MaxRevives { get; private set; } = 1;
+        private double ashDamageRemainder;
 
         public void BindTerminal(double baseDamage, double energyCost, int flame, double triggerCoefficient)
         {
@@ -213,6 +221,94 @@ namespace TouhouMigration.Runtime.CardBuild
             {
                 triggers.Add(triggerId);
             }
+        }
+
+        // Register a dodge (Godot register_dodge): while charging, retain charge * charge_dodge_retain (the
+        // rest is lost); a perfect dodge also grants +10 energy and +1 ember. Returns the retained charge.
+        public double RegisterDodge(bool perfect)
+        {
+            double retainedCharge = Charge;
+            if (Phase == MokouPhase.Charging || Phase == MokouPhase.Charged || Phase == MokouPhase.Overheat)
+            {
+                retainedCharge = Charge * Clamp(ChargeDodgeRetain, 0.0, 1.0);
+                Charge = retainedCharge;
+                Phase = Charge > 0.0 ? MokouPhase.Charging : MokouPhase.Idle;
+            }
+
+            if (perfect)
+            {
+                Energy = Math.Min(MaxEnergy, Energy + 10.0);
+                Ember = Math.Min(MaxEmber, Ember + 1);
+            }
+
+            return retainedCharge;
+        }
+
+        // Ignite the enemy's flame stacks (Godot ignite): consume up to 10 flame for 2.5 damage each.
+        // Returns the damage dealt.
+        public double Ignite()
+        {
+            int consumed = Math.Min(10, GetStatus("flame"));
+            if (consumed <= 0)
+            {
+                return 0.0;
+            }
+
+            ApplyStatus("enemy", "flame", -consumed);
+            return consumed * 2.5;
+        }
+
+        // Take damage (Godot take_damage): lost HP accrues ash (1 per 20 cumulative), and a lethal hit with
+        // a full immortal gauge revives to the revive HP (spending the gauge). Returns whether it revived.
+        public bool TakeDamage(double amount)
+        {
+            double damage = Math.Max(0.0, amount);
+            if (damage <= 0.0)
+            {
+                return false;
+            }
+
+            double hpBefore = Hp;
+            Hp -= damage;
+            double hpLost = Math.Min(hpBefore, damage);
+            if (hpLost > 0.0)
+            {
+                ashDamageRemainder += hpLost;
+                int ashGain = (int)Math.Floor(ashDamageRemainder / 20.0);
+                if (ashGain > 0)
+                {
+                    Ash = Math.Min(MaxAsh, Ash + ashGain);
+                    ashDamageRemainder -= ashGain * 20.0;
+                }
+            }
+
+            bool revived = false;
+            if (Hp <= 0.0 && ImmortalGauge >= MaxImmortalGauge && RevivesUsed < MaxRevives)
+            {
+                revived = true;
+                RevivesUsed++;
+                ImmortalGauge = 0.0;
+                Hp = DefaultReviveHp;
+            }
+            else
+            {
+                Hp = Math.Max(0.0, Hp);
+            }
+
+            return revived;
+        }
+
+        // Resolve an on-hit trigger (Godot resolve_hit_trigger): add energy_gain * coefficient to energy
+        // (capped). Returns the energy gained.
+        public double ResolveHitTrigger(double coefficient, double energyGain)
+        {
+            double gain = energyGain * coefficient;
+            if (gain > 0.0)
+            {
+                Energy = Math.Min(MaxEnergy, Energy + gain);
+            }
+
+            return gain;
         }
 
         // Charge-tier damage multiplier (Godot _charge_damage_multiplier).
