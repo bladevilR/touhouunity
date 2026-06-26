@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestBlockedWhenNotInHand();
             TestBlockedWhenOnCooldown();
             TestBlockedWhenResourceUnaffordable();
+            TestCardCooldownTicksAndReduces();
             Debug.Log("Card play orchestration smoke tests passed.");
         }
 
@@ -41,13 +42,13 @@ namespace TouhouMigration.Editor.Tests
         {
             MigrationCardBuildRunController run = NewRunWithHand();
 
-            CardPlayResult result = run.PlayCard("fire_bird", EmberBlock(), cost: null, cooldownTurns: 2);
+            CardPlayResult result = run.PlayCard("fire_bird", EmberBlock(), cost: null, cooldownSeconds: 2.0);
 
             AssertEqual(true, result.Success, "A playable card in hand succeeds.");
             AssertEqual(2, run.State.GetResource("ember"), "The card's effect blocks ran.");
             AssertEqual(2, run.Deck.HandCount, "The played card left the hand.");
             AssertEqual(1, run.Deck.DiscardPileCount, "The played card went to the discard pile.");
-            AssertEqual(true, run.Deck.IsOnCooldown("fire_bird"), "The played card is on cooldown.");
+            AssertEqual(true, run.IsCardOnCooldown("fire_bird"), "The played card is on its replay cooldown.");
         }
 
         private static void TestBlockedWhenNotInHand()
@@ -62,9 +63,8 @@ namespace TouhouMigration.Editor.Tests
         private static void TestBlockedWhenOnCooldown()
         {
             MigrationCardBuildRunController run = NewRunWithHand();
-            run.PlayCard("fire_bird", EmberBlock(), cost: null, cooldownTurns: 2); // now on cooldown, discarded
-            // Re-draw it: put a copy back in hand by drawing the reshuffle... simpler: it is in discard +
-            // on cooldown; we assert that the cooldown gate fires even if it were in hand again.
+            run.PlayCard("fire_bird", EmberBlock(), cost: null, cooldownSeconds: 2.0); // now on cooldown, discarded
+            // Re-draw it: it is in discard + on cooldown; assert the cooldown gate fires once back in hand.
             run.Deck.Draw(10, _ => 0); // refill hand from remaining/discard via reshuffle if needed
 
             // fire_bird is on cooldown; even if drawn back, playing it is blocked by cooldown.
@@ -82,6 +82,20 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(false, result.Success, "A card whose cost exceeds the pool is blocked.");
             AssertEqual("resource:ember", result.Reason, "The block reason names the missing resource.");
             AssertEqual(3, run.Deck.HandCount, "A cost-blocked card stays in hand.");
+        }
+
+        private static void TestCardCooldownTicksAndReduces()
+        {
+            MigrationCardBuildRunController run = NewRunWithHand();
+            run.PlayCard("fire_bird", EmberBlock(), cost: null, cooldownSeconds: 2.0);
+            AssertEqual(true, run.IsCardOnCooldown("fire_bird"), "Just-played card is on cooldown.");
+
+            run.TickCardCooldowns(1.5); // 2.0 -> 0.5, still > 0.05
+            AssertEqual(true, run.IsCardOnCooldown("fire_bird"), "Half-ticked cooldown is still active.");
+
+            run.ReduceCardCooldowns(1.0); // 0.5 -> expired
+            AssertEqual(false, run.IsCardOnCooldown("fire_bird"), "Reducing past zero clears the cooldown.");
+            AssertEqual(0.0, run.GetCardCooldown("fire_bird"), "An expired cooldown reads 0.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

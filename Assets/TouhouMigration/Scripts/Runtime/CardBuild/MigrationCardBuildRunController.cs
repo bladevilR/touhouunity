@@ -77,6 +77,72 @@ namespace TouhouMigration.Runtime.CardBuild
 
         private readonly MigrationCardEffectExecutor effectExecutor = new MigrationCardEffectExecutor();
 
+        // Cirno's seconds-based per-card replay cooldown (Godot _card_cooldowns), distinct from the deck's
+        // turn-based cooldown pile (which stays for the retain/exhaust/cooldown deck cycle). play_card sets
+        // it; tick / reduce count it down; the play gate reads it.
+        private readonly Dictionary<string, double> cardCooldowns = new Dictionary<string, double>();
+
+        public void SetCardCooldown(string cardId, double seconds)
+        {
+            if (string.IsNullOrEmpty(cardId))
+            {
+                return;
+            }
+
+            if (seconds <= 0.0)
+            {
+                cardCooldowns.Remove(cardId);
+            }
+            else
+            {
+                cardCooldowns[cardId] = seconds;
+            }
+        }
+
+        public double GetCardCooldown(string cardId)
+        {
+            return cardId != null && cardCooldowns.TryGetValue(cardId, out double seconds) ? seconds : 0.0;
+        }
+
+        // Godot get_card_cooldown > 0.05 threshold.
+        public bool IsCardOnCooldown(string cardId) => GetCardCooldown(cardId) > 0.05;
+
+        // Per-frame countdown (Godot tick): reduce every card cooldown by dt, dropping expired entries.
+        public void TickCardCooldowns(double deltaSeconds) => ReduceCardCooldowns(deltaSeconds);
+
+        // Reduce every card cooldown by `seconds` (Godot _reduce_card_cooldowns); a non-positive value is
+        // ignored. Expired cooldowns are removed.
+        public void ReduceCardCooldowns(double seconds)
+        {
+            if (seconds <= 0.0)
+            {
+                return;
+            }
+
+            List<string> expired = null;
+            List<string> keys = new List<string>(cardCooldowns.Keys);
+            foreach (string cardId in keys)
+            {
+                double next = cardCooldowns[cardId] - seconds;
+                if (next <= 0.0)
+                {
+                    (expired ??= new List<string>()).Add(cardId);
+                }
+                else
+                {
+                    cardCooldowns[cardId] = next;
+                }
+            }
+
+            if (expired != null)
+            {
+                foreach (string cardId in expired)
+                {
+                    cardCooldowns.Remove(cardId);
+                }
+            }
+        }
+
         // Per-card runtime requirement gate (Godot _runtime_requirement_disabled_reason): the bespoke
         // resource/status/vulnerability/rewritten-rule thresholds certain payoff/terminal cards need.
         // Returns the (Chinese) reason a card is currently unplayable, or "" when its requirement is met.
@@ -118,7 +184,7 @@ namespace TouhouMigration.Runtime.CardBuild
         // spend_resource blocks). The bespoke per-card resolution + runtime-requirement gates are a later
         // slice; pass the card's parsed effect blocks + (optional) cost + cooldown.
         public CardPlayResult PlayCard(string cardId, IReadOnlyList<MigrationCardEffectBlock> effectBlocks,
-            IReadOnlyDictionary<string, int> cost = null, int cooldownTurns = 0)
+            IReadOnlyDictionary<string, int> cost = null, double cooldownSeconds = 0.0)
         {
             if (IsBossDefeated)
             {
@@ -130,7 +196,7 @@ namespace TouhouMigration.Runtime.CardBuild
                 return CardPlayResult.Blocked(cardId, "not_in_hand");
             }
 
-            if (Deck.IsOnCooldown(cardId))
+            if (IsCardOnCooldown(cardId))
             {
                 return CardPlayResult.Blocked(cardId, "cooldown");
             }
@@ -149,9 +215,9 @@ namespace TouhouMigration.Runtime.CardBuild
 
             effectExecutor.Execute(effectBlocks, this);
             Deck.DiscardFromHand(cardId);
-            if (cooldownTurns > 0)
+            if (cooldownSeconds > 0.0)
             {
-                Deck.PutOnCooldown(cardId, cooldownTurns);
+                SetCardCooldown(cardId, cooldownSeconds);
             }
 
             return CardPlayResult.Ok(cardId);
