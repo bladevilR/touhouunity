@@ -1,5 +1,6 @@
 using System.IO;
 using TouhouMigration.Runtime.CardBuild;
+using TouhouMigration.Runtime.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -43,6 +44,35 @@ namespace TouhouMigration.Editor
             EditorSceneManager.SaveScene(scene, ScenePath);
             AssetDatabase.Refresh();
             Debug.Log("[MigrationCirnoArenaBuilder] authored " + ScenePath);
+        }
+
+        private const string ShopScenePath = SceneDir + "/MigrationShopPlayable.unity";
+
+        // Authors a standalone playable shop scene (camera + MigrationShopDriver), routing around the
+        // concurrent MigrationGlobalUiController the same way the Cirno scene does.
+        [MenuItem("Touhou Migration/Build/Build Shop Playable Scene")]
+        public static void BuildShopScene()
+        {
+            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            GameObject cameraGo = new GameObject("Main Camera");
+            Camera camera = cameraGo.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.16f, 0.13f, 0.20f);
+            camera.orthographic = true;
+            cameraGo.tag = "MainCamera";
+
+            GameObject driverGo = new GameObject("ShopDriver");
+            driverGo.AddComponent<MigrationShopDriver>();
+
+            if (!Directory.Exists(SceneDir))
+            {
+                Directory.CreateDirectory(SceneDir);
+            }
+
+            EditorSceneManager.SaveScene(scene, ShopScenePath);
+            AssetDatabase.Refresh();
+            Debug.Log("[MigrationCirnoArenaBuilder] authored " + ShopScenePath);
         }
     }
 }
