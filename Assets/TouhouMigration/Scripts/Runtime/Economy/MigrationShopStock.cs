@@ -48,6 +48,33 @@ namespace TouhouMigration.Runtime.Economy
             stock[shopId] = shopStock;
         }
 
+        // Merge extra items (e.g. the active season's or festival's stock) into a shop's ledger,
+        // making them buyable alongside its catalog. Adds to existing stock for an already-present item;
+        // creates the shop entry if it has none yet. The owner calls this after ResetShop when in-season.
+        public void MergeStock(string shopId, IReadOnlyList<MigrationShopItem> items)
+        {
+            if (string.IsNullOrEmpty(shopId) || items == null)
+            {
+                return;
+            }
+
+            if (!stock.TryGetValue(shopId, out Dictionary<string, int> shopStock))
+            {
+                shopStock = new Dictionary<string, int>();
+                stock[shopId] = shopStock;
+            }
+
+            foreach (MigrationShopItem item in items)
+            {
+                if (item == null || string.IsNullOrEmpty(item.ItemId))
+                {
+                    continue;
+                }
+
+                shopStock[item.ItemId] = (shopStock.TryGetValue(item.ItemId, out int existing) ? existing : 0) + item.Stock;
+            }
+        }
+
         public int GetStock(string shopId, string itemId)
         {
             return shopId != null && itemId != null

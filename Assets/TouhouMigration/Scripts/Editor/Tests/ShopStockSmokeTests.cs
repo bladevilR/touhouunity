@@ -25,6 +25,7 @@ namespace TouhouMigration.Editor.Tests
             TestSellLeavesStockAloneForUnstockedItem();
             TestRefreshShopRestoresStock();
             TestSnapshotRoundTripsDecrementedStock();
+            TestMergeStockAddsSeasonalItems();
             Debug.Log("Shop stock smoke tests passed.");
         }
 
@@ -173,6 +174,32 @@ namespace TouhouMigration.Editor.Tests
             // The snapshot is a deep copy — mutating the source ledger does not change it.
             stock.ResetShop("test_shop", def.Items);
             AssertEqual(2, snapshot["test_shop"][itemId], "The snapshot is an independent deep copy.");
+        }
+
+        private static void TestMergeStockAddsSeasonalItems()
+        {
+            MigrationShopStock stock = new MigrationShopStock();
+            List<MigrationShopItem> baseItems = new List<MigrationShopItem>
+            {
+                new MigrationShopItem("seed_tomato", 50, 99)
+            };
+            stock.ResetShop("town_general", baseItems);
+
+            List<MigrationShopItem> seasonal = new List<MigrationShopItem>
+            {
+                new MigrationShopItem("seed_cherry", 200, 10)
+            };
+            stock.MergeStock("town_general", seasonal);
+
+            AssertEqual(10, stock.GetStock("town_general", "seed_cherry"),
+                "Merged seasonal stock becomes buyable.");
+            AssertEqual(99, stock.GetStock("town_general", "seed_tomato"),
+                "Merging seasonal items leaves the base stock intact.");
+
+            // Merging into a shop with no ledger entry yet creates it.
+            stock.MergeStock("pop_up_stall", seasonal);
+            AssertEqual(10, stock.GetStock("pop_up_stall", "seed_cherry"),
+                "Merging into an unseeded shop creates its stock entry.");
         }
 
         private static MigrationShopDefinition SingleItemShop(string shopId, string itemId, int price, int stock)
