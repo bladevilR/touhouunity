@@ -11,6 +11,7 @@ namespace TouhouMigration.Runtime.CardBuild
         public string Status;
         public string Target;
         public string ClauseId;
+        public string Id;
         public int? Amount;
 
         public static MigrationCardEffectBlock Create(string type)
@@ -88,6 +89,21 @@ namespace TouhouMigration.Runtime.CardBuild
                     return true;
                 case "seal_clause":
                     run.Clauses.Seal(block.ClauseId ?? string.Empty);
+                    return true;
+                case "summon":
+                    run.AddSummon(block);
+                    return true;
+                case "install":
+                    run.AddInstalledCard(block);
+                    return true;
+                case "create_field":
+                    run.AddFieldObject(block);
+                    return true;
+                case "trigger_partner":
+                    run.AddPartnerEvent(block);
+                    return true;
+                case "modify_bullet":
+                    run.AddBulletModifier(block);
                     return true;
                 default:
                     return false;

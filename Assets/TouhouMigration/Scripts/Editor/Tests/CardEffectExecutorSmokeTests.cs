@@ -17,6 +17,7 @@ namespace TouhouMigration.Editor.Tests
             TestResourceAndStatusBlocks();
             TestDeckBlocksWithAmountDefaults();
             TestClauseRevealAndSeal();
+            TestCollectionEffectsAppend();
             TestUnhandledEffectsAreReported();
             Debug.Log("Card effect executor smoke tests passed.");
         }
@@ -87,14 +88,37 @@ namespace TouhouMigration.Editor.Tests
             IReadOnlyList<string> ignored = executor.Execute(new[]
             {
                 new MigrationCardEffectBlock { Type = "create_resource", Resource = "ash", Amount = 1 },
-                new MigrationCardEffectBlock { Type = "summon" },
-                new MigrationCardEffectBlock { Type = "create_field" },
+                new MigrationCardEffectBlock { Type = "mokou_bind_terminal" },
+                new MigrationCardEffectBlock { Type = "damage" },
                 new MigrationCardEffectBlock { Type = "totally_unknown" },
             }, run);
 
-            AssertEqual(3, ignored.Count, "The three un-ported effect types are reported as ignored.");
+            AssertEqual(3, ignored.Count, "The remaining un-ported effect types are reported as ignored.");
             AssertEqual(1, run.State.GetResource("ash"), "The handled block still applied alongside ignored ones.");
-            AssertEqual(true, Contains(ignored, "summon"), "summon is reported ignored (its collection is a later slice).");
+            AssertEqual(true, Contains(ignored, "totally_unknown"), "An unknown effect type is reported ignored.");
+        }
+
+        private static void TestCollectionEffectsAppend()
+        {
+            MigrationCardBuildRunController run = NewRun();
+            MigrationCardEffectExecutor executor = new MigrationCardEffectExecutor();
+
+            IReadOnlyList<string> ignored = executor.Execute(new[]
+            {
+                new MigrationCardEffectBlock { Type = "summon", Id = "ice_fairy" },
+                new MigrationCardEffectBlock { Type = "install", Id = "frost_rule" },
+                new MigrationCardEffectBlock { Type = "create_field", Id = "frozen_lake" },
+                new MigrationCardEffectBlock { Type = "trigger_partner" },
+                new MigrationCardEffectBlock { Type = "modify_bullet" },
+            }, run);
+
+            AssertEqual(0, ignored.Count, "Collection effects are handled, not ignored.");
+            AssertEqual(1, run.Summons.Count, "summon appends to the summons collection.");
+            AssertEqual("ice_fairy", run.Summons[0].Id, "The summon block is stored with its id.");
+            AssertEqual(1, run.InstalledCards.Count, "install appends to the installed-cards collection.");
+            AssertEqual(1, run.FieldObjects.Count, "create_field appends to the field-objects collection.");
+            AssertEqual(1, run.PartnerEvents.Count, "trigger_partner appends to the partner-events collection.");
+            AssertEqual(1, run.BulletModifiers.Count, "modify_bullet appends to the bullet-modifiers collection.");
         }
 
         private static bool Contains(IReadOnlyList<string> list, string value)

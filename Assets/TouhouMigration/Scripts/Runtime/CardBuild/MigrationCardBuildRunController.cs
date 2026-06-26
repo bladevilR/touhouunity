@@ -56,5 +56,34 @@ namespace TouhouMigration.Runtime.CardBuild
         public int BossHp => Boss.CurrentHp;
 
         public bool IsBossDefeated => Boss.IsDefeated;
+
+        // Run-level effect collections (Godot CardBuildRuntimeState summons / installed_cards /
+        // field_objects / partner_events / bullet_modifiers): simple append-lists the effect executor
+        // grows. Reads expose counts/contents; the systems that consume them are later slices.
+        private readonly List<MigrationCardEffectBlock> summons = new List<MigrationCardEffectBlock>();
+        private readonly List<MigrationCardEffectBlock> installedCards = new List<MigrationCardEffectBlock>();
+        private readonly List<MigrationCardEffectBlock> fieldObjects = new List<MigrationCardEffectBlock>();
+        private readonly List<MigrationCardEffectBlock> partnerEvents = new List<MigrationCardEffectBlock>();
+        private readonly List<MigrationCardEffectBlock> bulletModifiers = new List<MigrationCardEffectBlock>();
+
+        public IReadOnlyList<MigrationCardEffectBlock> Summons => summons;
+        public IReadOnlyList<MigrationCardEffectBlock> InstalledCards => installedCards;
+        public IReadOnlyList<MigrationCardEffectBlock> FieldObjects => fieldObjects;
+        public IReadOnlyList<MigrationCardEffectBlock> PartnerEvents => partnerEvents;
+        public IReadOnlyList<MigrationCardEffectBlock> BulletModifiers => bulletModifiers;
+
+        public void AddSummon(MigrationCardEffectBlock block) => Append(summons, block);
+        public void AddInstalledCard(MigrationCardEffectBlock block) => Append(installedCards, block);
+        public void AddFieldObject(MigrationCardEffectBlock block) => Append(fieldObjects, block);
+        public void AddPartnerEvent(MigrationCardEffectBlock block) => Append(partnerEvents, block);
+        public void AddBulletModifier(MigrationCardEffectBlock block) => Append(bulletModifiers, block);
+
+        private static void Append(List<MigrationCardEffectBlock> list, MigrationCardEffectBlock block)
+        {
+            if (block != null)
+            {
+                list.Add(block);
+            }
+        }
     }
 }
