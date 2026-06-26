@@ -1,5 +1,6 @@
 using System.IO;
 using TouhouMigration.Runtime.CardBuild;
+using TouhouMigration.Runtime.Farming;
 using TouhouMigration.Runtime.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -73,6 +74,35 @@ namespace TouhouMigration.Editor
             EditorSceneManager.SaveScene(scene, ShopScenePath);
             AssetDatabase.Refresh();
             Debug.Log("[MigrationCirnoArenaBuilder] authored " + ShopScenePath);
+        }
+
+        private const string FarmScenePath = SceneDir + "/MigrationFarmPlayable.unity";
+
+        // Authors a standalone playable farm scene (camera + MigrationFarmDriver) showcasing the closed E4
+        // economy loop, routing around the concurrent owner like the Cirno + shop scenes.
+        [MenuItem("Touhou Migration/Build/Build Farm Playable Scene")]
+        public static void BuildFarmScene()
+        {
+            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            GameObject cameraGo = new GameObject("Main Camera");
+            Camera camera = cameraGo.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.40f, 0.55f, 0.30f); // field green
+            camera.orthographic = true;
+            cameraGo.tag = "MainCamera";
+
+            GameObject driverGo = new GameObject("FarmDriver");
+            driverGo.AddComponent<MigrationFarmDriver>();
+
+            if (!Directory.Exists(SceneDir))
+            {
+                Directory.CreateDirectory(SceneDir);
+            }
+
+            EditorSceneManager.SaveScene(scene, FarmScenePath);
+            AssetDatabase.Refresh();
+            Debug.Log("[MigrationCirnoArenaBuilder] authored " + FarmScenePath);
         }
     }
 }
