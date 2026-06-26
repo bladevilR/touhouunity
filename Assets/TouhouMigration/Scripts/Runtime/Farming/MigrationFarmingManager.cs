@@ -67,6 +67,35 @@ namespace TouhouMigration.Runtime.Farming
             return plot.Plant(crop.CropId, crop.GrowthDays, crop.NeedsWaterDaily);
         }
 
+        // Plant a crop by spending its seed item (Godot FarmingUI plant branch: has_item(seed_<x>) ->
+        // remove_item -> plant crop_<x>). The seed is consumed only if the plant actually takes.
+        public bool PlantFromInventory(int plotIndex, string cropId)
+        {
+            string seedId = SeedIdForCrop(cropId);
+            if (inventory == null || inventory.GetItemCount(seedId) < 1)
+            {
+                return false;
+            }
+
+            if (!Plant(plotIndex, cropId))
+            {
+                return false;
+            }
+
+            inventory.RemoveItem(seedId, 1);
+            return true;
+        }
+
+        // crop_<x> -> seed_<x> (Godot "crop_" <-> "seed_" prefix swap).
+        private static string SeedIdForCrop(string cropId)
+        {
+            const string cropPrefix = "crop_";
+            string bare = cropId != null && cropId.StartsWith(cropPrefix, StringComparison.Ordinal)
+                ? cropId.Substring(cropPrefix.Length)
+                : cropId ?? string.Empty;
+            return "seed_" + bare;
+        }
+
         public void Water(int plotIndex)
         {
             GetPlot(plotIndex)?.Water();
