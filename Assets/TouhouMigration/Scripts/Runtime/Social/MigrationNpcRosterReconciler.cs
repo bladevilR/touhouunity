@@ -16,9 +16,20 @@ namespace TouhouMigration.Runtime.Social
     // invention.
     public static class MigrationNpcRosterReconciler
     {
+        // Canonical Touhou species/nickname -> npc id, for roster entries whose name is a known character
+        // epithet (not a guess: each maps to an existing _npc_<id> dialogue file). Established identity, the
+        // same kind of fact as Reimu = 博丽灵梦.
+        public static readonly IReadOnlyDictionary<string, string> CanonicalAliases = new Dictionary<string, string>
+        {
+            ["夜雀"] = "mystia",    // "night sparrow" — Mystia Lorelei
+            ["大狸子"] = "mamizou", // "big tanuki" — Mamizou Futatsuiwa
+            ["河童"] = "nitori",    // "kappa" — Nitori Kawashiro
+        };
+
         public static NpcRosterReconcileResult Reconcile(
             IEnumerable<MigrationNpcRosterEntry> entries,
-            IReadOnlyDictionary<string, string> nameToCanonicalId)
+            IReadOnlyDictionary<string, string> nameToCanonicalId,
+            IReadOnlyDictionary<string, string> aliases = null)
         {
             NpcRosterReconcileResult result = new NpcRosterReconcileResult();
             if (entries == null)
@@ -36,7 +47,7 @@ namespace TouhouMigration.Runtime.Social
                     continue;
                 }
 
-                string resolved = Resolve(entry, nameMap, canonicalIds);
+                string resolved = Resolve(entry, nameMap, canonicalIds, aliases);
                 if (resolved != null)
                 {
                     result.Matched[entry.NpcId] = resolved;
@@ -50,12 +61,24 @@ namespace TouhouMigration.Runtime.Social
             return result;
         }
 
-        private static string Resolve(MigrationNpcRosterEntry entry, IReadOnlyDictionary<string, string> nameMap, HashSet<string> canonicalIds)
+        private static string Resolve(MigrationNpcRosterEntry entry, IReadOnlyDictionary<string, string> nameMap, HashSet<string> canonicalIds, IReadOnlyDictionary<string, string> aliases)
         {
             // 1) The roster id is already a canonical npc id.
             if (!string.IsNullOrEmpty(entry.NpcId) && canonicalIds.Contains(entry.NpcId))
             {
                 return entry.NpcId;
+            }
+
+            // 1b) A curated canonical alias (species/nickname) on the roster id or display name.
+            if (aliases != null)
+            {
+                foreach (string candidate in new[] { entry.NpcId, entry.DisplayName })
+                {
+                    if (!string.IsNullOrEmpty(candidate) && aliases.TryGetValue(candidate, out string aliasId))
+                    {
+                        return aliasId;
+                    }
+                }
             }
 
             // 2) Exact name match (on the roster id or its display name).

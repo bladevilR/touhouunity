@@ -16,6 +16,7 @@ namespace TouhouMigration.Editor.Tests
         {
             TestResolvesExactSubstringAndCanonical();
             TestSurfacesTrulyAmbiguous();
+            TestCanonicalAliasesResolveNicknames();
             Debug.Log("NPC roster reconciler smoke tests passed.");
         }
 
@@ -66,6 +67,22 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(2, result.Unmatched.Count, "The two genuinely-ambiguous entries are surfaced, not guessed.");
             AssertEqual(true, result.Unmatched.Contains("uuz") && result.Unmatched.Contains("大狸子"),
                 "The ambiguous ids are listed for author review.");
+        }
+
+        private static void TestCanonicalAliasesResolveNicknames()
+        {
+            // 夜雀 ("night sparrow") is not in the name map, but the canonical alias map maps it to mystia.
+            List<MigrationNpcRosterEntry> entries = new List<MigrationNpcRosterEntry>
+            {
+                Entry("夜雀", "夜雀"),
+                Entry("uuz", "uuz"), // still genuinely ambiguous
+            };
+
+            NpcRosterReconcileResult result = MigrationNpcRosterReconciler.Reconcile(
+                entries, NameMap(), MigrationNpcRosterReconciler.CanonicalAliases);
+
+            AssertEqual("mystia", result.Matched["夜雀"], "A canonical species nickname resolves via the alias map.");
+            AssertEqual(true, result.Unmatched.Contains("uuz"), "Genuinely-unknown entries stay surfaced.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
