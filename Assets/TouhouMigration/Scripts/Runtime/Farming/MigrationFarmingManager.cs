@@ -72,6 +72,20 @@ namespace TouhouMigration.Runtime.Farming
             GetPlot(plotIndex)?.Water();
         }
 
+        // Apply fertilizer of the given power to a growing plot, raising its quality (and so its harvest
+        // yield). Returns false when the plot is empty/missing. Mirrors Godot FarmPlot.fertilize.
+        public bool Fertilize(int plotIndex, double power)
+        {
+            MigrationFarmPlot plot = GetPlot(plotIndex);
+            if (plot == null || !plot.HasCrop)
+            {
+                return false;
+            }
+
+            plot.Fertilize(power);
+            return true;
+        }
+
         public void AdvanceDay()
         {
             foreach (MigrationFarmPlot plot in plots)

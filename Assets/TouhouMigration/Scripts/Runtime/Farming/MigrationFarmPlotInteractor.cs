@@ -14,6 +14,8 @@ namespace TouhouMigration.Runtime.Farming
         [SerializeField] private string cropId = "crop_turnip";
         [SerializeField] private float interactionRadius = 3.5f;
         [SerializeField] private KeyCode interactKey = KeyCode.F;
+        [SerializeField] private KeyCode fertilizeKey = KeyCode.G;
+        [SerializeField] private double fertilizePower = 35.0;
 
         private Transform player;
         private MigrationGlobalUiController globalUi;
@@ -63,6 +65,13 @@ namespace TouhouMigration.Runtime.Farming
             return false;
         }
 
+        // Apply fertilizer to a growing plot (raises quality -> harvest yield). Returns false if the plot
+        // is empty/missing.
+        public bool Fertilize()
+        {
+            return ResolveFarming()?.Fertilize(plotIndex, fertilizePower) ?? false;
+        }
+
         private void Update()
         {
             if (!capturedBaseScale)
@@ -79,9 +88,16 @@ namespace TouhouMigration.Runtime.Farming
                 return;
             }
 
-            if (IsPlayerInRange() && Input.GetKeyDown(interactKey))
+            if (IsPlayerInRange())
             {
-                Work();
+                if (Input.GetKeyDown(interactKey))
+                {
+                    Work();
+                }
+                else if (Input.GetKeyDown(fertilizeKey))
+                {
+                    Fertilize();
+                }
             }
         }
 

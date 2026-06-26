@@ -22,6 +22,7 @@ namespace TouhouMigration.Editor.Tests
             TestYieldRollHonorsRange();
             TestRegisterCropsFromDatabaseGrowsRealCrop();
             TestHarvestYieldScalesWithPlotQuality();
+            TestFertilizeRaisesPlotFertilizer();
             Debug.Log("Farming manager smoke tests passed.");
         }
 
@@ -133,6 +134,19 @@ namespace TouhouMigration.Editor.Tests
             manager.AdvanceDay();
             AssertEqual(CropQuality.Excellent, plot.QualityTier, "High water + fertilizer reaches Excellent quality.");
             AssertEqual(6, manager.Harvest(1, (lo, hi) => lo).Amount, "An Excellent plot scales the base 4 by 1.5x -> 6.");
+        }
+
+        private static void TestFertilizeRaisesPlotFertilizer()
+        {
+            InventoryService inventory = BuildInventory();
+            MigrationFarmingManager manager = new MigrationFarmingManager(inventory, 1);
+            manager.RegisterCrop(new MigrationCropDefinition("crop_fixed", 2, false, ProduceItemId, 4, 4));
+
+            AssertEqual(false, manager.Fertilize(0, 35.0), "Fertilizing an empty plot should fail.");
+
+            manager.Plant(0, "crop_fixed");
+            AssertEqual(true, manager.Fertilize(0, 35.0), "Fertilizing a growing plot should succeed.");
+            AssertEqual(35.0, manager.GetPlot(0).FertilizerLevel, "Fertilize should raise the plot's fertilizer level by the power.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
