@@ -412,6 +412,31 @@ namespace TouhouMigration.Runtime.CardBuild
                 case "mokou_bridge_imperishable_shooting":
                     ReduceCardCooldowns(0.6);
                     break;
+                case "mokou_boss_melt_the_lake":
+                    ResolveMokouMeltTheLake();
+                    break;
+            }
+        }
+
+        private void ResolveMokouMeltTheLake()
+        {
+            if (State.GetResource("ember") < 1 || State.GetStatus("enemy", "burn") < 1)
+            {
+                return;
+            }
+
+            State.SpendResource("ember", 1);
+            State.ApplyStatus("enemy", "burn", -1);
+            RewrittenRuleCount++;
+            Domains.Contest(BossClauseId, 1);
+            AddTerrainPressure(-3);
+            SuppressTerrain(7.5);
+            OpenVulnerability(5.0);
+            Clauses.Disable(BossClauseId, 1);
+
+            if (Domains.IsSealed(BossClauseId) && !Clauses.IsSealed(BossClauseId))
+            {
+                Clauses.SealWithAnswer(BossClauseId, "field_replace", 2);
             }
         }
 

@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestFlameFist();
             TestHouraiDollGateThenBurst();
             TestXuFuDimensionAndHonestMansDeath();
+            TestMeltTheLakeContestsAndSeals();
             Debug.Log("Card resolution mokou smoke tests passed.");
         }
 
@@ -99,6 +100,30 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(1, honest.InstalledCards.Count, "Honest man's death installs a card.");
             AssertEqual(3, honest.TerrainPressure, "Honest man's death raises terrain pressure.");
             AssertEqual(true, honest.IsVulnerabilityOpen, "Honest man's death opens vulnerability.");
+        }
+
+        private static void TestMeltTheLakeContestsAndSeals()
+        {
+            MigrationCardBuildRunController run = NewRun();
+            // The Cirno domain + clause are installed exposed at run setup; model that here.
+            run.Domains.Install("cirno_domain", threshold: 1, answerFamilies: new[] { "field_replace" });
+            run.Clauses.Install("cirno_domain", new[] { "field_replace" }, revealed: true, exposed: true);
+            run.State.AddResource("ember", 1);
+            run.State.ApplyStatus("enemy", "burn", 1);
+
+            run.ResolveCardEffect("mokou_boss_melt_the_lake");
+
+            AssertEqual(0, run.State.GetResource("ember"), "Melt the lake spends an ember.");
+            AssertEqual(1, run.RewrittenRuleCount, "Melt the lake rewrites a rule.");
+            AssertEqual(true, run.Domains.IsSealed("cirno_domain"), "The domain contest breaks (seals) the domain.");
+            AssertEqual(true, run.Clauses.IsSealed("cirno_domain"), "A sealed domain seals the boss clause via the answer.");
+            AssertEqual(true, run.IsVulnerabilityOpen, "Melt the lake opens a wide vulnerability window.");
+
+            // Gated: without ember/burn it waits.
+            MigrationCardBuildRunController idle = NewRun();
+            idle.Domains.Install("cirno_domain", threshold: 1);
+            idle.ResolveCardEffect("mokou_boss_melt_the_lake");
+            AssertEqual(false, idle.Domains.IsSealed("cirno_domain"), "Melt the lake waits without ember and burn.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
