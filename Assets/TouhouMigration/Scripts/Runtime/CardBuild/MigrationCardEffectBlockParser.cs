@@ -85,7 +85,8 @@ namespace TouhouMigration.Runtime.CardBuild
                 : Array.Empty<MigrationCardEffectBlock>();
         }
 
-        private static MigrationCardEffectBlock ParseBlock(Dictionary<string, object> data)
+        // Build one effect block from its JSON dict (shared with the relic loader in the content database).
+        public static MigrationCardEffectBlock ParseBlock(Dictionary<string, object> data)
         {
             return new MigrationCardEffectBlock
             {
