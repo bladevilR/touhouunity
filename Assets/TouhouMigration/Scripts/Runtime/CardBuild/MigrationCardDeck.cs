@@ -191,6 +191,55 @@ namespace TouhouMigration.Runtime.CardBuild
             cooldownCards.AddRange(remaining);
         }
 
+        // Snapshot every pile for a card-run save.
+        public CardDeckSnapshot CreateSnapshot()
+        {
+            CardDeckSnapshot snapshot = new CardDeckSnapshot
+            {
+                drawPile = new List<string>(drawPile),
+                hand = new List<string>(hand),
+                discardPile = new List<string>(discardPile),
+                retainedCards = new List<string>(retainedCards),
+                exhaustPile = new List<string>(exhaustPile),
+            };
+            foreach ((string card, int turns) in cooldownCards)
+            {
+                snapshot.cooldownCardIds.Add(card);
+                snapshot.cooldownTurns.Add(turns);
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(CardDeckSnapshot snapshot)
+        {
+            drawPile.Clear();
+            hand.Clear();
+            discardPile.Clear();
+            retainedCards.Clear();
+            exhaustPile.Clear();
+            cooldownCards.Clear();
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            if (snapshot.drawPile != null) drawPile.AddRange(snapshot.drawPile);
+            if (snapshot.hand != null) hand.AddRange(snapshot.hand);
+            if (snapshot.discardPile != null) discardPile.AddRange(snapshot.discardPile);
+            if (snapshot.retainedCards != null) retainedCards.AddRange(snapshot.retainedCards);
+            if (snapshot.exhaustPile != null) exhaustPile.AddRange(snapshot.exhaustPile);
+
+            if (snapshot.cooldownCardIds != null && snapshot.cooldownTurns != null)
+            {
+                int count = Math.Min(snapshot.cooldownCardIds.Count, snapshot.cooldownTurns.Count);
+                for (int i = 0; i < count; i++)
+                {
+                    cooldownCards.Add((snapshot.cooldownCardIds[i], snapshot.cooldownTurns[i]));
+                }
+            }
+        }
+
         private void ReshuffleDiscardIntoDraw(Func<int, int> randomIndex)
         {
             drawPile.AddRange(discardPile);
@@ -208,5 +257,18 @@ namespace TouhouMigration.Runtime.CardBuild
                 (drawPile[i], drawPile[j]) = (drawPile[j], drawPile[i]);
             }
         }
+    }
+
+    // Persisted card-deck piles (Godot CardBuildRuntimeState deck/hand/discard/retained/exhaust/cooldown).
+    [Serializable]
+    public sealed class CardDeckSnapshot
+    {
+        public List<string> drawPile = new List<string>();
+        public List<string> hand = new List<string>();
+        public List<string> discardPile = new List<string>();
+        public List<string> retainedCards = new List<string>();
+        public List<string> exhaustPile = new List<string>();
+        public List<string> cooldownCardIds = new List<string>();
+        public List<int> cooldownTurns = new List<int>();
     }
 }

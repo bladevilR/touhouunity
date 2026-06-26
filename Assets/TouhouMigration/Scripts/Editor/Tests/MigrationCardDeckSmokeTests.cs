@@ -22,6 +22,7 @@ namespace TouhouMigration.Editor.Tests
             TestPutOnCooldownClampsToOneTurnThenReturnsToDiscard();
             TestTickCooldownsDecrementsMultiTurn();
             TestCountBasedHandMoves();
+            TestSnapshotRoundTrip();
             Debug.Log("Migration card deck smoke tests passed.");
         }
 
@@ -158,6 +159,36 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(1, deck.DiscardFromHand(5), "A count beyond the hand only moves what remains.");
             AssertEqual(0, deck.HandCount, "The hand is empty after over-discarding.");
             AssertEqual(0, deck.DiscardFromHand(3), "Discarding from an empty hand moves nothing.");
+        }
+
+        private static void TestSnapshotRoundTrip()
+        {
+            MigrationCardDeck deck = new MigrationCardDeck(new List<string> { "a", "b", "c", "d", "e" });
+            deck.Draw(3, max => 0);         // hand: a b c ; draw: d e
+            deck.DiscardFromHand("a");      // discard: a
+            deck.RetainFromHand("b");       // retained: b
+            deck.PutOnCooldown("z", 2);     // cooldown: z(2)
+
+            CardDeckSnapshot snapshot = deck.CreateSnapshot();
+            AssertEqual(2, snapshot.drawPile.Count, "Snapshot captures the draw pile.");
+            AssertEqual(1, snapshot.cooldownCardIds.Count, "Snapshot captures cooldown cards.");
+
+            MigrationCardDeck restored = new MigrationCardDeck(new List<string> { "x" });
+            restored.LoadSnapshot(snapshot);
+
+            AssertEqual(2, restored.DrawPileCount, "Restored draw pile matches.");
+            AssertEqual(1, restored.HandCount, "Restored hand matches (c).");
+            AssertEqual("c", restored.Hand[0], "The held card round-trips.");
+            AssertEqual(1, restored.DiscardPileCount, "Restored discard matches.");
+            AssertEqual(1, restored.RetainedCount, "Restored retained matches.");
+            AssertEqual(1, restored.CooldownCount, "Restored cooldown matches.");
+            AssertEqual(true, restored.IsOnCooldown("z"), "The cooled card round-trips on cooldown.");
+
+            // Ticking the restored cooldown twice returns z to discard (turns preserved).
+            restored.TickCooldowns();
+            AssertEqual(true, restored.IsOnCooldown("z"), "Cooldown turns are preserved (still cooling after one tick).");
+            restored.TickCooldowns();
+            AssertEqual(false, restored.IsOnCooldown("z"), "The two-turn cooldown lapses after two ticks.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
