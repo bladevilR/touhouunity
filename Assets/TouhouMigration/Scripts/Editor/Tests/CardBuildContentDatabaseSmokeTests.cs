@@ -14,6 +14,8 @@ namespace TouhouMigration.Editor.Tests
         private const string ResourcesPath = "Assets/TouhouMigration/Data/CardBuild/resources.json";
         private const string StatusesPath = "Assets/TouhouMigration/Data/CardBuild/statuses.json";
         private const string BossRulesPath = "Assets/TouhouMigration/Data/CardBuild/boss_rules.json";
+        private const string ArchetypesPath = "Assets/TouhouMigration/Data/CardBuild/archetypes.json";
+        private const string CharactersPath = "Assets/TouhouMigration/Data/CardBuild/characters.json";
         private const double Tol = 1e-9;
 
         [MenuItem("Touhou Migration/Tests/Run CardBuild Content Database Smoke Tests")]
@@ -23,6 +25,7 @@ namespace TouhouMigration.Editor.Tests
             TestUpgradeFeedsProgression();
             TestLoadsResourceAndStatusDefinitions();
             TestLoadsBossRules();
+            TestLoadsArchetypesAndCharacters();
             Debug.Log("CardBuild content database smoke tests passed.");
         }
 
@@ -88,6 +91,24 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, rule != null, "The unavoidable-danmaku rule loads.");
             AssertEqual(true, rule.CandidateBosses.Contains("reimu_hakurei"), "Reimu is a candidate boss for it.");
             AssertEqual(true, rule.AnswerFamilies.Contains("barrier_reflect"), "barrier_reflect is one of its answer families.");
+        }
+
+        private static void TestLoadsArchetypesAndCharacters()
+        {
+            MigrationCardBuildContentDatabase db = new MigrationCardBuildContentDatabase();
+            AssertEqual(true, db.LoadArchetypesAndCharacters(ArchetypesPath, CharactersPath), "Archetypes + characters load.");
+            AssertEqual(12, db.ArchetypeCount, "All twelve archetypes load.");
+            AssertEqual(36, db.CharacterCount, "All thirty-six characters load.");
+
+            MigrationCardArchetype fire = db.GetArchetype("fire");
+            AssertEqual(true, fire != null, "The fire archetype loads.");
+            AssertEqual("ember", fire.Resource, "Fire's signature resource is ember.");
+            AssertEqual(true, fire.Keywords.Contains("burn"), "burn is a fire keyword.");
+
+            MigrationCardBuildCharacter mokou = db.GetCharacter("fujiwara_no_mokou");
+            AssertEqual(true, mokou != null, "Mokou loads as a cardbuild character.");
+            AssertEqual(true, mokou.Archetypes.Contains("fire"), "Mokou is a fire-archetype character.");
+            AssertEqual(true, mokou.Roles.Contains("boss"), "Mokou has the boss role.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
