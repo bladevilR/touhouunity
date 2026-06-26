@@ -4,13 +4,13 @@ Last updated: 2026-06-26 (session 6 close)
 
 ## ▶▶ RESUME HERE (session 6 → 7)
 
-**State:** my work all pushed; `origin/main` at **`276315d`**. Regression **96/96**. Working tree has **only the concurrent session's 4 uncommitted files** dirty (see ⚠️ note) — I never touched them; stage by path only.
+**State:** my work all pushed; `origin/main` at **`53beaca`**. Regression **96/96**. Working tree has **only the concurrent session's 4 uncommitted files** dirty (see ⚠️ note) — I never touched them; stage by path only.
 
 **▶ NEXT-SESSION MENU (non-blocked pure-logic epics surveyed this session):** with E6 logic-complete, the remaining non-blocked, non-art pure-logic work is **fresh un-ported Godot systems**, each its own data-infra chain (best started with focused context, not at a session tail):
   - **Weapons subsystem** (logic core DONE, slices 35-37): `MigrationWeaponFusion` + `MigrationWeaponInventory` + `MigrationWeaponCatalog` compose self-sufficiently (catalog→inventory→fusion). Remaining is scene/real-time: upgrade-tree level bonuses + qualitative changes, then `WeaponSystem` firing/projectiles + `FusionSystem` owner/UI.
   - ✅ **`CombatBondSystem`** — DONE (slice 38): `MigrationCombatBondSystem` (bond selection + cooldown gate + passive modifiers). The skill VFX / bullet-hook half is scene work.
   - ✅ **`NPCCrossDialogueSystem`** — engine DONE (slice 39): `MigrationNpcCrossDialogue` (pair/triple matching + cooldown; uses canonical ids — no roster caveat). The large hardcoded DUAL/TRIPLE dialogue-line tables are content to feed via `Register*` (data/Codex).
-  - **`CardBuildRunStore`/`CardBuildProfileStore`/`CardBuildRunProgressionController`** — cardbuild run persistence + between-run progression (mostly thin file-CRUD; composes the now-complete E6 engine).
+  - **Card-run save/resume** (STARTED, slice 40): `MigrationCardRunState.CreateSnapshot`/`LoadSnapshot` done (resources+statuses). To finish a savable run: snapshot boss-hp / clauses / domains / deck piles / mokou state / the controller scalars (terrain/vulnerability/rewritten/cooldowns), then a `CardBuildRunSnapshot` on the controller + the `CardBuildRunStore` façade. ⚠️ **Low immediate value** — the Cirno fight isn't scene-wired yet (blocked on the concurrent builder file), so this is capability-for-a-blocked-feature. (`CardBuildProfileStore` is already ported.)
   - Beyond these the remaining un-ported systems are increasingly **scene/real-time** (firing/projectiles, rendering, HD2D, camera) or **content/data** (dialogue tables, art) — not clean pure-logic.
   - Blocked (NOT pure-logic): E6 card-costs + CirnoBossArena scene wiring; shop/seed owner-wiring; art (Codex); LFS/UI (user). See the per-line notes below.
 
@@ -54,6 +54,7 @@ Last updated: 2026-06-26 (session 6 close)
   37. `a40fac9` **Weapons: catalog config table** — `MigrationWeaponCatalog` ports `WeaponData.WEAPONS` pure-data fields (17 weapons: id→max_level/cooldown/base_damage); `MaxLevelOf` feeds the inventory directly. Weapons logic core is now self-sufficient (catalog→inventory→fusion).
   38. `5b5f0ad` **Combat bond system** — `MigrationCombatBondSystem` ports `CombatBondSystem`: pick a combat ally (6 characters), active skill on a per-character cooldown gate, + permanent passive modifiers (bounce/size/revive/delay/gravity/phase). Skill VFX + bullet hooks are scene work.
   39. `276315d` **NPC cross-dialogue engine** — `MigrationNpcCrossDialogue` ports the `NPCCrossDialogueSystem` matching+cooldown engine (order-independent dual/triple keys, 5-min cooldown, triple-priority; canonical ids). Dialogue-line tables are content fed via `Register*`.
+  40. `53beaca` **Card-run state snapshot** — `MigrationCardRunState.CreateSnapshot`/`LoadSnapshot` (resources + per-target statuses, JsonUtility-safe). First slice toward a savable card-run (the rest of the run snapshot follows; low immediate value while the fight is unwired).
 
 **E6 forward — the Cirno card-fight is LOGIC-COMPLETE; remaining is BLOCKED on data/concurrent-file:** the entire boss-fight engine + card-play orchestration + all 40+ cards' resolution + the full Mokou action chain + run setup + cooldown durations are done & tested (slices 8-34). The remaining E6 pieces are blocked, not pure-logic:
   1. ⚠️ **Card costs (DATA DECISION)** — cards.json has no top-level `cost` dict (only `charge_action.energy_cost` per-terminal). `PlayCard` takes cost as an optional param; confirm the card-cost source before feeding real costs (don't invent).
