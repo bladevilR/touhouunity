@@ -231,6 +231,7 @@ namespace TouhouMigration.Runtime.CardBuild
             }
 
             effectExecutor.Execute(effectBlocks, this);
+            ResolveCardEffect(cardId);
             Deck.DiscardFromHand(cardId);
             if (cooldownSeconds > 0.0)
             {
@@ -238,6 +239,118 @@ namespace TouhouMigration.Runtime.CardBuild
             }
 
             return CardPlayResult.Ok(cardId);
+        }
+
+        // Per-card bespoke resolution (Godot _apply_cirno_card_resolution). Ported by archetype; an
+        // unported / inert card id is a no-op. Fire archetype is done; blood/mechanism/mokou follow.
+        public void ResolveCardEffect(string cardId)
+        {
+            switch (cardId)
+            {
+                case "fire_starter_ember_shot":
+                    if (IsVulnerabilityOpen)
+                    {
+                        Boss.Damage(18 + RewrittenRuleCount * 6);
+                    }
+                    break;
+                case "fire_resource_ash_collector":
+                {
+                    int emberGain = System.Math.Max(1, State.GetStatus("enemy", "burn"));
+                    State.AddResource("ember", emberGain);
+                    ReduceCardCooldowns(0.35 * emberGain);
+                    break;
+                }
+                case "fire_payoff_detonation_palm":
+                {
+                    int burn = State.GetStatus("enemy", "burn");
+                    if (burn <= 0)
+                    {
+                        break;
+                    }
+
+                    State.ApplyStatus("enemy", "burn", -burn);
+                    int damage = 22 + burn * 18 + State.GetResource("ember") * 4;
+                    if (IsVulnerabilityOpen)
+                    {
+                        damage = (int)System.Math.Round(damage * 1.35, System.MidpointRounding.AwayFromZero);
+                    }
+
+                    Boss.Damage(damage);
+                    break;
+                }
+                case "fire_defense_phoenix_guard":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "phoenix_guard" });
+                    AddTerrainPressure(-1);
+                    break;
+                case "fire_movement_firestep":
+                    SuppressTerrain(2.5);
+                    ReduceCardCooldowns(0.25);
+                    break;
+                case "fire_draw_smoke_reading":
+                    ReduceCardCooldowns(1.0);
+                    break;
+                case "fire_partner_shared_kindling":
+                    State.ApplyStatus("enemy", "burn", 1);
+                    State.AddResource("ember", 1);
+                    break;
+                case "fire_risk_burn_the_hand":
+                {
+                    int emberGain = System.Math.Max(2, (int)System.Math.Ceiling(Deck.HandCount / 4.0));
+                    State.AddResource("ember", emberGain);
+                    ReduceCardCooldowns(0.5);
+                    break;
+                }
+                case "fire_bridge_hot_iron_contract":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "hot_iron_contract" });
+                    break;
+                case "fire_boss_ash_seal":
+                    ResolveAshSeal();
+                    break;
+                case "fire_terminal_hourai_phoenix":
+                    ResolveHouraiPhoenix();
+                    break;
+            }
+        }
+
+        private void ResolveAshSeal()
+        {
+            if (State.GetResource("ember") < 1 || State.GetStatus("enemy", "burn") < 1)
+            {
+                return;
+            }
+
+            State.SpendResource("ember", 1);
+            State.ApplyStatus("enemy", "burn", -1);
+            RewrittenRuleCount++;
+            AddTerrainPressure(-2);
+            SuppressTerrain(7.0);
+            OpenVulnerability(5.0);
+            Clauses.Disable(BossClauseId, 1);
+
+            if (RewrittenRuleCount >= 3 && !Clauses.IsSealed(BossClauseId))
+            {
+                Clauses.SealWithAnswer(BossClauseId, "mechanism_rewrite_environment", 2);
+            }
+        }
+
+        private void ResolveHouraiPhoenix()
+        {
+            int ember = State.GetResource("ember");
+            int burn = State.GetStatus("enemy", "burn");
+            if (!IsVulnerabilityOpen || ember < 2)
+            {
+                return;
+            }
+
+            int damage = 80 + ember * 34 + burn * 16 + RewrittenRuleCount * 28;
+            State.SpendResource("ember", ember);
+            if (burn > 0)
+            {
+                State.ApplyStatus("enemy", "burn", -burn);
+            }
+
+            Boss.Damage(damage);
+            ReduceVulnerability(2.0);
         }
 
         private bool HandContains(string cardId)
