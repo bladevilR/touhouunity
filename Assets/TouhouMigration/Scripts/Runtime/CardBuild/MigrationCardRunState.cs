@@ -126,5 +126,95 @@ namespace TouhouMigration.Runtime.CardBuild
                 ? value
                 : 0;
         }
+
+        // Snapshot the resource pools + per-target status stacks for a card-run save (Godot
+        // CardBuildRuntimeState get_resources_snapshot / get_statuses_snapshot, persisted by the run store).
+        // JsonUtility-safe parallel lists.
+        public CardRunStateSnapshot CreateSnapshot()
+        {
+            CardRunStateSnapshot snapshot = new CardRunStateSnapshot();
+            foreach (KeyValuePair<string, int> resource in resources)
+            {
+                snapshot.resourceIds.Add(resource.Key);
+                snapshot.resourceAmounts.Add(resource.Value);
+            }
+
+            foreach (KeyValuePair<string, Dictionary<string, int>> target in statuses)
+            {
+                CardRunStatusEntry entry = new CardRunStatusEntry { targetId = target.Key };
+                foreach (KeyValuePair<string, int> status in target.Value)
+                {
+                    entry.statusIds.Add(status.Key);
+                    entry.amounts.Add(status.Value);
+                }
+
+                snapshot.statuses.Add(entry);
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(CardRunStateSnapshot snapshot)
+        {
+            resources.Clear();
+            statuses.Clear();
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            int resourceCount = Math.Min(
+                snapshot.resourceIds?.Count ?? 0, snapshot.resourceAmounts?.Count ?? 0);
+            for (int i = 0; i < resourceCount; i++)
+            {
+                if (!string.IsNullOrEmpty(snapshot.resourceIds[i]))
+                {
+                    resources[snapshot.resourceIds[i]] = snapshot.resourceAmounts[i];
+                }
+            }
+
+            if (snapshot.statuses == null)
+            {
+                return;
+            }
+
+            foreach (CardRunStatusEntry entry in snapshot.statuses)
+            {
+                if (entry == null || string.IsNullOrEmpty(entry.targetId)
+                    || entry.statusIds == null || entry.amounts == null)
+                {
+                    continue;
+                }
+
+                Dictionary<string, int> targetStatuses = new Dictionary<string, int>();
+                int count = Math.Min(entry.statusIds.Count, entry.amounts.Count);
+                for (int i = 0; i < count; i++)
+                {
+                    if (!string.IsNullOrEmpty(entry.statusIds[i]))
+                    {
+                        targetStatuses[entry.statusIds[i]] = entry.amounts[i];
+                    }
+                }
+
+                statuses[entry.targetId] = targetStatuses;
+            }
+        }
+    }
+
+    // Persisted card-run resource pools + per-target status stacks (JsonUtility-safe parallel lists).
+    [Serializable]
+    public sealed class CardRunStateSnapshot
+    {
+        public List<string> resourceIds = new List<string>();
+        public List<int> resourceAmounts = new List<int>();
+        public List<CardRunStatusEntry> statuses = new List<CardRunStatusEntry>();
+    }
+
+    [Serializable]
+    public sealed class CardRunStatusEntry
+    {
+        public string targetId = string.Empty;
+        public List<string> statusIds = new List<string>();
+        public List<int> amounts = new List<int>();
     }
 }

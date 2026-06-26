@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestStatusIsPerTargetAndDefaults();
             TestConsumeStatusPartialAllAndErase();
             TestMissingCostResource();
+            TestSnapshotRoundTrip();
             Debug.Log("Card run state smoke tests passed.");
         }
 
@@ -100,6 +101,33 @@ namespace TouhouMigration.Editor.Tests
                 "A null cost has nothing missing.");
             AssertEqual("seal", state.MissingCostResource(new Dictionary<string, int> { ["seal"] = 1 }),
                 "An entirely-absent resource is reported as missing.");
+        }
+
+        private static void TestSnapshotRoundTrip()
+        {
+            MigrationCardRunState state = new MigrationCardRunState();
+            state.AddResource("ember", 3);
+            state.AddResource("seal", 1);
+            state.ApplyStatus("enemy", "burn", 4);
+            state.ApplyStatus("player", "guard", 2);
+
+            CardRunStateSnapshot snapshot = state.CreateSnapshot();
+
+            MigrationCardRunState restored = new MigrationCardRunState();
+            restored.AddResource("stale", 99); // overwritten by the load
+            restored.LoadSnapshot(snapshot);
+
+            AssertEqual(3, restored.GetResource("ember"), "Resources round-trip through the snapshot.");
+            AssertEqual(1, restored.GetResource("seal"), "All resources are restored.");
+            AssertEqual(0, restored.GetResource("stale"), "Loading clears prior resource state.");
+            AssertEqual(4, restored.GetStatus("enemy", "burn"), "Per-target statuses round-trip.");
+            AssertEqual(2, restored.GetStatus("player", "guard"), "Statuses are restored per target.");
+
+            // The snapshot is independent of later source mutations.
+            state.AddResource("ember", 5);
+            MigrationCardRunState again = new MigrationCardRunState();
+            again.LoadSnapshot(snapshot);
+            AssertEqual(3, again.GetResource("ember"), "The snapshot is independent of later source changes.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
