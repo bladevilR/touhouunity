@@ -309,7 +309,80 @@ namespace TouhouMigration.Runtime.CardBuild
                 case "fire_terminal_hourai_phoenix":
                     ResolveHouraiPhoenix();
                     break;
+                case "blood_starter_scarlet_shot":
+                    State.ApplyStatus("enemy", "fate_lock", 1);
+                    Boss.Damage(14 + State.GetResource("fate") * 3);
+                    break;
+                case "blood_payoff_fate_spear":
+                    ResolveFateSpear();
+                    break;
+                case "blood_defense_noble_guard":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "noble_guard" });
+                    break;
+                case "blood_movement_night_dash":
+                    State.ApplyStatus("enemy", "fate_lock", 1);
+                    SuppressTerrain(1.8);
+                    break;
+                case "blood_draw_moonlit_invitation":
+                    State.AddResource("fate", 1);
+                    ReduceCardCooldowns(0.8);
+                    break;
+                case "blood_partner_vampire_contract":
+                    AddPartnerEvent(new MigrationCardEffectBlock { Type = "trigger_partner", Id = "vampire_contract" });
+                    break;
+                case "blood_boss_break_destiny":
+                    AddTerrainPressure(-1);
+                    OpenVulnerability(2.5);
+                    break;
+                case "blood_terminal_spear_the_gungnir":
+                    ResolveGungnir();
+                    break;
+                case "blood_risk_forbidden_appetite":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "forbidden_appetite" });
+                    State.AddResource("fate", 1);
+                    break;
+                case "blood_bridge_bloody_barrier":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "bloody_barrier" });
+                    break;
             }
+        }
+
+        private void ResolveFateSpear()
+        {
+            int fateLock = State.GetStatus("enemy", "fate_lock");
+            int fate = State.GetResource("fate");
+            int damage = 18;
+            if (fateLock > 0)
+            {
+                damage += 34 + fate * 8;
+                State.ApplyStatus("enemy", "fate_lock", -1);
+            }
+
+            if (fate > 0)
+            {
+                State.SpendResource("fate", System.Math.Min(fate, 1));
+            }
+
+            Boss.Damage(damage);
+        }
+
+        private void ResolveGungnir()
+        {
+            int fate = State.GetResource("fate");
+            int fateLock = State.GetStatus("enemy", "fate_lock");
+            if (fate <= 0 && fateLock <= 0)
+            {
+                return;
+            }
+
+            int damage = 70 + fate * 22 + fateLock * 18;
+            State.SpendResource("fate", fate);
+            if (fateLock > 0)
+            {
+                State.ApplyStatus("enemy", "fate_lock", -fateLock);
+            }
+
+            Boss.Damage(damage);
         }
 
         private void ResolveAshSeal()
