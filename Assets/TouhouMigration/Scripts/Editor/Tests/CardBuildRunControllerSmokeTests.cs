@@ -20,6 +20,7 @@ namespace TouhouMigration.Editor.Tests
             TestVulnerabilityIsWindowOrClauseSealed();
             TestAttackUsesCompositeVulnerabilityAndTerrain();
             TestTerrainSuppressionAndPressureClamp();
+            TestSetupCirnoRunInstallsClauseAndDomain();
             Debug.Log("Card build run controller smoke tests passed.");
         }
 
@@ -105,6 +106,30 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(MigrationCardBuildRunController.MaxTerrainPressure, p.TerrainPressure, "Pressure clamps at the max.");
             p.AddTerrainPressure(-100);
             AssertEqual(0, p.TerrainPressure, "Pressure clamps at zero.");
+        }
+
+        private static void TestSetupCirnoRunInstallsClauseAndDomain()
+        {
+            // The default boss clause id is the faithful Godot CIRNO_CLAUSE_ID.
+            MigrationCardBuildRunController run = new MigrationCardBuildRunController(new List<string> { "a", "b" });
+            AssertEqual("terrain_tyranny", run.BossClauseId, "The default clause id is the Godot CIRNO_CLAUSE_ID.");
+
+            run.SetupCirnoRun();
+            AssertEqual(true, run.Clauses.IsRevealed("terrain_tyranny"), "Setup reveals the Cirno clause.");
+            AssertEqual(true, run.Clauses.IsExposed("terrain_tyranny"), "Setup exposes the Cirno clause.");
+            AssertEqual(3, run.Domains.GetThreshold("terrain_tyranny"), "The Cirno domain has a threshold of 3.");
+
+            // With the clause exposed, three melt-the-lake contests seal the domain -> seal the clause.
+            run.State.AddResource("ember", 9);
+            for (int i = 0; i < 3; i++)
+            {
+                run.State.ApplyStatus("enemy", "burn", 1);
+                run.ResolveCardEffect("mokou_boss_melt_the_lake");
+            }
+
+            AssertEqual(true, run.Domains.IsSealed("terrain_tyranny"), "Three contests break the threshold-3 domain.");
+            AssertEqual(true, run.Clauses.IsSealed("terrain_tyranny"), "Sealing the domain seals the Cirno clause.");
+            AssertEqual(true, run.IsVulnerabilityOpen, "A sealed clause keeps vulnerability open.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

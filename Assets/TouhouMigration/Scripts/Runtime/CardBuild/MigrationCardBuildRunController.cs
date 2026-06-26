@@ -27,7 +27,10 @@ namespace TouhouMigration.Runtime.CardBuild
     // units stay separate and unit-testable; this facade is the integration seam over them.
     public sealed class MigrationCardBuildRunController
     {
-        public MigrationCardBuildRunController(IEnumerable<string> deckCards, int bossMaxHp = 540, string bossClauseId = "cirno_domain")
+        // Godot CardBuildMvpRunController.CIRNO_CLAUSE_ID.
+        public const string CirnoClauseId = "terrain_tyranny";
+
+        public MigrationCardBuildRunController(IEnumerable<string> deckCards, int bossMaxHp = 540, string bossClauseId = CirnoClauseId)
         {
             Deck = new MigrationCardDeck(deckCards);
             State = new MigrationCardRunState();
@@ -239,6 +242,22 @@ namespace TouhouMigration.Runtime.CardBuild
             }
 
             return CardPlayResult.Ok(cardId);
+        }
+
+        // Cirno boss-fight run setup (Godot setup_cirno_vertical_slice's install block): install the boss
+        // clause + domain, both revealed and exposed, with the terrain-tyranny answer families and the
+        // threshold-3 domain. Call once at run start so the vulnerability / terrain-suppression /
+        // melt-the-lake clause-seal paths fire in a real run.
+        public void SetupCirnoRun()
+        {
+            string[] answerFamilies =
+            {
+                "field_replace", "ice_slow_abuse", "movement_ignore_terrain", "mechanism_rewrite_environment",
+            };
+
+            Clauses.Install(BossClauseId, answerFamilies, revealed: true, exposed: true);
+            Domains.Install(BossClauseId, threshold: 3, pressure: TerrainPressure,
+                answerTags: new[] { "melt_terrain", "field_replace" }, answerFamilies: answerFamilies);
         }
 
         // Per-card bespoke resolution (Godot _apply_cirno_card_resolution). Ported by archetype; an
