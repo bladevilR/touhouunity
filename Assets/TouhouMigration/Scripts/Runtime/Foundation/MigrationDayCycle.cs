@@ -1,3 +1,4 @@
+using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Farming;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Social;
@@ -6,8 +7,9 @@ namespace TouhouMigration.Runtime.Foundation
 {
     // Orchestrates the day loop (Godot SleepManager / day-start wiring): subscribes to
     // GameClock.DayStarted and fans the per-day resets out to the (already logic-complete) life-sim
-    // services — farming growth (AdvanceDay), daily quests (ResetDailyQuests), and bond daily
-    // interactions (StartNewDay). Sleeping advances the clock to the next morning, which crosses one
+    // services — farming growth (AdvanceDay), daily quests (ResetDailyQuests), bond daily
+    // interactions (StartNewDay), and shop stock refresh (Godot refresh_all_stock). Sleeping advances
+    // the clock to the next morning, which crosses one
     // midnight (firing DayStarted -> the resets) and then fully restores fatigue.
     //
     // Pure C# (no UnityEngine): a MonoBehaviour owner constructs it once, forwards Sleep() from the
@@ -24,6 +26,8 @@ namespace TouhouMigration.Runtime.Foundation
         private readonly MigrationFatigueSystem fatigue;
         private readonly MigrationNpcMemorySystem npcMemory;
         private readonly WeatherService weather;
+        private readonly MigrationShopDatabase shopDatabase;
+        private readonly MigrationShopStock shopStock;
 
         public int DailyResetsRun { get; private set; }
         public int LastResetDay { get; private set; } = -1;
@@ -35,7 +39,9 @@ namespace TouhouMigration.Runtime.Foundation
             SocialBondService bonds = null,
             MigrationFatigueSystem fatigue = null,
             MigrationNpcMemorySystem npcMemory = null,
-            WeatherService weather = null)
+            WeatherService weather = null,
+            MigrationShopDatabase shopDatabase = null,
+            MigrationShopStock shopStock = null)
         {
             this.clock = clock;
             this.farming = farming;
@@ -44,6 +50,8 @@ namespace TouhouMigration.Runtime.Foundation
             this.fatigue = fatigue;
             this.npcMemory = npcMemory;
             this.weather = weather;
+            this.shopDatabase = shopDatabase;
+            this.shopStock = shopStock;
 
             if (this.clock != null)
             {
@@ -60,6 +68,7 @@ namespace TouhouMigration.Runtime.Foundation
             bonds?.StartNewDay();
             npcMemory?.DecayAllMemories();
             weather?.UpdateForDate(day, season.ToString());
+            shopStock?.InitializeFrom(shopDatabase);
             LastResetDay = day;
             DailyResetsRun++;
         }

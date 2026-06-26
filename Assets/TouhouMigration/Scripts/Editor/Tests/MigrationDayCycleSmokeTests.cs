@@ -1,4 +1,5 @@
 using System;
+using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Player;
 using TouhouMigration.Runtime.Quest;
@@ -23,6 +24,7 @@ namespace TouhouMigration.Editor.Tests
             TestNaturalMidnightCrossingRunsDailyReset();
             TestSleepDecaysNpcMemories();
             TestSleepUpdatesWeatherForNewDate();
+            TestSleepRefreshesShopStock();
             TestNullServicesAreSafe();
             Debug.Log("Migration day cycle smoke tests passed.");
         }
@@ -111,6 +113,30 @@ namespace TouhouMigration.Editor.Tests
             WeatherService expected = new WeatherService();
             expected.UpdateForDate(clock.Day, clock.Season.ToString());
             AssertEqual(expected.MoonPhase, weather.MoonPhase, "Sleeping updates the weather/moon phase for the new date.");
+            cycle.Detach();
+        }
+
+        private static void TestSleepRefreshesShopStock()
+        {
+            const string ShopDataPath = "Assets/TouhouMigration/Data/Shops/shops.json";
+            MigrationShopDatabase database = new MigrationShopDatabase();
+            AssertEqual(true, database.LoadFromPath(ShopDataPath), "Shop database loads for the day-cycle test.");
+
+            MigrationShopStock stock = new MigrationShopStock();
+            stock.InitializeFrom(database);
+            stock.TryConsume("town_blacksmith", "sword_basic", 2);
+            AssertEqual(1, stock.GetStock("town_blacksmith", "sword_basic"),
+                "Two of the three basic swords are sold before sleeping.");
+
+            GameClock clock = new GameClock();
+            clock.SetTime(22, 0);
+            MigrationDayCycle cycle = new MigrationDayCycle(
+                clock, null, null, null, null, null, null, database, stock);
+
+            cycle.Sleep();
+
+            AssertEqual(3, stock.GetStock("town_blacksmith", "sword_basic"),
+                "Sleeping into a new day refreshes shop stock to its catalog level (Godot refresh_all_stock).");
             cycle.Detach();
         }
 
