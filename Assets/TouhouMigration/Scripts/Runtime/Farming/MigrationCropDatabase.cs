@@ -68,7 +68,9 @@ namespace TouhouMigration.Runtime.Farming
                 string cropId = pair.Key;
                 int growthDays = GetInt(data, "growth_days", 5);
                 string harvestItemId = ResolveHarvestItemId(cropId);
-                crops[cropId] = new MigrationCropDefinition(cropId, growthDays, true, harvestItemId, 1, 1);
+                MigrationCropRarity rarity = ParseRarity(GetString(data, "rarity"));
+                MigrationCropSeason season = ParseSeason(GetString(data, "season"));
+                crops[cropId] = new MigrationCropDefinition(cropId, growthDays, true, harvestItemId, 1, 1, rarity, season);
             }
 
             return crops.Count > 0 && errors.Count == 0;
@@ -82,6 +84,58 @@ namespace TouhouMigration.Runtime.Farming
         public IReadOnlyDictionary<string, MigrationCropDefinition> GetAllCrops()
         {
             return crops;
+        }
+
+        // Every crop id at the given rarity (Godot get_crops_by_rarity); backs the seed-bag gacha rolls.
+        public IReadOnlyList<string> GetCropsByRarity(MigrationCropRarity rarity)
+        {
+            List<string> result = new List<string>();
+            foreach (KeyValuePair<string, MigrationCropDefinition> pair in crops)
+            {
+                if (pair.Value != null && pair.Value.Rarity == rarity)
+                {
+                    result.Add(pair.Key);
+                }
+            }
+
+            return result;
+        }
+
+        // Whether a known crop can be planted in the given season (Godot can_plant_in_season). False for
+        // an unknown crop id.
+        public bool CanPlantInSeason(string cropId, MigrationCropSeason season)
+        {
+            MigrationCropDefinition crop = GetCrop(cropId);
+            return crop != null && crop.CanPlantIn(season);
+        }
+
+        private static string GetString(Dictionary<string, object> data, string key)
+        {
+            return data.TryGetValue(key, out object value) && value != null ? value.ToString() : string.Empty;
+        }
+
+        private static MigrationCropRarity ParseRarity(string raw)
+        {
+            switch ((raw ?? string.Empty).Trim().ToUpperInvariant())
+            {
+                case "UNCOMMON": return MigrationCropRarity.Uncommon;
+                case "RARE": return MigrationCropRarity.Rare;
+                case "LEGENDARY": return MigrationCropRarity.Legendary;
+                default: return MigrationCropRarity.Common;
+            }
+        }
+
+        private static MigrationCropSeason ParseSeason(string raw)
+        {
+            switch ((raw ?? string.Empty).Trim().ToUpperInvariant())
+            {
+                case "SUMMER": return MigrationCropSeason.Summer;
+                case "AUTUMN": return MigrationCropSeason.Autumn;
+                case "WINTER": return MigrationCropSeason.Winter;
+                case "ALL": return MigrationCropSeason.All;
+                case "SPRING_SUMMER_AUTUMN": return MigrationCropSeason.SpringSummerAutumn;
+                default: return MigrationCropSeason.Spring;
+            }
         }
 
         private static string ResolveHarvestItemId(string cropId)
