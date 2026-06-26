@@ -22,6 +22,7 @@ namespace TouhouMigration.Editor.Tests
             TestTerrainSuppressionAndPressureClamp();
             TestSetupCirnoRunInstallsClauseAndDomain();
             TestCardCooldownDurations();
+            TestFullRunSnapshotRoundTrip();
             Debug.Log("Card build run controller smoke tests passed.");
         }
 
@@ -149,6 +150,40 @@ namespace TouhouMigration.Editor.Tests
             run.PlayCard("mokou_starter_fire_bird", new List<MigrationCardEffectBlock>());
             AssertEqual(2.0, run.GetCardCooldown("mokou_starter_fire_bird"),
                 "Playing a card sets its CARD_COOLDOWNS replay cooldown.");
+        }
+
+        private static void TestFullRunSnapshotRoundTrip()
+        {
+            MigrationCardBuildRunController run = new MigrationCardBuildRunController(
+                new List<string> { "a", "b", "c", "d" });
+            run.SetupCirnoRun();
+            run.Deck.Draw(2, _ => 0);
+            run.State.AddResource("ember", 3);
+            run.State.ApplyStatus("enemy", "burn", 2);
+            run.Boss.Damage(140);                  // boss hp 400
+            run.RewrittenRuleCount = 1;
+            run.TerrainPressure = 4;
+            run.OpenVulnerability(2.5);
+            run.SuppressTerrain(3.0);
+            run.SetCardCooldown("a", 5.0);
+
+            CardBuildRunSnapshot snapshot = run.CaptureSnapshot();
+
+            MigrationCardBuildRunController restored = new MigrationCardBuildRunController(
+                new List<string> { "x" }); // different deck — fully overwritten by the load
+            restored.RestoreSnapshot(snapshot);
+
+            AssertEqual(400, restored.BossHp, "Boss HP round-trips.");
+            AssertEqual(3, restored.State.GetResource("ember"), "Resources round-trip.");
+            AssertEqual(2, restored.State.GetStatus("enemy", "burn"), "Statuses round-trip.");
+            AssertEqual(1, restored.RewrittenRuleCount, "Rewritten-rule count round-trips.");
+            AssertEqual(4, restored.TerrainPressure, "Terrain pressure round-trips.");
+            AssertEqual(2, restored.Deck.HandCount, "The deck (hand) round-trips.");
+            AssertEqual(true, restored.IsVulnerabilityOpen, "The vulnerability window round-trips open.");
+            AssertEqual(true, restored.IsTerrainSuppressed, "Terrain suppression round-trips.");
+            AssertEqual(true, restored.IsCardOnCooldown("a"), "Card cooldowns round-trip.");
+            AssertEqual(true, restored.Clauses.IsExposed("terrain_tyranny"), "The boss clause (from setup) round-trips.");
+            AssertEqual(3, restored.Domains.GetThreshold("terrain_tyranny"), "The boss domain round-trips.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

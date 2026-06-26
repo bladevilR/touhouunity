@@ -277,6 +277,68 @@ namespace TouhouMigration.Runtime.CardBuild
             return cardId != null && CardCooldowns.TryGetValue(cardId, out double seconds) ? seconds : 3.0;
         }
 
+        // Capture the full run state for a save (Godot CardBuildRunStore.save_current_run): every sub-unit
+        // snapshot + the controller scalars.
+        public CardBuildRunSnapshot CaptureSnapshot()
+        {
+            CardBuildRunSnapshot snapshot = new CardBuildRunSnapshot
+            {
+                runState = State.CreateSnapshot(),
+                bossHp = Boss.CurrentHp,
+                deck = Deck.CreateSnapshot(),
+                clauses = Clauses.CreateSnapshot(),
+                domains = Domains.CreateSnapshot(),
+                mokou = Mokou.CreateSnapshot(),
+                terrainPressure = TerrainPressure,
+                rewrittenRuleCount = RewrittenRuleCount,
+                vulnerabilitySeconds = VulnerabilitySeconds,
+                terrainSuppressionSeconds = TerrainSuppressionSeconds,
+            };
+            foreach (KeyValuePair<string, double> cooldown in cardCooldowns)
+            {
+                snapshot.cardCooldownIds.Add(cooldown.Key);
+                snapshot.cardCooldownSeconds.Add(cooldown.Value);
+            }
+
+            return snapshot;
+        }
+
+        // Restore a saved run into this (freshly-constructed) controller (Godot load_current_run).
+        public void RestoreSnapshot(CardBuildRunSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            State.LoadSnapshot(snapshot.runState);
+            Boss.RestoreHp(snapshot.bossHp);
+            Deck.LoadSnapshot(snapshot.deck);
+            Clauses.LoadSnapshot(snapshot.clauses);
+            Domains.LoadSnapshot(snapshot.domains);
+            Mokou.LoadSnapshot(snapshot.mokou);
+            TerrainPressure = snapshot.terrainPressure;
+            RewrittenRuleCount = snapshot.rewrittenRuleCount;
+
+            vulnerability.Reduce(double.MaxValue);
+            vulnerability.Open(snapshot.vulnerabilitySeconds);
+            terrainSuppression.Reduce(double.MaxValue);
+            terrainSuppression.Open(snapshot.terrainSuppressionSeconds);
+
+            cardCooldowns.Clear();
+            if (snapshot.cardCooldownIds != null && snapshot.cardCooldownSeconds != null)
+            {
+                int count = System.Math.Min(snapshot.cardCooldownIds.Count, snapshot.cardCooldownSeconds.Count);
+                for (int i = 0; i < count; i++)
+                {
+                    if (!string.IsNullOrEmpty(snapshot.cardCooldownIds[i]))
+                    {
+                        cardCooldowns[snapshot.cardCooldownIds[i]] = snapshot.cardCooldownSeconds[i];
+                    }
+                }
+            }
+        }
+
         // Cirno boss-fight run setup (Godot setup_cirno_vertical_slice's install block): install the boss
         // clause + domain, both revealed and exposed, with the terrain-tyranny answer families and the
         // threshold-3 domain. Call once at run start so the vulnerability / terrain-suppression /
@@ -723,5 +785,24 @@ namespace TouhouMigration.Runtime.CardBuild
                 list.Add(block);
             }
         }
+    }
+
+    // A full card-build run snapshot (what Godot CardBuildRunStore persists): every sub-unit's state plus
+    // the controller scalars. JsonUtility-safe (each member is a [Serializable] snapshot or a list/scalar).
+    [System.Serializable]
+    public sealed class CardBuildRunSnapshot
+    {
+        public CardRunStateSnapshot runState = new CardRunStateSnapshot();
+        public int bossHp;
+        public CardDeckSnapshot deck = new CardDeckSnapshot();
+        public CardBossClausesSnapshot clauses = new CardBossClausesSnapshot();
+        public CardBossDomainsSnapshot domains = new CardBossDomainsSnapshot();
+        public MokouChargeSnapshot mokou = new MokouChargeSnapshot();
+        public int terrainPressure = 2;
+        public int rewrittenRuleCount;
+        public double vulnerabilitySeconds;
+        public double terrainSuppressionSeconds;
+        public System.Collections.Generic.List<string> cardCooldownIds = new System.Collections.Generic.List<string>();
+        public System.Collections.Generic.List<double> cardCooldownSeconds = new System.Collections.Generic.List<double>();
     }
 }
