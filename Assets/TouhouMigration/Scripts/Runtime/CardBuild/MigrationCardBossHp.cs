@@ -34,5 +34,31 @@ namespace TouhouMigration.Runtime.CardBuild
             CurrentHp -= dealt;
             return dealt;
         }
+
+        // Resolve a raw player-attack amount through the Cirno guard model (Godot
+        // apply_player_attack_damage) and apply it: x1.0 + 0.16/rewritten-rule when the vulnerability
+        // window is open, else a chip multiplier (x0.42 at terrain pressure <= 1, otherwise x0.18). The
+        // result is at least 1 on any positive hit. Returns the HP actually removed; 0 for a non-positive
+        // amount or an already-defeated boss.
+        public int ApplyPlayerAttack(double amount, bool vulnerabilityOpen, int terrainPressure, int rewrittenRuleCount)
+        {
+            if (amount <= 0.0 || IsDefeated)
+            {
+                return 0;
+            }
+
+            double multiplier = 0.18;
+            if (vulnerabilityOpen)
+            {
+                multiplier = 1.0 + rewrittenRuleCount * 0.16;
+            }
+            else if (terrainPressure <= 1)
+            {
+                multiplier = 0.42;
+            }
+
+            int resolved = Math.Max(1, (int)Math.Round(amount * multiplier, MidpointRounding.AwayFromZero));
+            return Damage(resolved);
+        }
     }
 }
