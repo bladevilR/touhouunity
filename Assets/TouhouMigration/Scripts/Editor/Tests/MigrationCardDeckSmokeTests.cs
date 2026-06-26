@@ -21,6 +21,7 @@ namespace TouhouMigration.Editor.Tests
             TestMoveRetainedToHandReturnsCards();
             TestPutOnCooldownClampsToOneTurnThenReturnsToDiscard();
             TestTickCooldownsDecrementsMultiTurn();
+            TestCountBasedHandMoves();
             Debug.Log("Migration card deck smoke tests passed.");
         }
 
@@ -133,6 +134,30 @@ namespace TouhouMigration.Editor.Tests
             deck.TickCooldowns();
             AssertEqual(0, deck.CooldownCount, "The cooldown clears after the second tick.");
             AssertEqual(1, deck.DiscardPileCount, "The card returns to the discard pile when the cooldown expires.");
+        }
+
+        private static void TestCountBasedHandMoves()
+        {
+            // Godot CardBuildRuntimeState discard/exhaust/retain(amount) pop from the BACK of the hand.
+            MigrationCardDeck deck = new MigrationCardDeck(new List<string> { "a", "b", "c", "d", "e" });
+            deck.Draw(5, max => 0); // hand: a b c d e
+
+            AssertEqual(2, deck.DiscardFromHand(2), "Count-based discard returns the number moved.");
+            AssertEqual(3, deck.HandCount, "Discarding two leaves three in hand.");
+            AssertEqual(2, deck.DiscardPileCount, "Discarded cards go to the discard pile.");
+            AssertEqual("c", deck.Hand[deck.HandCount - 1], "Discard pops from the back of the hand (e, d gone).");
+
+            AssertEqual(1, deck.RetainFromHand(1), "Count-based retain returns the number moved.");
+            AssertEqual(1, deck.RetainedCount, "Retained card moves to the retained pile.");
+
+            AssertEqual(1, deck.ExhaustFromHand(1), "Count-based exhaust returns the number moved.");
+            AssertEqual(1, deck.ExhaustPileCount, "Exhausted card moves to the exhaust pile.");
+            AssertEqual(1, deck.HandCount, "One card remains in hand after discard/retain/exhaust.");
+
+            // Asking for more than the hand holds moves only what's there.
+            AssertEqual(1, deck.DiscardFromHand(5), "A count beyond the hand only moves what remains.");
+            AssertEqual(0, deck.HandCount, "The hand is empty after over-discarding.");
+            AssertEqual(0, deck.DiscardFromHand(3), "Discarding from an empty hand moves nothing.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

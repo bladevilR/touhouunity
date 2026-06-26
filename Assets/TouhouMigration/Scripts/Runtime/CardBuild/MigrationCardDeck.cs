@@ -83,6 +83,29 @@ namespace TouhouMigration.Runtime.CardBuild
             hand.Clear();
         }
 
+        // Count-based hand moves (Godot CardBuildRuntimeState discard/exhaust/retain(amount)): pop the last
+        // 'count' cards off the hand into the matching pile, stopping early if the hand empties. Returns
+        // the number actually moved.
+        public int DiscardFromHand(int count) => MoveFromHandBack(count, discardPile);
+
+        public int ExhaustFromHand(int count) => MoveFromHandBack(count, exhaustPile);
+
+        public int RetainFromHand(int count) => MoveFromHandBack(count, retainedCards);
+
+        private int MoveFromHandBack(int count, List<string> destination)
+        {
+            int moved = 0;
+            for (int i = 0; i < count && hand.Count > 0; i++)
+            {
+                int last = hand.Count - 1;
+                destination.Add(hand[last]);
+                hand.RemoveAt(last);
+                moved++;
+            }
+
+            return moved;
+        }
+
         public int RetainedCount => retainedCards.Count;
         public int ExhaustPileCount => exhaustPile.Count;
         public int CooldownCount => cooldownCards.Count;
