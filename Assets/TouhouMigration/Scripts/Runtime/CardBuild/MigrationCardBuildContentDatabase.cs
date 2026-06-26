@@ -121,6 +121,57 @@ namespace TouhouMigration.Runtime.CardBuild
         public MigrationCardBuildCharacter GetCharacter(string characterId) =>
             characterId != null && characters.TryGetValue(characterId, out MigrationCardBuildCharacter def) ? def : null;
 
+        // Cross-reference validation across the loaded content (Godot CardBuildDatabase validate_all):
+        // upgrades must target a known card with a valid operation (and sane cooldown/charges); characters
+        // must reference real archetypes. Returns the list of problems (empty = consistent).
+        private static readonly HashSet<string> ValidOperations = new HashSet<string>
+        {
+            "set_cooldown", "set_charges", "append_answer_tags", "set_activation_mode",
+        };
+
+        public IReadOnlyList<string> Validate(IReadOnlyCollection<string> knownCardIds)
+        {
+            List<string> problems = new List<string>();
+            HashSet<string> cards = knownCardIds != null
+                ? new HashSet<string>(knownCardIds)
+                : new HashSet<string>();
+
+            foreach (KeyValuePair<string, MigrationCardUpgrade> pair in upgrades)
+            {
+                MigrationCardUpgrade upgrade = pair.Value;
+                if (string.IsNullOrEmpty(upgrade.TargetCardId) || !cards.Contains(upgrade.TargetCardId))
+                {
+                    problems.Add($"upgrade {pair.Key} references missing target_card_id {upgrade.TargetCardId}");
+                }
+
+                if (!ValidOperations.Contains(upgrade.Operation))
+                {
+                    problems.Add($"upgrade {pair.Key} has invalid operation {upgrade.Operation}");
+                }
+                else if (upgrade.Operation == "set_cooldown" && upgrade.Cooldown.HasValue && upgrade.Cooldown.Value < 0.0)
+                {
+                    problems.Add($"upgrade {pair.Key} cooldown must be non-negative");
+                }
+                else if (upgrade.Operation == "set_charges" && upgrade.Charges.HasValue && upgrade.Charges.Value < 1)
+                {
+                    problems.Add($"upgrade {pair.Key} charges must be at least 1");
+                }
+            }
+
+            foreach (KeyValuePair<string, MigrationCardBuildCharacter> pair in characters)
+            {
+                foreach (string archetypeId in pair.Value.Archetypes)
+                {
+                    if (!archetypes.ContainsKey(archetypeId))
+                    {
+                        problems.Add($"character {pair.Key} references missing archetype {archetypeId}");
+                    }
+                }
+            }
+
+            return problems;
+        }
+
         // Load the boss puzzle rules (Godot CardBuildDatabase _index_boss_rules).
         public bool LoadBossRules(string bossRulesJsonPath)
         {

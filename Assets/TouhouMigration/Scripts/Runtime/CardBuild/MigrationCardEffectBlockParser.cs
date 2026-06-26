@@ -16,6 +16,7 @@ namespace TouhouMigration.Runtime.CardBuild
 
         public IReadOnlyList<string> Errors => errors;
         public int CardCount => blocksByCard.Count;
+        public IReadOnlyCollection<string> CardIds => blocksByCard.Keys;
 
         public bool LoadFromPath(string cardsJsonPath)
         {
