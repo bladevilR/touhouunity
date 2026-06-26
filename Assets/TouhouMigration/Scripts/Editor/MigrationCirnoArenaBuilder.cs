@@ -165,5 +165,65 @@ namespace TouhouMigration.Editor
             AssetDatabase.Refresh();
             Debug.Log("[MigrationCirnoArenaBuilder] authored " + CombatScenePath);
         }
+
+        private const string HubScenePath = SceneDir + "/MigrationDemoHub.unity";
+
+        private static readonly string[] DemoScenePaths =
+        {
+            HubScenePath, ScenePath, ShopScenePath, FarmScenePath, FishScenePath, CombatScenePath,
+        };
+
+        // Authors the demo hub scene (camera + MigrationDemoHubDriver) and registers all six demo scenes in
+        // the build settings (appended, never clobbering existing entries) so the hub's LoadScene resolves
+        // them. The single navigable entry point to every standalone domain demo.
+        [MenuItem("Touhou Migration/Build/Build Demo Hub Scene")]
+        public static void BuildDemoHub()
+        {
+            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            GameObject cameraGo = new GameObject("Main Camera");
+            Camera camera = cameraGo.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.10f, 0.09f, 0.12f);
+            camera.orthographic = true;
+            cameraGo.tag = "MainCamera";
+
+            GameObject hubGo = new GameObject("DemoHub");
+            hubGo.AddComponent<MigrationDemoHubDriver>();
+
+            if (!Directory.Exists(SceneDir))
+            {
+                Directory.CreateDirectory(SceneDir);
+            }
+
+            EditorSceneManager.SaveScene(scene, HubScenePath);
+            RegisterDemoScenesInBuildSettings();
+            AssetDatabase.Refresh();
+            Debug.Log("[MigrationCirnoArenaBuilder] authored " + HubScenePath + " + registered demo scenes");
+        }
+
+        // Append any missing demo scenes to EditorBuildSettings (so SceneManager.LoadScene resolves them),
+        // preserving every existing entry.
+        private static void RegisterDemoScenesInBuildSettings()
+        {
+            System.Collections.Generic.List<EditorBuildSettingsScene> scenes =
+                new System.Collections.Generic.List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+
+            System.Collections.Generic.HashSet<string> present = new System.Collections.Generic.HashSet<string>();
+            foreach (EditorBuildSettingsScene existing in scenes)
+            {
+                present.Add(existing.path);
+            }
+
+            foreach (string path in DemoScenePaths)
+            {
+                if (!present.Contains(path))
+                {
+                    scenes.Add(new EditorBuildSettingsScene(path, true));
+                }
+            }
+
+            EditorBuildSettings.scenes = scenes.ToArray();
+        }
     }
 }
