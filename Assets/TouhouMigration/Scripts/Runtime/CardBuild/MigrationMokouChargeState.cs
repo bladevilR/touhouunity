@@ -59,13 +59,20 @@ namespace TouhouMigration.Runtime.CardBuild
         private readonly System.Collections.Generic.Dictionary<string, int> statuses =
             new System.Collections.Generic.Dictionary<string, int>();
 
+        private readonly System.Collections.Generic.List<string> triggers = new System.Collections.Generic.List<string>();
+
         private bool hasTerminal;
         private double terminalBaseDamage;
         private double terminalEnergyCost;
         private int terminalFlame;
         private double terminalTriggerCoefficient = 1.0;
-        private double terminalDamageBonus;
-        private double chargeSpeedMultiplier = 1.0;
+
+        // Process-modifier accumulators (Godot apply_process_modifier): feed AdvanceCharge (speed) and
+        // TerminalDamageMultiplier (bonus); charge-dodge retain is consumed by the deferred dodge mechanic.
+        public double ChargeDodgeRetain { get; private set; }
+        public double ChargeSpeedMultiplier { get; private set; } = 1.0;
+        public double TerminalDamageBonus { get; private set; }
+        public int TriggerCount => triggers.Count;
 
         public MokouPhase Phase { get; private set; } = MokouPhase.Idle;
         public double Charge { get; private set; }
@@ -107,7 +114,7 @@ namespace TouhouMigration.Runtime.CardBuild
             }
 
             double chargeBefore = Charge;
-            double chargeRate = (100.0 / FullChargeSeconds) * chargeSpeedMultiplier;
+            double chargeRate = (100.0 / FullChargeSeconds) * ChargeSpeedMultiplier;
             Charge = Clamp(Charge + chargeRate * dt, 0.0, MaxCharge);
 
             if (Charge >= 100.0)
@@ -178,6 +185,36 @@ namespace TouhouMigration.Runtime.CardBuild
             ImmortalGauge = Clamp(ImmortalGauge + amount, 0.0, MaxImmortalGauge);
         }
 
+        // Apply a process-card modifier (Godot apply_process_modifier): dodge-retain takes the higher
+        // value, charge-speed multiplies (floored at 0.05), terminal-damage bonus accumulates. Each field
+        // is optional and only applied when supplied.
+        public void ApplyProcessModifier(double? chargeDodgeRetain = null, double? chargeSpeedMultiplier = null, double? terminalDamageBonus = null)
+        {
+            if (chargeDodgeRetain.HasValue)
+            {
+                ChargeDodgeRetain = Math.Max(ChargeDodgeRetain, chargeDodgeRetain.Value);
+            }
+
+            if (chargeSpeedMultiplier.HasValue)
+            {
+                ChargeSpeedMultiplier *= Math.Max(0.05, chargeSpeedMultiplier.Value);
+            }
+
+            if (terminalDamageBonus.HasValue)
+            {
+                TerminalDamageBonus += terminalDamageBonus.Value;
+            }
+        }
+
+        // Install a trigger card (Godot install_trigger appends the trigger).
+        public void InstallTrigger(string triggerId)
+        {
+            if (!string.IsNullOrEmpty(triggerId))
+            {
+                triggers.Add(triggerId);
+            }
+        }
+
         // Charge-tier damage multiplier (Godot _charge_damage_multiplier).
         public double ChargeDamageMultiplier()
         {
@@ -198,7 +235,7 @@ namespace TouhouMigration.Runtime.CardBuild
         public double TerminalDamageMultiplier()
         {
             double overheatBonus = Math.Max(0.0, Charge - 100.0) / 10.0 * OverheatDamagePer10Charge;
-            return 1.0 + overheatBonus + terminalDamageBonus;
+            return 1.0 + overheatBonus + TerminalDamageBonus;
         }
 
         public int GetStatus(string statusId)

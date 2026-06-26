@@ -20,6 +20,7 @@ namespace TouhouMigration.Editor.Tests
             TestChargeDamageMultiplierTiers();
             TestReleaseGatesAndScaling();
             TestReleaseBlockedReasons();
+            TestProcessModifierAndTriggers();
             Debug.Log("Mokou charge state smoke tests passed.");
         }
 
@@ -110,6 +111,33 @@ namespace TouhouMigration.Editor.Tests
             broke.BeginCharge();
             broke.AdvanceCharge(1.6);
             AssertEqual("energy", broke.ReleaseCharge().Reason, "Release without enough energy fails.");
+        }
+
+        private static void TestProcessModifierAndTriggers()
+        {
+            MigrationMokouChargeState chain = new MigrationMokouChargeState();
+            AssertEqual(1.0, chain.ChargeSpeedMultiplier, "Charge speed starts at x1.");
+            AssertEqual(0.0, chain.ChargeDodgeRetain, "Charge-dodge retain starts at 0.");
+
+            // Godot apply_process_modifier: dodge-retain takes the max, speed multiplies, damage-bonus adds.
+            chain.ApplyProcessModifier(chargeDodgeRetain: 0.5, chargeSpeedMultiplier: 2.0, terminalDamageBonus: 0.1);
+            AssertEqual(0.5, chain.ChargeDodgeRetain, "Process modifier sets the dodge retain.");
+            AssertEqual(2.0, chain.ChargeSpeedMultiplier, "Process modifier multiplies the charge speed.");
+            AssertTrue(Math.Abs(0.1 - chain.TerminalDamageBonus) < Tol, "Process modifier adds the terminal damage bonus.");
+
+            chain.ApplyProcessModifier(chargeDodgeRetain: 0.3, chargeSpeedMultiplier: 0.5, terminalDamageBonus: 0.2);
+            AssertEqual(0.5, chain.ChargeDodgeRetain, "Dodge retain keeps the higher value (max).");
+            AssertEqual(1.0, chain.ChargeSpeedMultiplier, "Charge speed multiplies (2.0 * 0.5).");
+            AssertTrue(Math.Abs(0.3 - chain.TerminalDamageBonus) < Tol, "Terminal damage bonus accumulates (0.1 + 0.2).");
+
+            // A faster charge speed reaches full charge in less time.
+            chain.BeginCharge();
+            chain.AdvanceCharge(1.6); // at x1.0 speed (2.0*0.5) -> exactly 100
+            AssertTrue(Math.Abs(100.0 - chain.Charge) < Tol, "Charge speed multiplier feeds the charge rate.");
+
+            chain.InstallTrigger("after_perfect_dodge");
+            chain.InstallTrigger("on_overheat");
+            AssertEqual(2, chain.TriggerCount, "Installed triggers are tracked.");
         }
 
         private static void AssertTrue(bool condition, string message)
