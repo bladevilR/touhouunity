@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestNonPositiveDamageIsNoOp();
             TestCustomMaxHp();
             TestPlayerAttackMultiplier();
+            TestRestoreHp();
             Debug.Log("Card boss HP smoke tests passed.");
         }
 
@@ -91,6 +92,21 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(0, none.ApplyPlayerAttack(0, true, 2, 0), "Zero amount deals nothing.");
             none.Damage(100);
             AssertEqual(0, none.ApplyPlayerAttack(50, true, 2, 0), "A defeated boss takes no attack damage.");
+        }
+
+        private static void TestRestoreHp()
+        {
+            MigrationCardBossHp boss = new MigrationCardBossHp();
+            boss.RestoreHp(200);
+            AssertEqual(200, boss.CurrentHp, "RestoreHp sets the saved HP.");
+            AssertEqual(false, boss.IsDefeated, "A restored positive HP is not defeated.");
+
+            boss.RestoreHp(999); // above max -> clamps
+            AssertEqual(540, boss.CurrentHp, "RestoreHp clamps at max HP.");
+
+            boss.RestoreHp(-5); // below 0 -> clamps
+            AssertEqual(0, boss.CurrentHp, "RestoreHp clamps at 0.");
+            AssertEqual(true, boss.IsDefeated, "A restored 0 HP is defeated.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

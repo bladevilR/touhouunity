@@ -35,6 +35,12 @@ namespace TouhouMigration.Runtime.CardBuild
             return dealt;
         }
 
+        // Restore current HP from a card-run save, clamped to [0, MaxHp].
+        public void RestoreHp(int currentHp)
+        {
+            CurrentHp = currentHp < 0 ? 0 : currentHp > MaxHp ? MaxHp : currentHp;
+        }
+
         // Resolve a raw player-attack amount through the Cirno guard model (Godot
         // apply_player_attack_damage) and apply it: x1.0 + 0.16/rewritten-rule when the vulnerability
         // window is open, else a chip multiplier (x0.42 at terrain pressure <= 1, otherwise x0.18). The
