@@ -23,6 +23,16 @@ namespace TouhouMigration.Runtime.CardBuild
         public string StackPolicy = string.Empty;
     }
 
+    // A boss puzzle rule (boss_rules.json): which bosses pose it + which answer families counter it.
+    public sealed class MigrationCardBossRule
+    {
+        public string Id = string.Empty;
+        public string DisplayName = string.Empty;
+        public List<string> CandidateBosses = new List<string>();
+        public List<string> AnswerFamilies = new List<string>();
+        public string Pressure = string.Empty;
+    }
+
     // Loads the cardbuild content (relics.json + upgrades.json) into queryable definitions that feed
     // MigrationCardProgression (Godot CardBuildDatabase _index_relics / _index_upgrades). Relic effect
     // blocks reuse the card parser's ParseBlock. UnityEngine-free + unit-testable.
@@ -32,6 +42,7 @@ namespace TouhouMigration.Runtime.CardBuild
         private readonly Dictionary<string, MigrationCardUpgrade> upgrades = new Dictionary<string, MigrationCardUpgrade>();
         private readonly Dictionary<string, MigrationCardResourceDef> resources = new Dictionary<string, MigrationCardResourceDef>();
         private readonly Dictionary<string, MigrationCardStatusDef> statuses = new Dictionary<string, MigrationCardStatusDef>();
+        private readonly Dictionary<string, MigrationCardBossRule> bossRules = new Dictionary<string, MigrationCardBossRule>();
         private readonly List<string> errors = new List<string>();
 
         public IReadOnlyList<string> Errors => errors;
@@ -39,6 +50,50 @@ namespace TouhouMigration.Runtime.CardBuild
         public int UpgradeCount => upgrades.Count;
         public int ResourceCount => resources.Count;
         public int StatusCount => statuses.Count;
+        public int BossRuleCount => bossRules.Count;
+
+        // Load the boss puzzle rules (Godot CardBuildDatabase _index_boss_rules).
+        public bool LoadBossRules(string bossRulesJsonPath)
+        {
+            bossRules.Clear();
+            foreach (Dictionary<string, object> entry in ReadArray(bossRulesJsonPath, "boss_rules"))
+            {
+                string id = GetString(entry, "id");
+                if (string.IsNullOrEmpty(id))
+                {
+                    continue;
+                }
+
+                MigrationCardBossRule rule = new MigrationCardBossRule
+                {
+                    Id = id,
+                    DisplayName = entry.ContainsKey("display_name_en") ? GetString(entry, "display_name_en") : GetString(entry, "display_name_zh"),
+                    Pressure = GetString(entry, "pressure"),
+                };
+                rule.CandidateBosses.AddRange(GetStringList(entry, "candidate_bosses"));
+                rule.AnswerFamilies.AddRange(GetStringList(entry, "answer_families"));
+                bossRules[id] = rule;
+            }
+
+            return bossRules.Count > 0;
+        }
+
+        public MigrationCardBossRule GetBossRule(string ruleId) =>
+            ruleId != null && bossRules.TryGetValue(ruleId, out MigrationCardBossRule rule) ? rule : null;
+
+        private static IEnumerable<string> GetStringList(Dictionary<string, object> data, string key)
+        {
+            List<string> values = new List<string>();
+            if (data.TryGetValue(key, out object obj) && obj is List<object> list)
+            {
+                foreach (object item in list)
+                {
+                    values.Add(System.Convert.ToString(item));
+                }
+            }
+
+            return values;
+        }
 
         // Load the resource + status definition tables (Godot CardBuildDatabase _index_resources/_statuses).
         public bool LoadDefinitions(string resourcesJsonPath, string statusesJsonPath)

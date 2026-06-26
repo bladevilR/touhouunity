@@ -13,6 +13,7 @@ namespace TouhouMigration.Editor.Tests
         private const string UpgradesPath = "Assets/TouhouMigration/Data/CardBuild/upgrades.json";
         private const string ResourcesPath = "Assets/TouhouMigration/Data/CardBuild/resources.json";
         private const string StatusesPath = "Assets/TouhouMigration/Data/CardBuild/statuses.json";
+        private const string BossRulesPath = "Assets/TouhouMigration/Data/CardBuild/boss_rules.json";
         private const double Tol = 1e-9;
 
         [MenuItem("Touhou Migration/Tests/Run CardBuild Content Database Smoke Tests")]
@@ -21,6 +22,7 @@ namespace TouhouMigration.Editor.Tests
             TestLoadsRelicsAndUpgrades();
             TestUpgradeFeedsProgression();
             TestLoadsResourceAndStatusDefinitions();
+            TestLoadsBossRules();
             Debug.Log("CardBuild content database smoke tests passed.");
         }
 
@@ -74,6 +76,18 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, burn != null, "The burn status loads.");
             AssertEqual("debuff", burn.Polarity, "Burn is a debuff.");
             AssertEqual("intensity", burn.StackPolicy, "Burn stacks by intensity.");
+        }
+
+        private static void TestLoadsBossRules()
+        {
+            MigrationCardBuildContentDatabase db = new MigrationCardBuildContentDatabase();
+            AssertEqual(true, db.LoadBossRules(BossRulesPath), "Boss rules load.");
+            AssertEqual(true, db.BossRuleCount > 0, "At least one boss rule loads.");
+
+            MigrationCardBossRule rule = db.GetBossRule("unavoidable_danmaku");
+            AssertEqual(true, rule != null, "The unavoidable-danmaku rule loads.");
+            AssertEqual(true, rule.CandidateBosses.Contains("reimu_hakurei"), "Reimu is a candidate boss for it.");
+            AssertEqual(true, rule.AnswerFamilies.Contains("barrier_reflect"), "barrier_reflect is one of its answer families.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
