@@ -1,8 +1,34 @@
 # Current Handoff — Resume Point
 
+Last updated: 2026-06-26 (session 6 close)
+
+## ▶▶ RESUME HERE (session 6 → 7)
+
+**State:** my work all pushed; `origin/main` at **`a08d94a`**. Regression **75/75**. Working tree has **only the concurrent session's 4 uncommitted files** dirty (see ⚠️ note) — I never touched them; stage by path only.
+
+**Session 6 shipped 5 verified slices** — a complete **finite-shop-stock** feature line (E4, the handoff's direction 1), all on top of the concurrent session's uncommitted tree, all collision-safe (Economy/Foundation/Save only), regression 75/75 throughout:
+  1. `f4de29a` **finite stock ledger** — `MigrationShopStock` (Godot `ShopManager.runtime_stock`): per-shop/per-item stock seeded from the catalog, decrements on buy ("out_of_stock" gate), refunds carried items on sell-back, daily `ResetShop`. `MigrationShop` takes an optional ledger (null = unlimited, existing callers unaffected). +`ShopStockSmokeTests`.
+  2. `20cf93b` **festival_items parsing** — the orphan `festival_items` block (flower_festival/moon_festival/new_year/tanabata) was silently dropped; now parsed + `GetFestivalItems()`, mirroring seasonal.
+  3. `122685f` **seasonal/festival merge** — `MigrationShopStock.MergeStock(shopId, items)` layers a season's/festival's items onto a shop's stock so they're buyable in-season.
+  4. `42e677e` **save persistence** — `ShopStockSnapshot` (JsonUtility-safe) + `MigrationSaveData.shop_stock` + orchestrator 14th optional dep; stock now survives reopen AND save/load.
+  5. `a08d94a` **day-start refresh** — `MigrationDayCycle` re-seeds shop stock each new day (Godot `refresh_all_stock`) via two optional deps.
+
+**The shop-stock line is logic+integration complete** (ledger / festival / merge / save / day-refresh, all as capability+slot). **The ONE remaining piece is owner-wiring** — `MigrationGlobalUiController` must: construct a single shared `MigrationShopStock`, `InitializeFrom(shopDatabase)` at startup, build each `MigrationShop` with it, merge the active season's `GetSeasonalItems` after reset, pass it as the day-cycle's `shopStock`+`shopDatabase` and the orchestrator's 14th arg, and surface it to the shop UI (stock display + sold-out). **This is BLOCKED:** `MigrationGlobalUiController.cs` is one of the concurrent session's 4 uncommitted files (see ⚠️). Do the owner-wiring once those land/clear.
+
+**Why I stopped here:** the clean self-contained pure-logic well that avoids the 4 concurrent files is now essentially dry. Remaining work is: (a) shop-stock **owner-wiring** (blocked on the concurrent `MigrationGlobalUiController` edits), (b) **E6 cardbuild** — surveyed this session: the Cirno `CardBuildMvpRunController` (1283 lines) is deeply boss-bespoke (ember/fate/seal resources, burn/fate_lock statuses, domains, terrain pressure) and the Unity cards.json (12 Mokou cards) has no generic top-level `cost` dict, so there's **no clean quick generic slice** — it's a deliberate multi-slice real-time port, (c) **Codex/image2 art** (portraits/textures/audio/VFX/models), (d) **user decisions** (Git LFS for the 4×52 MB terrains; E4 uGUI/UITK production-UI reskin vs. keep IMGUI), (e) **ambiguous data** (NPC roster Chinese-name→canonical id reconciliation — needs author intent, don't guess).
+
+**Open question for session 7 (same as session 5's, narrowed):** pick a direction —
+  1. **Shop-stock owner-wiring** (once the concurrent edits clear) — makes all 5 session-6 slices live in-game; the natural completion.
+  2. **E6 cardbuild** — the biggest remaining pure-logic depth, but a heavy bespoke port (no quick slice).
+  3. Standing user decisions: **Git LFS** (history rewrite — risky while a 2nd session shares the tree) and the **uGUI/UITK production-UI** reskin.
+
+---
+
+## (session 5 close)
+
 Last updated: 2026-06-26 (session 5 close)
 
-## ▶▶ RESUME HERE (session 5 → 6)
+### ▶▶ (historical) RESUME (session 5 → 6)
 
 **State:** clean, all pushed, in sync with `origin/main` at **`f0a5fd8`**. Regression **74/74**; 29 scenes play-validated 0 errors.
 
