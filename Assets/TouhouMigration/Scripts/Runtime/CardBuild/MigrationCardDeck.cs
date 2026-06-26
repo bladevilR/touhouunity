@@ -110,6 +110,20 @@ namespace TouhouMigration.Runtime.CardBuild
         public int ExhaustPileCount => exhaustPile.Count;
         public int CooldownCount => cooldownCards.Count;
 
+        // Whether a card is currently held out of play on cooldown (Godot get_card_cooldown > 0).
+        public bool IsOnCooldown(string cardId)
+        {
+            foreach ((string card, int _) in cooldownCards)
+            {
+                if (card == cardId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         // Move a held card to the retained pile (Godot CardDeckController.retain_from_hand). Retained cards
         // survive the end-of-turn discard and are returned to the hand by MoveRetainedToHand.
         public bool RetainFromHand(string cardId)

@@ -2,6 +2,24 @@ using System.Collections.Generic;
 
 namespace TouhouMigration.Runtime.CardBuild
 {
+    // The outcome of a card play (Godot play_card_by_id success/blocking-reason).
+    public readonly struct CardPlayResult
+    {
+        public CardPlayResult(bool success, string cardId, string reason)
+        {
+            Success = success;
+            CardId = cardId;
+            Reason = reason;
+        }
+
+        public bool Success { get; }
+        public string CardId { get; }
+        public string Reason { get; }
+
+        public static CardPlayResult Ok(string cardId) => new CardPlayResult(true, cardId, string.Empty);
+        public static CardPlayResult Blocked(string cardId, string reason) => new CardPlayResult(false, cardId, reason);
+    }
+
     // The CardBuild run facade (Godot CardBuildMvpRunController): composes the independently-tested units
     // — deck piles, the resource/status substrate, the boss HP pool, the vulnerability window, boss
     // clauses, boss domains, and the Mokou charge chain — behind one object and resolves the composite
@@ -56,6 +74,60 @@ namespace TouhouMigration.Runtime.CardBuild
         public int BossHp => Boss.CurrentHp;
 
         public bool IsBossDefeated => Boss.IsDefeated;
+
+        private readonly MigrationCardEffectExecutor effectExecutor = new MigrationCardEffectExecutor();
+
+        // Play a card (Godot play_card_by_id, generic parts): block when the card isn't in hand, is on
+        // cooldown, or its cost can't be paid; otherwise run its effect blocks, move it to the discard
+        // pile, and put it on cooldown. The card's cost is checked (not spent — cards spend via their own
+        // spend_resource blocks). The bespoke per-card resolution + runtime-requirement gates are a later
+        // slice; pass the card's parsed effect blocks + (optional) cost + cooldown.
+        public CardPlayResult PlayCard(string cardId, IReadOnlyList<MigrationCardEffectBlock> effectBlocks,
+            IReadOnlyDictionary<string, int> cost = null, int cooldownTurns = 0)
+        {
+            if (IsBossDefeated)
+            {
+                return CardPlayResult.Blocked(cardId, "boss_defeated");
+            }
+
+            if (!HandContains(cardId))
+            {
+                return CardPlayResult.Blocked(cardId, "not_in_hand");
+            }
+
+            if (Deck.IsOnCooldown(cardId))
+            {
+                return CardPlayResult.Blocked(cardId, "cooldown");
+            }
+
+            string missing = State.MissingCostResource(cost);
+            if (!string.IsNullOrEmpty(missing))
+            {
+                return CardPlayResult.Blocked(cardId, "resource:" + missing);
+            }
+
+            effectExecutor.Execute(effectBlocks, this);
+            Deck.DiscardFromHand(cardId);
+            if (cooldownTurns > 0)
+            {
+                Deck.PutOnCooldown(cardId, cooldownTurns);
+            }
+
+            return CardPlayResult.Ok(cardId);
+        }
+
+        private bool HandContains(string cardId)
+        {
+            foreach (string card in Deck.Hand)
+            {
+                if (card == cardId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         // Run-level effect collections (Godot CardBuildRuntimeState summons / installed_cards /
         // field_objects / partner_events / bullet_modifiers): simple append-lists the effect executor
