@@ -1,5 +1,6 @@
 using System.IO;
 using TouhouMigration.Runtime.CardBuild;
+using TouhouMigration.Runtime.Combat;
 using TouhouMigration.Runtime.Farming;
 using TouhouMigration.Runtime.Fishing;
 using TouhouMigration.Runtime.UI;
@@ -133,6 +134,36 @@ namespace TouhouMigration.Editor
             EditorSceneManager.SaveScene(scene, FishScenePath);
             AssetDatabase.Refresh();
             Debug.Log("[MigrationCirnoArenaBuilder] authored " + FishScenePath);
+        }
+
+        private const string CombatScenePath = SceneDir + "/MigrationCombatDemoPlayable.unity";
+
+        // Authors a standalone enemy-side combat demo scene (camera + MigrationCombatDemoDriver): attack ->
+        // defeat -> loot, without the player MonoBehaviour, so it stays clear of the concurrent locomotion
+        // work while still showing the combat-defeat-loot pipeline.
+        [MenuItem("Touhou Migration/Build/Build Combat Demo Playable Scene")]
+        public static void BuildCombatScene()
+        {
+            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            GameObject cameraGo = new GameObject("Main Camera");
+            Camera camera = cameraGo.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.22f, 0.10f, 0.12f); // battle crimson
+            camera.orthographic = true;
+            cameraGo.tag = "MainCamera";
+
+            GameObject driverGo = new GameObject("CombatDemoDriver");
+            driverGo.AddComponent<MigrationCombatDemoDriver>();
+
+            if (!Directory.Exists(SceneDir))
+            {
+                Directory.CreateDirectory(SceneDir);
+            }
+
+            EditorSceneManager.SaveScene(scene, CombatScenePath);
+            AssetDatabase.Refresh();
+            Debug.Log("[MigrationCirnoArenaBuilder] authored " + CombatScenePath);
         }
     }
 }
