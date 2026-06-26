@@ -17,6 +17,7 @@ namespace TouhouMigration.Editor.Tests
             TestResolvesExactSubstringAndCanonical();
             TestSurfacesTrulyAmbiguous();
             TestCanonicalAliasesResolveNicknames();
+            TestModelOnlySpawnsVersusBroken();
             Debug.Log("NPC roster reconciler smoke tests passed.");
         }
 
@@ -83,6 +84,25 @@ namespace TouhouMigration.Editor.Tests
 
             AssertEqual("mystia", result.Matched["夜雀"], "A canonical species nickname resolves via the alias map.");
             AssertEqual(true, result.Unmatched.Contains("uuz"), "Genuinely-unknown entries stay surfaced.");
+        }
+
+        private static void TestModelOnlySpawnsVersusBroken()
+        {
+            List<MigrationNpcRosterEntry> entries = new List<MigrationNpcRosterEntry>
+            {
+                // No dialogue NPC, but has a model -> intentional background spawn (like 橙/白莲/Flandre).
+                new MigrationNpcRosterEntry("橙", "橙", "res://models/chen.glb", true, "mid", 80f, "", "", ""),
+                // No dialogue NPC and no model -> genuinely broken, needs attention.
+                new MigrationNpcRosterEntry("???", "???", "", true, "mid", 80f, "", "", ""),
+            };
+
+            NpcRosterReconcileResult result = MigrationNpcRosterReconciler.Reconcile(entries, NameMap());
+
+            AssertEqual(true, result.ModelOnlySpawns.Contains("橙"),
+                "A dialogue-less entry with a model is a model-only background spawn, not an error.");
+            AssertEqual(false, result.Unmatched.Contains("橙"), "It is not flagged as broken.");
+            AssertEqual(true, result.Unmatched.Contains("???"),
+                "An entry with neither dialogue nor model is genuinely unmatched.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

@@ -5,7 +5,14 @@ namespace TouhouMigration.Runtime.Social
     // The result of reconciling roster entries to canonical npc ids.
     public sealed class NpcRosterReconcileResult
     {
+        // Roster id -> canonical npc id, for entries that have a dialogue NPC.
         public Dictionary<string, string> Matched { get; } = new Dictionary<string, string>();
+
+        // Entries with no dialogue NPC but a spawnable model: intentional background NPCs (faithful to Godot,
+        // which also has no dialogue for them) — spawn the model, no dialogue. NOT errors.
+        public List<string> ModelOnlySpawns { get; } = new List<string>();
+
+        // Entries with neither a dialogue NPC nor a model: genuinely need author attention.
         public List<string> Unmatched { get; } = new List<string>();
     }
 
@@ -51,6 +58,11 @@ namespace TouhouMigration.Runtime.Social
                 if (resolved != null)
                 {
                     result.Matched[entry.NpcId] = resolved;
+                }
+                else if (!string.IsNullOrEmpty(entry.ModelPath))
+                {
+                    // Dialogue-less but spawnable: an intentional background NPC (faithful to Godot).
+                    result.ModelOnlySpawns.Add(entry.NpcId);
                 }
                 else
                 {
