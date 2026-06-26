@@ -4,11 +4,11 @@ Last updated: 2026-06-26 (session 6 close)
 
 ## ▶▶ RESUME HERE (session 6 → 7)
 
-**State:** my work all pushed; `origin/main` at **`a40fac9`**. Regression **94/94**. Working tree has **only the concurrent session's 4 uncommitted files** dirty (see ⚠️ note) — I never touched them; stage by path only.
+**State:** my work all pushed; `origin/main` at **`5b5f0ad`**. Regression **95/95**. Working tree has **only the concurrent session's 4 uncommitted files** dirty (see ⚠️ note) — I never touched them; stage by path only.
 
 **▶ NEXT-SESSION MENU (non-blocked pure-logic epics surveyed this session):** with E6 logic-complete, the remaining non-blocked, non-art pure-logic work is **fresh un-ported Godot systems**, each its own data-infra chain (best started with focused context, not at a session tail):
   - **Weapons subsystem** (logic core DONE, slices 35-37): `MigrationWeaponFusion` + `MigrationWeaponInventory` + `MigrationWeaponCatalog` compose self-sufficiently (catalog→inventory→fusion). Remaining is scene/real-time: upgrade-tree level bonuses + qualitative changes, then `WeaponSystem` firing/projectiles + `FusionSystem` owner/UI.
-  - **`BondSystem`/`CombatBondSystem`** (350 lines) — combat bond skills + passive modifiers (distinct from the social `SocialBondService` already ported).
+  - ✅ **`CombatBondSystem`** — DONE (slice 38): `MigrationCombatBondSystem` (bond selection + cooldown gate + passive modifiers). The skill VFX / bullet-hook half is scene work.
   - **`NPCCrossDialogueSystem`** (429 lines) — NPC-to-NPC ambient dialogue triggered by shared location (the roster-id reconciliation caveat may apply — check before wiring).
   - **`CardBuildRunStore`/`CardBuildProfileStore`/`CardBuildRunProgressionController`** — cardbuild run persistence + between-run progression (composes the now-complete E6 engine).
   - Blocked (NOT pure-logic): E6 card-costs + CirnoBossArena scene wiring; shop/seed owner-wiring; art (Codex); LFS/UI (user). See the per-line notes below.
@@ -51,6 +51,7 @@ Last updated: 2026-06-26 (session 6 close)
   35. `bf031a4` **Weapons: fusion logic (new subsystem)** — `MigrationWeaponFusion` ports `FusionSystem` + `WeaponData` recipes (3 spell-card recipes, order-independent `FindRecipe`, MAX-level `CanFuse` gating, `AvailableFusions`); weapon level injected so it ports without the un-migrated weapon-system node.
   36. `6024bd8` **Weapons: inventory ownership + leveling** — `MigrationWeaponInventory` ports `WeaponSystem.add_weapon`/`upgrade_weapon` (own + level, capped at injected max level; adding an owned weapon upgrades it). Composes with the fusion: `GetLevel`/`GetOwnedWeaponIds` feed `CanFuse`/`AvailableFusions` so two weapons levelled to MAX fuse end-to-end.
   37. `a40fac9` **Weapons: catalog config table** — `MigrationWeaponCatalog` ports `WeaponData.WEAPONS` pure-data fields (17 weapons: id→max_level/cooldown/base_damage); `MaxLevelOf` feeds the inventory directly. Weapons logic core is now self-sufficient (catalog→inventory→fusion).
+  38. `5b5f0ad` **Combat bond system** — `MigrationCombatBondSystem` ports `CombatBondSystem`: pick a combat ally (6 characters), active skill on a per-character cooldown gate, + permanent passive modifiers (bounce/size/revive/delay/gravity/phase). Skill VFX + bullet hooks are scene work.
 
 **E6 forward — the Cirno card-fight is LOGIC-COMPLETE; remaining is BLOCKED on data/concurrent-file:** the entire boss-fight engine + card-play orchestration + all 40+ cards' resolution + the full Mokou action chain + run setup + cooldown durations are done & tested (slices 8-34). The remaining E6 pieces are blocked, not pure-logic:
   1. ⚠️ **Card costs (DATA DECISION)** — cards.json has no top-level `cost` dict (only `charge_action.energy_cost` per-terminal). `PlayCard` takes cost as an optional param; confirm the card-cost source before feeding real costs (don't invent).
