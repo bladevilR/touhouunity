@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TouhouMigration.Runtime.Cooking;
+using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
 using TouhouMigration.Runtime.Progression;
@@ -36,6 +37,7 @@ namespace TouhouMigration.Runtime.Save
         public MetaProgressionSnapshot meta_progression = new MetaProgressionSnapshot();
         public NpcRelationshipSnapshot npc_relationships = new NpcRelationshipSnapshot();
         public NpcMemorySnapshot npc_memory = new NpcMemorySnapshot();
+        public ShopStockSnapshot shop_stock = new ShopStockSnapshot();
         public List<string> story_flags = new List<string>();
 
         public int SaveSchema => save_schema;
@@ -183,6 +185,11 @@ namespace TouhouMigration.Runtime.Save
         {
             get => npc_memory;
             set => npc_memory = value ?? new NpcMemorySnapshot();
+        }
+        public ShopStockSnapshot ShopStock
+        {
+            get => shop_stock;
+            set => shop_stock = value ?? new ShopStockSnapshot();
         }
 
         public static MigrationSaveData CreateDefault()

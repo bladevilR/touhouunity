@@ -1,4 +1,5 @@
 using System;
+using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Player;
@@ -24,6 +25,7 @@ namespace TouhouMigration.Editor.Tests
             TestMetaProgressionRoundTripsThroughSaveData();
             TestNpcRelationshipRoundTripsThroughSaveData();
             TestNpcMemoryRoundTripsThroughSaveData();
+            TestShopStockRoundTripsThroughSaveData();
             TestCaptureFillsProvidedServiceSnapshots();
             TestNullToleranceForMissingServicesAndData();
             Debug.Log("Save orchestrator smoke tests passed.");
@@ -228,6 +230,30 @@ namespace TouhouMigration.Editor.Tests
                 new MigrationSaveOrchestrator(null, null, null, null, null, restored);
             applyOrchestrator.Apply(data);
             AssertEqual(capturedHumanity, restored.Humanity, "Apply should restore captured humanity into the live service.");
+        }
+
+        private static void TestShopStockRoundTripsThroughSaveData()
+        {
+            MigrationShopStock source = new MigrationShopStock();
+            source.ResetShop("town_blacksmith", new System.Collections.Generic.List<MigrationShopItem>
+            {
+                new MigrationShopItem("sword_basic", 1000, 3)
+            });
+            source.TryConsume("town_blacksmith", "sword_basic", 1);
+            AssertEqual(2, source.GetStock("town_blacksmith", "sword_basic"),
+                "Source ledger reflects the consumed unit before capture.");
+
+            MigrationSaveOrchestrator captureOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, null, null, null, source);
+            MigrationSaveData data = captureOrchestrator.Capture(new MigrationSaveData());
+            AssertEqual(1, data.shop_stock.shops.Count, "Capture stores the shop's stock entry.");
+
+            MigrationShopStock restored = new MigrationShopStock();
+            MigrationSaveOrchestrator applyOrchestrator =
+                new MigrationSaveOrchestrator(null, null, null, null, null, null, null, null, null, null, null, null, null, restored);
+            applyOrchestrator.Apply(data);
+            AssertEqual(2, restored.GetStock("town_blacksmith", "sword_basic"),
+                "Apply restores the captured remaining stock into the live ledger.");
         }
 
         private static void TestCaptureFillsProvidedServiceSnapshots()

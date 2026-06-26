@@ -164,16 +164,19 @@ namespace TouhouMigration.Editor.Tests
             MigrationShopService service = new MigrationShopService(inventory, items, progress);
             new MigrationShop(def, service, stock).Buy(itemId, 3, 12);
 
-            Dictionary<string, Dictionary<string, int>> snapshot = stock.CaptureSnapshot();
+            ShopStockSnapshot snapshot = stock.CreateSnapshot();
 
             MigrationShopStock restored = new MigrationShopStock();
-            restored.RestoreSnapshot(snapshot);
+            restored.LoadSnapshot(snapshot);
             AssertEqual(2, restored.GetStock("test_shop", itemId),
                 "A restored ledger keeps the decremented stock (2 of 5 left).");
 
-            // The snapshot is a deep copy — mutating the source ledger does not change it.
+            // The snapshot is an independent copy — mutating the source ledger does not change the restore.
             stock.ResetShop("test_shop", def.Items);
-            AssertEqual(2, snapshot["test_shop"][itemId], "The snapshot is an independent deep copy.");
+            MigrationShopStock restoredAgain = new MigrationShopStock();
+            restoredAgain.LoadSnapshot(snapshot);
+            AssertEqual(2, restoredAgain.GetStock("test_shop", itemId),
+                "The snapshot is independent of later source mutations.");
         }
 
         private static void TestMergeStockAddsSeasonalItems()

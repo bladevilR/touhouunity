@@ -1,4 +1,5 @@
 using TouhouMigration.Runtime.Cooking;
+using TouhouMigration.Runtime.Economy;
 using TouhouMigration.Runtime.Foundation;
 using TouhouMigration.Runtime.Home;
 using TouhouMigration.Runtime.Inventory;
@@ -28,6 +29,7 @@ namespace TouhouMigration.Runtime.Save
         private readonly MigrationMetaProgression meta;
         private readonly MigrationNpcRelationshipNetwork relationships;
         private readonly MigrationNpcMemorySystem npcMemory;
+        private readonly MigrationShopStock shopStock;
 
         public MigrationSaveOrchestrator(
             InventoryService inventory,
@@ -42,7 +44,8 @@ namespace TouhouMigration.Runtime.Save
             MigrationHomeStorage homeStorage = null,
             MigrationMetaProgression meta = null,
             MigrationNpcRelationshipNetwork relationships = null,
-            MigrationNpcMemorySystem npcMemory = null)
+            MigrationNpcMemorySystem npcMemory = null,
+            MigrationShopStock shopStock = null)
         {
             this.inventory = inventory;
             this.cooking = cooking;
@@ -57,6 +60,7 @@ namespace TouhouMigration.Runtime.Save
             this.meta = meta;
             this.relationships = relationships;
             this.npcMemory = npcMemory;
+            this.shopStock = shopStock;
         }
 
         public MigrationSaveData Capture(MigrationSaveData data)
@@ -121,6 +125,10 @@ namespace TouhouMigration.Runtime.Save
             {
                 data.NpcMemory = npcMemory.CreateSnapshot();
             }
+            if (shopStock != null)
+            {
+                data.ShopStock = shopStock.CreateSnapshot();
+            }
             return data;
         }
 
@@ -182,6 +190,10 @@ namespace TouhouMigration.Runtime.Save
             if (npcMemory != null && data.npc_memory != null)
             {
                 npcMemory.LoadSnapshot(data.npc_memory);
+            }
+            if (shopStock != null && data.shop_stock != null)
+            {
+                shopStock.LoadSnapshot(data.shop_stock);
             }
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace TouhouMigration.Runtime.Economy
@@ -120,31 +121,68 @@ namespace TouhouMigration.Runtime.Economy
             shopStock[itemId] = remaining + amount;
         }
 
-        // Deep-copy the ledger for a save (Godot get_save_data duplicates runtime_stock).
-        public Dictionary<string, Dictionary<string, int>> CaptureSnapshot()
+        // Snapshot the ledger for a save (Godot get_save_data duplicates runtime_stock). JsonUtility-safe
+        // parallel-list shape, mirroring the other service snapshots.
+        public ShopStockSnapshot CreateSnapshot()
         {
-            Dictionary<string, Dictionary<string, int>> snapshot =
-                new Dictionary<string, Dictionary<string, int>>();
+            ShopStockSnapshot snapshot = new ShopStockSnapshot();
             foreach (KeyValuePair<string, Dictionary<string, int>> shopPair in stock)
             {
-                snapshot[shopPair.Key] = new Dictionary<string, int>(shopPair.Value);
+                ShopStockEntry entry = new ShopStockEntry { shopId = shopPair.Key };
+                foreach (KeyValuePair<string, int> itemPair in shopPair.Value)
+                {
+                    entry.itemIds.Add(itemPair.Key);
+                    entry.remaining.Add(itemPair.Value);
+                }
+
+                snapshot.shops.Add(entry);
             }
 
             return snapshot;
         }
 
-        public void RestoreSnapshot(Dictionary<string, Dictionary<string, int>> snapshot)
+        public void LoadSnapshot(ShopStockSnapshot snapshot)
         {
             stock.Clear();
-            if (snapshot == null)
+            if (snapshot?.shops == null)
             {
                 return;
             }
 
-            foreach (KeyValuePair<string, Dictionary<string, int>> shopPair in snapshot)
+            foreach (ShopStockEntry entry in snapshot.shops)
             {
-                stock[shopPair.Key] = new Dictionary<string, int>(shopPair.Value ?? new Dictionary<string, int>());
+                if (entry == null || string.IsNullOrEmpty(entry.shopId) || entry.itemIds == null || entry.remaining == null)
+                {
+                    continue;
+                }
+
+                Dictionary<string, int> shopStock = new Dictionary<string, int>();
+                int count = Math.Min(entry.itemIds.Count, entry.remaining.Count);
+                for (int i = 0; i < count; i++)
+                {
+                    if (!string.IsNullOrEmpty(entry.itemIds[i]))
+                    {
+                        shopStock[entry.itemIds[i]] = entry.remaining[i];
+                    }
+                }
+
+                stock[entry.shopId] = shopStock;
             }
         }
+    }
+
+    // Persisted runtime shop stock (shop -> item -> remaining), JsonUtility-safe parallel lists per shop.
+    [Serializable]
+    public sealed class ShopStockSnapshot
+    {
+        public List<ShopStockEntry> shops = new List<ShopStockEntry>();
+    }
+
+    [Serializable]
+    public sealed class ShopStockEntry
+    {
+        public string shopId = string.Empty;
+        public List<string> itemIds = new List<string>();
+        public List<int> remaining = new List<int>();
     }
 }
