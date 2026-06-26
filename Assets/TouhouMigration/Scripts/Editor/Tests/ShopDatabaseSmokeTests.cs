@@ -15,6 +15,7 @@ namespace TouhouMigration.Editor.Tests
             TestLoadsShopsFromJson();
             TestShopQueriesAndHours();
             TestSeasonalItemsLoadPerSeason();
+            TestFestivalItemsLoadPerFestival();
             Debug.Log("Shop database smoke tests passed.");
         }
 
@@ -57,6 +58,21 @@ namespace TouhouMigration.Editor.Tests
 
             AssertEqual("warm_coat", database.GetSeasonalItems("winter")[1].ItemId, "Winter stocks warm_coat.");
             AssertEqual(0, database.GetSeasonalItems("unknown_season").Count, "An unmapped season has no seasonal items.");
+        }
+
+        private static void TestFestivalItemsLoadPerFestival()
+        {
+            MigrationShopDatabase database = LoadDatabase();
+
+            var flower = database.GetFestivalItems("flower_festival");
+            AssertEqual(1, flower.Count, "The flower festival stocks 1 item.");
+            AssertEqual("sakura_branch", flower[0].ItemId, "The flower festival sells sakura_branch.");
+            AssertEqual(300, flower[0].Price, "sakura_branch costs 300.");
+
+            AssertEqual("moon_cake", database.GetFestivalItems("moon_festival")[0].ItemId,
+                "The moon festival stocks moon_cake.");
+            AssertEqual(0, database.GetFestivalItems("unknown_festival").Count,
+                "An unmapped festival has no items.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

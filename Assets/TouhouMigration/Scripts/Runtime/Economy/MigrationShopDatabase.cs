@@ -14,6 +14,8 @@ namespace TouhouMigration.Runtime.Economy
         private readonly Dictionary<string, MigrationShopDefinition> shops = new Dictionary<string, MigrationShopDefinition>();
         private readonly Dictionary<string, List<MigrationShopItem>> seasonalItems =
             new Dictionary<string, List<MigrationShopItem>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, List<MigrationShopItem>> festivalItems =
+            new Dictionary<string, List<MigrationShopItem>>(StringComparer.OrdinalIgnoreCase);
         private readonly List<string> errors = new List<string>();
 
         public IReadOnlyList<string> Errors => errors;
@@ -23,6 +25,7 @@ namespace TouhouMigration.Runtime.Economy
         {
             shops.Clear();
             seasonalItems.Clear();
+            festivalItems.Clear();
             errors.Clear();
 
             string path = ResolvePath(assetPath);
@@ -98,6 +101,15 @@ namespace TouhouMigration.Runtime.Economy
                 }
             }
 
+            // Optional festival stock (Godot shops.json festival_items): festival id -> items for that festival.
+            if (root.TryGetValue("festival_items", out object festivalObject) && festivalObject is Dictionary<string, object> festivalMap)
+            {
+                foreach (KeyValuePair<string, object> festivalPair in festivalMap)
+                {
+                    festivalItems[festivalPair.Key] = ParseItemList(festivalPair.Value);
+                }
+            }
+
             return shops.Count > 0 && errors.Count == 0;
         }
 
@@ -125,6 +137,14 @@ namespace TouhouMigration.Runtime.Economy
         public IReadOnlyList<MigrationShopItem> GetSeasonalItems(string season)
         {
             return season != null && seasonalItems.TryGetValue(season, out List<MigrationShopItem> items)
+                ? items
+                : Array.Empty<MigrationShopItem>();
+        }
+
+        // The items available during a given festival (Godot festival_items). Empty when none.
+        public IReadOnlyList<MigrationShopItem> GetFestivalItems(string festivalId)
+        {
+            return festivalId != null && festivalItems.TryGetValue(festivalId, out List<MigrationShopItem> items)
                 ? items
                 : Array.Empty<MigrationShopItem>();
         }
