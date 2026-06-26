@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestDeckBlocksWithAmountDefaults();
             TestClauseRevealAndSeal();
             TestCollectionEffectsAppend();
+            TestMokouEffectBlocks();
             TestUnhandledEffectsAreReported();
             Debug.Log("Card effect executor smoke tests passed.");
         }
@@ -88,14 +89,43 @@ namespace TouhouMigration.Editor.Tests
             IReadOnlyList<string> ignored = executor.Execute(new[]
             {
                 new MigrationCardEffectBlock { Type = "create_resource", Resource = "ash", Amount = 1 },
-                new MigrationCardEffectBlock { Type = "mokou_bind_terminal" },
-                new MigrationCardEffectBlock { Type = "damage" },
+                new MigrationCardEffectBlock { Type = "damage", Amount = 40 },      // handled no-op (Godot logs)
                 new MigrationCardEffectBlock { Type = "totally_unknown" },
+                new MigrationCardEffectBlock { Type = "another_unknown" },
             }, run);
 
-            AssertEqual(3, ignored.Count, "The remaining un-ported effect types are reported as ignored.");
+            AssertEqual(2, ignored.Count, "Only genuinely-unknown effect types are reported as ignored.");
             AssertEqual(1, run.State.GetResource("ash"), "The handled block still applied alongside ignored ones.");
             AssertEqual(true, Contains(ignored, "totally_unknown"), "An unknown effect type is reported ignored.");
+            AssertEqual(false, Contains(ignored, "damage"), "damage is a handled (logged) no-op, not ignored.");
+        }
+
+        private static void TestMokouEffectBlocks()
+        {
+            MigrationCardBuildRunController run = NewRun();
+            MigrationCardEffectExecutor executor = new MigrationCardEffectExecutor();
+
+            IReadOnlyList<string> ignored = executor.Execute(new[]
+            {
+                new MigrationCardEffectBlock
+                {
+                    Type = "mokou_bind_terminal", Id = "T01",
+                    BaseDamage = 65, EnergyCost = 25, Flame = 4, TriggerCoefficient = 1.0,
+                },
+                new MigrationCardEffectBlock { Type = "mokou_process_modifier", Id = "P02", ChargeSpeedMultiplier = 2.0 },
+                new MigrationCardEffectBlock { Type = "mokou_trigger", Id = "G02" },
+            }, run);
+
+            AssertEqual(0, ignored.Count, "Mokou effect blocks are handled, not ignored.");
+            AssertEqual(2.0, run.Mokou.ChargeSpeedMultiplier, "mokou_process_modifier reaches the Mokou chain.");
+            AssertEqual(1, run.Mokou.TriggerCount, "mokou_trigger installs a trigger.");
+
+            // The bound terminal is now releasable: charge fully and release for its base damage.
+            run.Mokou.BeginCharge();
+            run.Mokou.AdvanceCharge(1.6 / 2.0); // x2 speed -> full charge in half the time
+            MokouReleaseResult result = run.Mokou.ReleaseCharge();
+            AssertEqual(true, result.Success, "mokou_bind_terminal bound a releasable terminal.");
+            AssertEqual(4, result.Flame, "The bound terminal's flame came through the effect block.");
         }
 
         private static void TestCollectionEffectsAppend()

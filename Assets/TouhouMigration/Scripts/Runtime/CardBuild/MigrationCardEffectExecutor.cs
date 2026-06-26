@@ -14,6 +14,21 @@ namespace TouhouMigration.Runtime.CardBuild
         public string Id;
         public int? Amount;
 
+        // mokou_bind_terminal payload.
+        public double? BaseDamage;
+        public double? EnergyCost;
+        public int? Flame;
+        public double? TriggerCoefficient;
+
+        // mokou_process_modifier payload.
+        public double? ChargeDodgeRetain;
+        public double? ChargeSpeedMultiplier;
+        public double? TerminalDamageBonus;
+
+        // modify_bullet payload.
+        public string Family;
+        public string Modifier;
+
         public static MigrationCardEffectBlock Create(string type)
         {
             return new MigrationCardEffectBlock { Type = type };
@@ -104,6 +119,19 @@ namespace TouhouMigration.Runtime.CardBuild
                     return true;
                 case "modify_bullet":
                     run.AddBulletModifier(block);
+                    return true;
+                case "mokou_bind_terminal":
+                    run.Mokou.BindTerminal(block.BaseDamage ?? 0.0, block.EnergyCost ?? 0.0, block.Flame ?? 0, block.TriggerCoefficient ?? 1.0);
+                    return true;
+                case "mokou_process_modifier":
+                    run.Mokou.ApplyProcessModifier(block.ChargeDodgeRetain, block.ChargeSpeedMultiplier, block.TerminalDamageBonus);
+                    return true;
+                case "mokou_trigger":
+                    run.Mokou.InstallTrigger(block.Id ?? string.Empty);
+                    return true;
+                case "damage":
+                case "self_damage":
+                    // Godot's executor only logs these; resolution computes the actual damage elsewhere.
                     return true;
                 default:
                     return false;
