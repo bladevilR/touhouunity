@@ -21,6 +21,8 @@ namespace TouhouMigration.Runtime.Player
 
         private void Awake()
         {
+            StripStrayVisualMeshes();
+
             if (animator == null)
             {
                 animator = GetComponentInChildren<Animator>();
@@ -32,6 +34,21 @@ namespace TouhouMigration.Runtime.Player
             }
 
             controller = GetComponent<MigrationPlayerController>() ?? GetComponentInParent<MigrationPlayerController>();
+        }
+
+        // The Mokou FBX ships with a leftover Blender "Icosphere" mesh (junk from the glb->fbx conversion).
+        // The placeholder-material pass tints every renderer pink, so the Icosphere renders as a giant ball
+        // over her body and reads as a "broken" character. Scenes built before this was stripped still bake it
+        // in, so remove it on load. TODO(codex/image2): drop the Icosphere from the FBX at the source export.
+        private void StripStrayVisualMeshes()
+        {
+            foreach (MeshRenderer meshRenderer in GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (meshRenderer.gameObject.name.IndexOf("Icosphere", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Destroy(meshRenderer.gameObject);
+                }
+            }
         }
 
         private void Update()

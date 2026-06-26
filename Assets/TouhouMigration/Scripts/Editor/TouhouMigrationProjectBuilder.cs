@@ -3030,6 +3030,7 @@ namespace TouhouMigration.Editor
             visual.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
             visual.transform.localScale = Vector3.one;
             RemoveColliders(visual);
+            StripStrayMeshes(visual);
             NormalizeVisualBounds(visual, player.transform.position + Vector3.down, 1.8f);
 
             Renderer capsuleRenderer = player.GetComponent<Renderer>();
@@ -3078,6 +3079,21 @@ namespace TouhouMigration.Editor
             }
 
             bridge.BindAnimator(animator);
+        }
+
+        // The Mokou FBX carries a leftover Blender "Icosphere" mesh (junk from the glb->fbx conversion). Left in,
+        // the placeholder-material pass tints it pink (a giant ball over her body) and it inflates the combined
+        // bounds so NormalizeVisualBounds shrinks the real character. Strip it before sizing/material work.
+        // TODO(codex/image2): remove the Icosphere from the FBX at the source export.
+        private static void StripStrayMeshes(GameObject visual)
+        {
+            foreach (MeshRenderer meshRenderer in visual.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (meshRenderer.gameObject.name.IndexOf("Icosphere", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Object.DestroyImmediate(meshRenderer.gameObject);
+                }
+            }
         }
 
         private static void CreateAnimationImportMarkers(Transform parent)
