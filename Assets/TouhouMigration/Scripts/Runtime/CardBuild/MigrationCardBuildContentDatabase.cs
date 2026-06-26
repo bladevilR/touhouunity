@@ -4,6 +4,25 @@ using TouhouMigration.Runtime.Serialization;
 
 namespace TouhouMigration.Runtime.CardBuild
 {
+    // A cardbuild resource definition (resources.json).
+    public sealed class MigrationCardResourceDef
+    {
+        public string Id = string.Empty;
+        public string DisplayName = string.Empty;
+        public string Archetype = string.Empty;
+        public string Storage = string.Empty;
+        public string Decay = string.Empty;
+    }
+
+    // A cardbuild status definition (statuses.json).
+    public sealed class MigrationCardStatusDef
+    {
+        public string Id = string.Empty;
+        public string DisplayName = string.Empty;
+        public string Polarity = string.Empty;
+        public string StackPolicy = string.Empty;
+    }
+
     // Loads the cardbuild content (relics.json + upgrades.json) into queryable definitions that feed
     // MigrationCardProgression (Godot CardBuildDatabase _index_relics / _index_upgrades). Relic effect
     // blocks reuse the card parser's ParseBlock. UnityEngine-free + unit-testable.
@@ -11,11 +30,61 @@ namespace TouhouMigration.Runtime.CardBuild
     {
         private readonly Dictionary<string, MigrationRelic> relics = new Dictionary<string, MigrationRelic>();
         private readonly Dictionary<string, MigrationCardUpgrade> upgrades = new Dictionary<string, MigrationCardUpgrade>();
+        private readonly Dictionary<string, MigrationCardResourceDef> resources = new Dictionary<string, MigrationCardResourceDef>();
+        private readonly Dictionary<string, MigrationCardStatusDef> statuses = new Dictionary<string, MigrationCardStatusDef>();
         private readonly List<string> errors = new List<string>();
 
         public IReadOnlyList<string> Errors => errors;
         public int RelicCount => relics.Count;
         public int UpgradeCount => upgrades.Count;
+        public int ResourceCount => resources.Count;
+        public int StatusCount => statuses.Count;
+
+        // Load the resource + status definition tables (Godot CardBuildDatabase _index_resources/_statuses).
+        public bool LoadDefinitions(string resourcesJsonPath, string statusesJsonPath)
+        {
+            resources.Clear();
+            statuses.Clear();
+
+            foreach (Dictionary<string, object> entry in ReadArray(resourcesJsonPath, "resources"))
+            {
+                string id = GetString(entry, "id");
+                if (!string.IsNullOrEmpty(id))
+                {
+                    resources[id] = new MigrationCardResourceDef
+                    {
+                        Id = id,
+                        DisplayName = GetString(entry, "display_name_en"),
+                        Archetype = GetString(entry, "archetype"),
+                        Storage = GetString(entry, "storage"),
+                        Decay = GetString(entry, "decay"),
+                    };
+                }
+            }
+
+            foreach (Dictionary<string, object> entry in ReadArray(statusesJsonPath, "statuses"))
+            {
+                string id = GetString(entry, "id");
+                if (!string.IsNullOrEmpty(id))
+                {
+                    statuses[id] = new MigrationCardStatusDef
+                    {
+                        Id = id,
+                        DisplayName = GetString(entry, "display_name_en"),
+                        Polarity = GetString(entry, "polarity"),
+                        StackPolicy = GetString(entry, "stack_policy"),
+                    };
+                }
+            }
+
+            return resources.Count > 0 && statuses.Count > 0;
+        }
+
+        public MigrationCardResourceDef GetResource(string resourceId) =>
+            resourceId != null && resources.TryGetValue(resourceId, out MigrationCardResourceDef def) ? def : null;
+
+        public MigrationCardStatusDef GetStatus(string statusId) =>
+            statusId != null && statuses.TryGetValue(statusId, out MigrationCardStatusDef def) ? def : null;
 
         public bool LoadFromPaths(string relicsJsonPath, string upgradesJsonPath)
         {

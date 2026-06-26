@@ -11,6 +11,8 @@ namespace TouhouMigration.Editor.Tests
     {
         private const string RelicsPath = "Assets/TouhouMigration/Data/CardBuild/relics.json";
         private const string UpgradesPath = "Assets/TouhouMigration/Data/CardBuild/upgrades.json";
+        private const string ResourcesPath = "Assets/TouhouMigration/Data/CardBuild/resources.json";
+        private const string StatusesPath = "Assets/TouhouMigration/Data/CardBuild/statuses.json";
         private const double Tol = 1e-9;
 
         [MenuItem("Touhou Migration/Tests/Run CardBuild Content Database Smoke Tests")]
@@ -18,6 +20,7 @@ namespace TouhouMigration.Editor.Tests
         {
             TestLoadsRelicsAndUpgrades();
             TestUpgradeFeedsProgression();
+            TestLoadsResourceAndStatusDefinitions();
             Debug.Log("CardBuild content database smoke tests passed.");
         }
 
@@ -53,6 +56,24 @@ namespace TouhouMigration.Editor.Tests
             // The loaded relics' effect blocks flatten through the progression.
             System.Collections.Generic.List<MigrationRelic> relics = new System.Collections.Generic.List<MigrationRelic> { db.GetRelic("phoenix_ash_lantern") };
             AssertEqual(true, progression.CollectRelicEffectBlocks(relics).Count > 0, "Loaded relic effect blocks collect through progression.");
+        }
+
+        private static void TestLoadsResourceAndStatusDefinitions()
+        {
+            MigrationCardBuildContentDatabase db = new MigrationCardBuildContentDatabase();
+            AssertEqual(true, db.LoadDefinitions(ResourcesPath, StatusesPath), "Resource + status definitions load.");
+            AssertEqual(5, db.ResourceCount, "All five resources load.");
+            AssertEqual(5, db.StatusCount, "All five statuses load.");
+
+            MigrationCardResourceDef spirit = db.GetResource("spirit");
+            AssertEqual(true, spirit != null, "The spirit resource loads.");
+            AssertEqual("meter", spirit.Storage, "Spirit is stored as a meter.");
+            AssertEqual("encounter", spirit.Decay, "Spirit decays per encounter.");
+
+            MigrationCardStatusDef burn = db.GetStatus("burn");
+            AssertEqual(true, burn != null, "The burn status loads.");
+            AssertEqual("debuff", burn.Polarity, "Burn is a debuff.");
+            AssertEqual("intensity", burn.StackPolicy, "Burn stacks by intensity.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
