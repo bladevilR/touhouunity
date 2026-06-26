@@ -23,6 +23,7 @@ namespace TouhouMigration.Editor.Tests
             TestProcessModifierAndTriggers();
             TestDodgeIgniteAndHitTrigger();
             TestTakeDamageAshAndRevive();
+            TestSnapshotRoundTrip();
             Debug.Log("Mokou charge state smoke tests passed.");
         }
 
@@ -197,6 +198,36 @@ namespace TouhouMigration.Editor.Tests
             MigrationMokouChargeState mortal = new MigrationMokouChargeState();
             AssertEqual(false, mortal.TakeDamage(999.0), "A lethal hit without the gauge does not revive.");
             AssertEqual(0.0, mortal.Hp, "Fatal damage clamps HP at 0.");
+        }
+
+        private static void TestSnapshotRoundTrip()
+        {
+            MigrationMokouChargeState chain = new MigrationMokouChargeState();
+            chain.BindTerminal(baseDamage: 65, energyCost: 25, flame: 4, triggerCoefficient: 1.0);
+            chain.ApplyProcessModifier(chargeSpeedMultiplier: 2.0, terminalDamageBonus: 0.1);
+            chain.SetEnergy(70);
+            chain.AddImmortalGauge(40);
+            chain.InstallTrigger("after_perfect_dodge");
+            chain.BeginCharge();
+            chain.AdvanceCharge(0.4); // partial charge
+
+            MokouChargeSnapshot snapshot = chain.CreateSnapshot();
+
+            MigrationMokouChargeState restored = new MigrationMokouChargeState();
+            restored.LoadSnapshot(snapshot);
+
+            AssertEqual(chain.Phase, restored.Phase, "Phase round-trips.");
+            AssertTrue(Math.Abs(chain.Charge - restored.Charge) < Tol, "Charge round-trips.");
+            AssertEqual(70.0, restored.Energy, "Energy round-trips.");
+            AssertEqual(40.0, restored.ImmortalGauge, "Immortal gauge round-trips.");
+            AssertEqual(2.0, restored.ChargeSpeedMultiplier, "Charge-speed modifier round-trips.");
+            AssertEqual(1, restored.TriggerCount, "Installed triggers round-trip.");
+
+            // The bound terminal round-trips: charge to full and release for its flame.
+            restored.AdvanceCharge(2.0);
+            MokouReleaseResult result = restored.ReleaseCharge();
+            AssertEqual(true, result.Success, "The restored bound terminal is releasable.");
+            AssertEqual(4, result.Flame, "The terminal's flame round-trips.");
         }
 
         private static void AssertTrue(bool condition, string message)

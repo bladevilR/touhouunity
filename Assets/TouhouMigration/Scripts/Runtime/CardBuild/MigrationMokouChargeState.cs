@@ -364,5 +364,99 @@ namespace TouhouMigration.Runtime.CardBuild
         {
             return value < min ? min : value > max ? max : value;
         }
+
+        // Snapshot the full charge-chain state for a card-run save.
+        public MokouChargeSnapshot CreateSnapshot()
+        {
+            MokouChargeSnapshot snapshot = new MokouChargeSnapshot
+            {
+                phase = (int)Phase,
+                charge = Charge,
+                hp = Hp,
+                energy = Energy,
+                immortalGauge = ImmortalGauge,
+                ember = Ember,
+                ash = Ash,
+                revivesUsed = RevivesUsed,
+                maxRevives = MaxRevives,
+                chargeDodgeRetain = ChargeDodgeRetain,
+                chargeSpeedMultiplier = ChargeSpeedMultiplier,
+                terminalDamageBonus = TerminalDamageBonus,
+                ashDamageRemainder = ashDamageRemainder,
+                hasTerminal = hasTerminal,
+                terminalBaseDamage = terminalBaseDamage,
+                terminalEnergyCost = terminalEnergyCost,
+                terminalFlame = terminalFlame,
+                terminalTriggerCoefficient = terminalTriggerCoefficient,
+                enemyFlame = GetStatus("flame"),
+            };
+            snapshot.triggers.AddRange(triggers);
+            return snapshot;
+        }
+
+        public void LoadSnapshot(MokouChargeSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            Phase = (MokouPhase)snapshot.phase;
+            Charge = snapshot.charge;
+            Hp = snapshot.hp;
+            Energy = snapshot.energy;
+            ImmortalGauge = snapshot.immortalGauge;
+            Ember = snapshot.ember;
+            Ash = snapshot.ash;
+            RevivesUsed = snapshot.revivesUsed;
+            MaxRevives = snapshot.maxRevives;
+            ChargeDodgeRetain = snapshot.chargeDodgeRetain;
+            ChargeSpeedMultiplier = snapshot.chargeSpeedMultiplier;
+            TerminalDamageBonus = snapshot.terminalDamageBonus;
+            ashDamageRemainder = snapshot.ashDamageRemainder;
+            hasTerminal = snapshot.hasTerminal;
+            terminalBaseDamage = snapshot.terminalBaseDamage;
+            terminalEnergyCost = snapshot.terminalEnergyCost;
+            terminalFlame = snapshot.terminalFlame;
+            terminalTriggerCoefficient = snapshot.terminalTriggerCoefficient;
+
+            statuses.Clear();
+            if (snapshot.enemyFlame != 0)
+            {
+                statuses["flame"] = snapshot.enemyFlame;
+            }
+
+            triggers.Clear();
+            if (snapshot.triggers != null)
+            {
+                triggers.AddRange(snapshot.triggers);
+            }
+        }
+    }
+
+    // Persisted Mokou charge-chain state for a card-run save.
+    [System.Serializable]
+    public sealed class MokouChargeSnapshot
+    {
+        public int phase;
+        public double charge;
+        public double hp;
+        public double energy;
+        public double immortalGauge;
+        public int ember;
+        public int ash;
+        public int revivesUsed;
+        public int maxRevives = 1;
+        public double chargeDodgeRetain;
+        public double chargeSpeedMultiplier = 1.0;
+        public double terminalDamageBonus;
+        public double ashDamageRemainder;
+        public bool hasTerminal;
+        public double terminalBaseDamage;
+        public double terminalEnergyCost;
+        public int terminalFlame;
+        public double terminalTriggerCoefficient = 1.0;
+        public int enemyFlame;
+        public System.Collections.Generic.List<string> triggers = new System.Collections.Generic.List<string>();
     }
 }
