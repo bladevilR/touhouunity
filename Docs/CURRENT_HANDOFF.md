@@ -1,5 +1,22 @@
 # Current Handoff — Resume Point
 
+Last updated: 2026-06-26 (session 5 close)
+
+## ▶▶ RESUME HERE (session 5 → 6)
+
+**State:** clean, all pushed, in sync with `origin/main` at **`f0a5fd8`**. Regression **74/74**; 29 scenes play-validated 0 errors.
+
+**Session 5 shipped 10 verified slices** (all on top of `9e0b7ea`): fishing interactor `6d6c90e` · shop modal+interactor `763cf3d` · portrait hook `49cc8c8` · save position/scene `3ade62c` · audio catalog+manager `6643b0a` · NPC reachability (7 home locations) `d24ab07` · SFX triggers `1529218` · farming yield-by-quality `66353dd` · fertilizer action `1a638cf` · seasonal shop items `98aad1a` · handoff `a95ea60`/`f0a5fd8`. (Two of the log commits — `6744192` camera, `4b7dd91` Mokou-rig — are the **concurrent session's**, see the ⚠️ note below.)
+
+**Why I stopped:** the clean non-art / non-blocked / pure-logic well is largely mined out. Remaining work is gated on a **user decision** or **Codex/image2 art** or is a **large reskin / ambiguous data task** (see "Remaining" list lower down). I asked the user to pick the next focus; **they switched conversations before answering** — so the open question for session 6 is *which direction to prioritize*:
+  1. **Finite shop stock** refactor (persistent runtime shop registry: stock decrements on buy, survives reopen, seasonal stock merged in-season) — self-contained, collision-safe, testable.
+  2. **E6 cardbuild** (un-deprioritize) — the Cirno `CardBuildMvpRunController` (~1280 lines) is the biggest remaining depth.
+  3. **Reconcile NPC roster ids** (best-effort Chinese-name→canonical mapping) to unblock hour-driven NPC schedules — needs user OK on a few guesses.
+  4. Keep mining small pure-logic slices (diminishing returns).
+  Plus two standing user decisions: **Git LFS** for the 4×52 MB terrains (history rewrite — extra-risky while a 2nd session shares the tree), and whether to invest in the **E4 uGUI/UITK production-UI** reskin vs. keep the working IMGUI shells.
+
+---
+
 Last updated: 2026-06-25 (session 5)
 
 ## Session 5 (production phase — life-sim consumers + E5 hook, all green, all pushed)
