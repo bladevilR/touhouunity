@@ -21,6 +21,7 @@ namespace TouhouMigration.Editor.Tests
             TestAttackUsesCompositeVulnerabilityAndTerrain();
             TestTerrainSuppressionAndPressureClamp();
             TestSetupCirnoRunInstallsClauseAndDomain();
+            TestCardCooldownDurations();
             Debug.Log("Card build run controller smoke tests passed.");
         }
 
@@ -130,6 +131,24 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(true, run.Domains.IsSealed("terrain_tyranny"), "Three contests break the threshold-3 domain.");
             AssertEqual(true, run.Clauses.IsSealed("terrain_tyranny"), "Sealing the domain seals the Cirno clause.");
             AssertEqual(true, run.IsVulnerabilityOpen, "A sealed clause keeps vulnerability open.");
+        }
+
+        private static void TestCardCooldownDurations()
+        {
+            AssertEqual(8.0, MigrationCardBuildRunController.CardCooldownDuration("fire_terminal_hourai_phoenix"),
+                "Terminal cards have an 8s replay cooldown.");
+            AssertEqual(2.0, MigrationCardBuildRunController.CardCooldownDuration("mokou_starter_fire_bird"),
+                "Starter cards cool down fast (2s).");
+            AssertEqual(3.0, MigrationCardBuildRunController.CardCooldownDuration("some_unlisted_card"),
+                "An unlisted card uses the 3s default.");
+
+            // PlayCard applies the card's CARD_COOLDOWNS duration when no explicit value is given.
+            MigrationCardBuildRunController run = new MigrationCardBuildRunController(
+                new List<string> { "mokou_starter_fire_bird", "x" });
+            run.Deck.Draw(2, _ => 0);
+            run.PlayCard("mokou_starter_fire_bird", new List<MigrationCardEffectBlock>());
+            AssertEqual(2.0, run.GetCardCooldown("mokou_starter_fire_bird"),
+                "Playing a card sets its CARD_COOLDOWNS replay cooldown.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

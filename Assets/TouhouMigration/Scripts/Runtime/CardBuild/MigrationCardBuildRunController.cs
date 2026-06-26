@@ -236,12 +236,45 @@ namespace TouhouMigration.Runtime.CardBuild
             effectExecutor.Execute(effectBlocks, this);
             ResolveCardEffect(cardId);
             Deck.DiscardFromHand(cardId);
-            if (cooldownSeconds > 0.0)
-            {
-                SetCardCooldown(cardId, cooldownSeconds);
-            }
+            // An explicit cooldown wins; otherwise use the card's CARD_COOLDOWNS duration.
+            SetCardCooldown(cardId, cooldownSeconds > 0.0 ? cooldownSeconds : CardCooldownDuration(cardId));
 
             return CardPlayResult.Ok(cardId);
+        }
+
+        // Per-card replay cooldown duration in seconds (Godot CARD_COOLDOWNS, default 3.0).
+        private static readonly Dictionary<string, double> CardCooldowns = new Dictionary<string, double>
+        {
+            ["fire_starter_ember_shot"] = 2.0,
+            ["fire_resource_ash_collector"] = 3.0,
+            ["fire_payoff_detonation_palm"] = 2.6,
+            ["fire_defense_phoenix_guard"] = 6.0,
+            ["fire_movement_firestep"] = 3.5,
+            ["fire_draw_smoke_reading"] = 4.0,
+            ["fire_bullet_cinder_ammunition"] = 8.0,
+            ["fire_boss_ash_seal"] = 5.5,
+            ["fire_terminal_hourai_phoenix"] = 8.0,
+            ["blood_resource_blood_oath"] = 4.0,
+            ["mechanism_starter_first_seal"] = 2.8,
+            ["mechanism_payoff_binding_verdict"] = 5.0,
+            ["mokou_starter_fire_bird"] = 2.0,
+            ["mokou_resource_hourai_embers"] = 3.0,
+            ["mokou_payoff_fujiyama_burst"] = 2.6,
+            ["mokou_defense_xu_fu_dimension"] = 6.0,
+            ["mokou_movement_bamboo_escape"] = 3.4,
+            ["mokou_draw_old_history_cinders"] = 4.0,
+            ["mokou_attack_flame_fist"] = 2.8,
+            ["mokou_bullet_phoenix_tail"] = 7.0,
+            ["mokou_boss_melt_the_lake"] = 5.5,
+            ["mokou_terminal_hourai_doll"] = 8.0,
+            ["mokou_risk_honest_mans_death"] = 7.0,
+            ["mokou_bridge_imperishable_shooting"] = 5.5,
+        };
+
+        // Godot _get_card_cooldown_duration (CARD_COOLDOWNS lookup, default 3.0).
+        public static double CardCooldownDuration(string cardId)
+        {
+            return cardId != null && CardCooldowns.TryGetValue(cardId, out double seconds) ? seconds : 3.0;
         }
 
         // Cirno boss-fight run setup (Godot setup_cirno_vertical_slice's install block): install the boss
