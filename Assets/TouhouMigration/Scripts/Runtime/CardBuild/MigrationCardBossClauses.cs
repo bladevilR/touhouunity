@@ -82,6 +82,16 @@ namespace TouhouMigration.Runtime.CardBuild
             return true;
         }
 
+        // Seal a clause directly (Godot state.seal_clause), bypassing the answer gate — used by the
+        // seal_clause effect block.
+        public void Seal(string clauseId)
+        {
+            if (TryGet(clauseId, out Clause clause))
+            {
+                clause.Sealed = true;
+            }
+        }
+
         public void Disable(string clauseId, int turns)
         {
             if (TryGet(clauseId, out Clause clause))
