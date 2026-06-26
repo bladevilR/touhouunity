@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace TouhouMigration.Runtime.CardBuild
@@ -120,6 +121,64 @@ namespace TouhouMigration.Runtime.CardBuild
 
         public bool IsDisabled(string clauseId) => TryGet(clauseId, out Clause clause) && clause.DisabledTurns > 0;
 
+        // Snapshot all clauses for a card-run save.
+        public CardBossClausesSnapshot CreateSnapshot()
+        {
+            CardBossClausesSnapshot snapshot = new CardBossClausesSnapshot();
+            foreach (KeyValuePair<string, Clause> pair in clauses)
+            {
+                CardBossClauseEntry entry = new CardBossClauseEntry
+                {
+                    id = pair.Key,
+                    revealed = pair.Value.Revealed,
+                    exposed = pair.Value.Exposed,
+                    sealedClause = pair.Value.Sealed,
+                    disabledTurns = pair.Value.DisabledTurns,
+                };
+                entry.answerFamilies.AddRange(pair.Value.AnswerFamilies);
+                snapshot.clauses.Add(entry);
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(CardBossClausesSnapshot snapshot)
+        {
+            clauses.Clear();
+            if (snapshot?.clauses == null)
+            {
+                return;
+            }
+
+            foreach (CardBossClauseEntry entry in snapshot.clauses)
+            {
+                if (entry == null || string.IsNullOrEmpty(entry.id))
+                {
+                    continue;
+                }
+
+                Clause clause = new Clause
+                {
+                    Revealed = entry.revealed,
+                    Exposed = entry.exposed,
+                    Sealed = entry.sealedClause,
+                    DisabledTurns = entry.disabledTurns,
+                };
+                if (entry.answerFamilies != null)
+                {
+                    foreach (string family in entry.answerFamilies)
+                    {
+                        if (!string.IsNullOrEmpty(family))
+                        {
+                            clause.AnswerFamilies.Add(family);
+                        }
+                    }
+                }
+
+                clauses[entry.id] = clause;
+            }
+        }
+
         private bool TryGet(string clauseId, out Clause clause)
         {
             if (clauseId != null)
@@ -130,5 +189,23 @@ namespace TouhouMigration.Runtime.CardBuild
             clause = null;
             return false;
         }
+    }
+
+    // Persisted boss clauses for a card-run save.
+    [Serializable]
+    public sealed class CardBossClausesSnapshot
+    {
+        public List<CardBossClauseEntry> clauses = new List<CardBossClauseEntry>();
+    }
+
+    [Serializable]
+    public sealed class CardBossClauseEntry
+    {
+        public string id = string.Empty;
+        public bool revealed;
+        public bool exposed;
+        public bool sealedClause;
+        public int disabledTurns;
+        public List<string> answerFamilies = new List<string>();
     }
 }

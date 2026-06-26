@@ -152,6 +152,58 @@ namespace TouhouMigration.Runtime.CardBuild
             }
         }
 
+        // Snapshot all domains for a card-run save.
+        public CardBossDomainsSnapshot CreateSnapshot()
+        {
+            CardBossDomainsSnapshot snapshot = new CardBossDomainsSnapshot();
+            foreach (KeyValuePair<string, Domain> pair in domains)
+            {
+                CardBossDomainEntry entry = new CardBossDomainEntry
+                {
+                    id = pair.Key,
+                    threshold = pair.Value.Threshold,
+                    pressure = pair.Value.Pressure,
+                    progress = pair.Value.Progress,
+                    broken = pair.Value.Broken,
+                    sealedDomain = pair.Value.Sealed,
+                };
+                entry.answerTags.AddRange(pair.Value.AnswerTags);
+                entry.answerFamilies.AddRange(pair.Value.AnswerFamilies);
+                snapshot.domains.Add(entry);
+            }
+
+            return snapshot;
+        }
+
+        public void LoadSnapshot(CardBossDomainsSnapshot snapshot)
+        {
+            domains.Clear();
+            if (snapshot?.domains == null)
+            {
+                return;
+            }
+
+            foreach (CardBossDomainEntry entry in snapshot.domains)
+            {
+                if (entry == null || string.IsNullOrEmpty(entry.id))
+                {
+                    continue;
+                }
+
+                Domain domain = new Domain
+                {
+                    Threshold = entry.threshold,
+                    Pressure = entry.pressure,
+                    Progress = entry.progress,
+                    Broken = entry.broken,
+                    Sealed = entry.sealedDomain,
+                };
+                AddAll(domain.AnswerTags, entry.answerTags);
+                AddAll(domain.AnswerFamilies, entry.answerFamilies);
+                domains[entry.id] = domain;
+            }
+        }
+
         private bool TryGet(string domainId, out Domain domain)
         {
             if (domainId != null)
@@ -162,5 +214,25 @@ namespace TouhouMigration.Runtime.CardBuild
             domain = null;
             return false;
         }
+    }
+
+    // Persisted boss domains for a card-run save.
+    [Serializable]
+    public sealed class CardBossDomainsSnapshot
+    {
+        public List<CardBossDomainEntry> domains = new List<CardBossDomainEntry>();
+    }
+
+    [Serializable]
+    public sealed class CardBossDomainEntry
+    {
+        public string id = string.Empty;
+        public int threshold = 1;
+        public int pressure;
+        public int progress;
+        public bool broken;
+        public bool sealedDomain;
+        public List<string> answerTags = new List<string>();
+        public List<string> answerFamilies = new List<string>();
     }
 }

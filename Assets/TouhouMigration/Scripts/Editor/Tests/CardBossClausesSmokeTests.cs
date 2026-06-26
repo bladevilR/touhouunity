@@ -17,6 +17,7 @@ namespace TouhouMigration.Editor.Tests
             TestSealRequiresExposedMatchingAnswerAndTwoCards();
             TestSealOnceThenLocked();
             TestDisableTicksDown();
+            TestSnapshotRoundTrip();
             Debug.Log("Card boss clauses smoke tests passed.");
         }
 
@@ -84,6 +85,26 @@ namespace TouhouMigration.Editor.Tests
 
             clauses.TickDisabled();
             AssertEqual(false, clauses.IsDisabled("cirno_clause"), "The disable lapses after its turns elapse.");
+        }
+
+        private static void TestSnapshotRoundTrip()
+        {
+            MigrationCardBossClauses clauses = new MigrationCardBossClauses();
+            clauses.Install("cirno", new[] { "field_replace", "melt_terrain" }, revealed: true, exposed: true);
+            clauses.Disable("cirno", 2);
+
+            CardBossClausesSnapshot snapshot = clauses.CreateSnapshot();
+
+            MigrationCardBossClauses restored = new MigrationCardBossClauses();
+            restored.LoadSnapshot(snapshot);
+
+            AssertEqual(true, restored.IsRevealed("cirno"), "Revealed round-trips.");
+            AssertEqual(true, restored.IsExposed("cirno"), "Exposed round-trips.");
+            AssertEqual(true, restored.IsDisabled("cirno"), "Disabled-turns round-trips.");
+            // The answer families round-trip: an exposed clause seals with a saved family + 2 cards.
+            AssertEqual(true, restored.SealWithAnswer("cirno", "field_replace", 2),
+                "The saved answer families round-trip (the clause still seals).");
+            AssertEqual(true, restored.IsSealed("cirno"), "The restored clause is now sealed.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

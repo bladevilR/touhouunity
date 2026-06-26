@@ -18,6 +18,7 @@ namespace TouhouMigration.Editor.Tests
             TestAnswerTagAndFamilyBonus();
             TestZeroContestRejectedAndSealedGuard();
             TestPressureTickClampsAtZero();
+            TestSnapshotRoundTrip();
             Debug.Log("Card boss domains smoke tests passed.");
         }
 
@@ -91,6 +92,27 @@ namespace TouhouMigration.Editor.Tests
 
             domains.TickPressure("cirno", -10);
             AssertEqual(0, domains.GetPressure("cirno"), "Pressure clamps at zero.");
+        }
+
+        private static void TestSnapshotRoundTrip()
+        {
+            MigrationCardBossDomains domains = new MigrationCardBossDomains();
+            domains.Install("cirno", threshold: 3, pressure: 2,
+                answerTags: new[] { "melt_terrain" }, answerFamilies: new[] { "field_replace" });
+            domains.Contest("cirno", 1); // progress 1
+
+            CardBossDomainsSnapshot snapshot = domains.CreateSnapshot();
+
+            MigrationCardBossDomains restored = new MigrationCardBossDomains();
+            restored.LoadSnapshot(snapshot);
+
+            AssertEqual(3, restored.GetThreshold("cirno"), "Threshold round-trips.");
+            AssertEqual(2, restored.GetPressure("cirno"), "Pressure round-trips.");
+            AssertEqual(1, restored.GetProgress("cirno"), "Progress round-trips.");
+            AssertEqual(false, restored.IsSealed("cirno"), "Unsealed state round-trips.");
+            // The answer tags/families round-trip: a tag-matching contest still earns its bonus.
+            restored.Contest("cirno", 1, "melt_terrain"); // 1 + 1(tag) = 2 -> progress 3 -> seals
+            AssertEqual(true, restored.IsSealed("cirno"), "Saved answer tags still grant their contest bonus.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)
