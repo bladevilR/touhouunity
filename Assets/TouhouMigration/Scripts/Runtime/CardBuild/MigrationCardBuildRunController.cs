@@ -344,7 +344,93 @@ namespace TouhouMigration.Runtime.CardBuild
                 case "blood_bridge_bloody_barrier":
                     AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "bloody_barrier" });
                     break;
+                case "mechanism_starter_first_seal":
+                case "mechanism_movement_ritual_position":
+                    State.AddResource("seal", 1);
+                    break;
+                case "mechanism_resource_evidence_token":
+                    State.AddResource("seal", Clauses.IsExposed(BossClauseId) ? 2 : 1);
+                    break;
+                case "mechanism_payoff_binding_verdict":
+                    ResolveBindingVerdict();
+                    break;
+                case "mechanism_defense_procedural_immunity":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "procedural_immunity" });
+                    break;
+                case "mechanism_draw_historical_precedent":
+                    ReduceCardCooldowns(1.2);
+                    break;
+                case "mechanism_partner_witness_statement":
+                    AddPartnerEvent(new MigrationCardEffectBlock { Type = "trigger_partner", Id = "witness_statement" });
+                    break;
+                case "mechanism_boss_clause_lock":
+                    ResolveClauseLock();
+                    break;
+                case "mechanism_terminal_fantasy_verdict":
+                    ResolveFantasyVerdict();
+                    break;
+                case "mechanism_risk_legal_trap":
+                    AddTerrainPressure(1);
+                    State.AddResource("seal", 2);
+                    break;
+                case "mechanism_bridge_market_regulation":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "market_regulation" });
+                    break;
             }
+        }
+
+        private void ResolveBindingVerdict()
+        {
+            if (State.GetResource("seal") + State.GetStatus("enemy", "seal") < 2)
+            {
+                return;
+            }
+
+            State.SpendResource("seal", System.Math.Min(State.GetResource("seal"), 1));
+            if (State.GetStatus("enemy", "seal") > 0)
+            {
+                State.ApplyStatus("enemy", "seal", -1);
+            }
+
+            RewrittenRuleCount++;
+            AddTerrainPressure(-1);
+            SuppressTerrain(4.0);
+            OpenVulnerability(3.0);
+        }
+
+        private void ResolveClauseLock()
+        {
+            if (State.GetResource("seal") + State.GetStatus("enemy", "seal") > 0)
+            {
+                State.SpendResource("seal", System.Math.Min(State.GetResource("seal"), 1));
+                RewrittenRuleCount++;
+            }
+
+            AddTerrainPressure(-1);
+            SuppressTerrain(4.5);
+            OpenVulnerability(2.5);
+        }
+
+        private void ResolveFantasyVerdict()
+        {
+            int sealTotal = State.GetResource("seal") + State.GetStatus("enemy", "seal") + RewrittenRuleCount;
+            if (sealTotal < 3)
+            {
+                return;
+            }
+
+            int damage = 96 + sealTotal * 24;
+            State.SpendResource("seal", State.GetResource("seal"));
+            int enemySeal = State.GetStatus("enemy", "seal");
+            if (enemySeal > 0)
+            {
+                State.ApplyStatus("enemy", "seal", -enemySeal);
+            }
+
+            Boss.Damage(damage);
+            TerrainPressure = 0;
+            SuppressTerrain(8.0);
+            OpenVulnerability(5.0);
         }
 
         private void ResolveFateSpear()
