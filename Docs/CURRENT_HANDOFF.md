@@ -6,6 +6,15 @@ Last updated: 2026-06-26 (session 6 close)
 
 **State:** my work all pushed; `origin/main` at **`eebfc70`**. Regression **136/136 (136 suites)**. Working tree has **only the concurrent session's 4 uncommitted files** dirty (see ⚠️ note) — I never touched them; stage by path only.
 
+**COVERAGE AUDIT (session 6 close, evidence-based):** scanned all **191** Godot `class_name` declarations vs the Unity ports. The un-ported remainder is **verified scene/Node/component/AI-behavior-node/render/UI-coupled — NOT clean headless logic**:
+- **Components** (`HealthComponent`, `Hitbox/HurtboxComponent`, `MovementComponent`, `Sprite/ShadowComponent`, `InventoryComponent`, `StatusEffectComponent`, `PhoenixGaugeComponent`, `FarmPlotComponent`…) → Node2D scene components.
+- **Behavior-tree nodes** (`Chase/Find/IdleWait/Melee/ShootAttackAction`, `CanSee/CanShoot/HasTarget/IsInAttackRangeCondition`) → AI nodes.
+- **NPC scene nodes** (`BaseNPC2D`, `Kaguya/Keine/Koishi/Marisa/Nitori/Reimu/SakuyaNPC`), **player physics** (`PlayerInputHandler`, `PlayerPhysicsController`, `StairClimbing/RigidBodyPushController`, `PlayerHairPhysics`).
+- **Render/scene** (`HD2D*`, `Water/UnderwaterVolume`, `Room*`, `Map/TownMapSystem`, `Weather2DSystem`, `DayNightCycle2D`, `AdvancedRenderingEnvironment`, `TerrainGrassPopulator`, `DustEffect`), **UI menus** (`Pause/Settings/UnifiedGameMenu`).
+- Spot-checked the borderline ones: `ElementEnchant`=Area2D pickup, `CharacterSkills`=1100-line Node2D+VFX, `ItemResource`=9-line Godot Resource (≈`ItemDefinition`). A few audit hits were already ported (`EnemyAIHelper`→slice 68, `SaveSchema`).
+
+**Conclusion:** the clean, headless, unit-testable logic/data/composition surface is **definitively complete** — every remaining Godot class needs Unity scene/rig/render/play-mode work or is Codex art. This is no longer an assertion; it's the result of auditing all 191 source classes.
+
 **Slices 88–91 (cardbuild content DB completion):** 88 added resources/statuses tables; 89 added boss_rules; 90 added archetypes (12) + characters (36) — content DB now loads **all 8 cardbuild data files** (Godot `CardBuildDatabase` fully ported); 91 added cross-reference `Validate` (load + validate). **Slice-91 FINDING (corrected):** the validator flags 2 upgrades (verdict_keyword_patch, installed_clause_lock) that target mechanism cards absent from cards.json — but this is **FAITHFUL to Godot** (both codebases' cards.json hold only the same 12 Mokou cards; the mechanism cards exist in NEITHER, though their *resolution* logic was ported in slice 29). It is a Godot-source data quirk carried over, NOT a Unity port gap; "fixing" it would mean inventing upstream-nonexistent cards. Correctly left as-is.
 
 **▶ NEXT-SESSION MENU (non-blocked pure-logic epics surveyed this session):** with E6 logic-complete, the remaining non-blocked, non-art pure-logic work is **fresh un-ported Godot systems**, each its own data-infra chain (best started with focused context, not at a session tail):
