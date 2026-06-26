@@ -376,7 +376,100 @@ namespace TouhouMigration.Runtime.CardBuild
                 case "mechanism_bridge_market_regulation":
                     AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "market_regulation" });
                     break;
+                case "mokou_starter_fire_bird":
+                    if (IsVulnerabilityOpen)
+                    {
+                        Boss.Damage(20 + RewrittenRuleCount * 6 + State.GetResource("ember") * 2);
+                    }
+                    break;
+                case "mokou_payoff_fujiyama_burst":
+                    ResolveMokouFujiyamaBurst();
+                    break;
+                case "mokou_defense_xu_fu_dimension":
+                    AddTerrainPressure(-2);
+                    SuppressTerrain(3.5);
+                    ReduceCardCooldowns(0.35);
+                    break;
+                case "mokou_movement_bamboo_escape":
+                    SuppressTerrain(2.8);
+                    ReduceCardCooldowns(0.35);
+                    break;
+                case "mokou_draw_old_history_cinders":
+                    ReduceCardCooldowns(0.75);
+                    break;
+                case "mokou_attack_flame_fist":
+                    ResolveMokouFlameFist();
+                    break;
+                case "mokou_terminal_hourai_doll":
+                    ResolveMokouHouraiDoll();
+                    break;
+                case "mokou_risk_honest_mans_death":
+                    AddInstalledCard(new MigrationCardEffectBlock { Type = "install", Id = "honest_mans_death" });
+                    AddTerrainPressure(1);
+                    OpenVulnerability(2.0);
+                    ReduceCardCooldowns(0.8);
+                    break;
+                case "mokou_bridge_imperishable_shooting":
+                    ReduceCardCooldowns(0.6);
+                    break;
             }
+        }
+
+        private void ResolveMokouFujiyamaBurst()
+        {
+            int burn = State.GetStatus("enemy", "burn");
+            if (burn <= 0)
+            {
+                return;
+            }
+
+            State.ApplyStatus("enemy", "burn", -burn);
+            int damage = 28 + burn * 20 + State.GetResource("ember") * 5;
+            if (IsVulnerabilityOpen)
+            {
+                damage = (int)System.Math.Round(damage * 1.3, System.MidpointRounding.AwayFromZero);
+            }
+
+            Boss.Damage(damage);
+            AddTerrainPressure(-1);
+        }
+
+        private void ResolveMokouFlameFist()
+        {
+            int damage = 24 + State.GetResource("ember") * 3;
+            if (State.GetStatus("enemy", "burn") > 0)
+            {
+                damage += 18;
+                OpenVulnerability(1.6);
+            }
+
+            Boss.Damage(damage);
+            State.ApplyStatus("enemy", "burn", 1);
+        }
+
+        private void ResolveMokouHouraiDoll()
+        {
+            int ember = State.GetResource("ember");
+            int burn = State.GetStatus("enemy", "burn");
+            if (ember < 2)
+            {
+                return;
+            }
+
+            int damage = 92 + ember * 30 + burn * 14 + RewrittenRuleCount * 30;
+            if (IsVulnerabilityOpen)
+            {
+                damage = (int)System.Math.Round(damage * 1.22, System.MidpointRounding.AwayFromZero);
+            }
+
+            State.SpendResource("ember", ember);
+            if (burn > 0)
+            {
+                State.ApplyStatus("enemy", "burn", -burn);
+            }
+
+            Boss.Damage(damage);
+            ReduceVulnerability(1.5);
         }
 
         private void ResolveBindingVerdict()
