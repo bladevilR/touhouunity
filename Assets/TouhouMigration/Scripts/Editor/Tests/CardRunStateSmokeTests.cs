@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TouhouMigration.Runtime.CardBuild;
 using UnityEditor;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace TouhouMigration.Editor.Tests
             TestSpendResourcePartialAllAndEmpty();
             TestStatusIsPerTargetAndDefaults();
             TestConsumeStatusPartialAllAndErase();
+            TestMissingCostResource();
             Debug.Log("Card run state smoke tests passed.");
         }
 
@@ -80,6 +82,24 @@ namespace TouhouMigration.Editor.Tests
             AssertEqual(0, state.GetStatus("enemy", "fate_lock"), "Consuming all erases the status.");
 
             AssertEqual(0, state.ConsumeStatus("enemy", "fate_lock", 1), "Consuming an absent status returns 0.");
+        }
+
+        private static void TestMissingCostResource()
+        {
+            MigrationCardRunState state = new MigrationCardRunState();
+            state.AddResource("ember", 2);
+            state.AddResource("fate", 1);
+
+            AssertEqual("", state.MissingCostResource(new Dictionary<string, int> { ["ember"] = 2, ["fate"] = 1 }),
+                "An affordable cost reports no missing resource.");
+            AssertEqual("fate", state.MissingCostResource(new Dictionary<string, int> { ["ember"] = 1, ["fate"] = 2 }),
+                "The first unaffordable resource is reported.");
+            AssertEqual("", state.MissingCostResource(new Dictionary<string, int> { ["ember"] = 0 }),
+                "A zero requirement is always satisfied.");
+            AssertEqual("", state.MissingCostResource(null),
+                "A null cost has nothing missing.");
+            AssertEqual("seal", state.MissingCostResource(new Dictionary<string, int> { ["seal"] = 1 }),
+                "An entirely-absent resource is reported as missing.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

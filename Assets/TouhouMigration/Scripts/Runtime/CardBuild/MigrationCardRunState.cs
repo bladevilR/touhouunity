@@ -50,6 +50,26 @@ namespace TouhouMigration.Runtime.CardBuild
             return resourceId != null && resources.TryGetValue(resourceId, out int value) ? value : 0;
         }
 
+        // The first resource a cost can't afford (Godot _missing_cost_resource), or "" if affordable.
+        // Only positive requirements are checked; backs card-play cost gating.
+        public string MissingCostResource(IReadOnlyDictionary<string, int> cost)
+        {
+            if (cost == null)
+            {
+                return string.Empty;
+            }
+
+            foreach (KeyValuePair<string, int> requirement in cost)
+            {
+                if (requirement.Value > 0 && GetResource(requirement.Key) < requirement.Value)
+                {
+                    return requirement.Key;
+                }
+            }
+
+            return string.Empty;
+        }
+
         public IReadOnlyDictionary<string, int> ResourcesSnapshot()
         {
             return new Dictionary<string, int>(resources);
