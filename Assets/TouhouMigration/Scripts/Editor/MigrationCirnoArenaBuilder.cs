@@ -1,6 +1,7 @@
 using System.IO;
 using TouhouMigration.Runtime.CardBuild;
 using TouhouMigration.Runtime.Farming;
+using TouhouMigration.Runtime.Fishing;
 using TouhouMigration.Runtime.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -103,6 +104,35 @@ namespace TouhouMigration.Editor
             EditorSceneManager.SaveScene(scene, FarmScenePath);
             AssetDatabase.Refresh();
             Debug.Log("[MigrationCirnoArenaBuilder] authored " + FarmScenePath);
+        }
+
+        private const string FishScenePath = SceneDir + "/MigrationFishingPlayable.unity";
+
+        // Authors a standalone playable fishing scene (camera + MigrationFishDriver), routing around the
+        // concurrent owner like the Cirno + shop + farm scenes.
+        [MenuItem("Touhou Migration/Build/Build Fishing Playable Scene")]
+        public static void BuildFishingScene()
+        {
+            UnityEngine.SceneManagement.Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            GameObject cameraGo = new GameObject("Main Camera");
+            Camera camera = cameraGo.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.20f, 0.42f, 0.55f); // lake blue
+            camera.orthographic = true;
+            cameraGo.tag = "MainCamera";
+
+            GameObject driverGo = new GameObject("FishDriver");
+            driverGo.AddComponent<MigrationFishDriver>();
+
+            if (!Directory.Exists(SceneDir))
+            {
+                Directory.CreateDirectory(SceneDir);
+            }
+
+            EditorSceneManager.SaveScene(scene, FishScenePath);
+            AssetDatabase.Refresh();
+            Debug.Log("[MigrationCirnoArenaBuilder] authored " + FishScenePath);
         }
     }
 }
