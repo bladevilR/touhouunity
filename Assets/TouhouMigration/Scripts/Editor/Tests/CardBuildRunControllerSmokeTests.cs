@@ -19,6 +19,7 @@ namespace TouhouMigration.Editor.Tests
             TestResourceAndDeckDelegation();
             TestVulnerabilityIsWindowOrClauseSealed();
             TestAttackUsesCompositeVulnerabilityAndTerrain();
+            TestTerrainSuppressionAndPressureClamp();
             Debug.Log("Card build run controller smoke tests passed.");
         }
 
@@ -80,6 +81,30 @@ namespace TouhouMigration.Editor.Tests
             // Open the window -> vulnerable -> x1.0; round(50*1.0)=50.
             run.OpenVulnerability(2.0);
             AssertEqual(50, run.ApplyPlayerAttack(50), "An open vulnerability deals full damage.");
+        }
+
+        private static void TestTerrainSuppressionAndPressureClamp()
+        {
+            MigrationCardBuildRunController run = NewRun();
+            AssertEqual(false, run.IsTerrainSuppressed, "Terrain starts unsuppressed.");
+
+            run.SuppressTerrain(2.0);
+            AssertEqual(true, run.IsTerrainSuppressed, "Suppressing terrain reads suppressed.");
+            run.TickTerrainSuppression(5.0);
+            AssertEqual(false, run.IsTerrainSuppressed, "Draining the suppression window clears it.");
+
+            // A sealed boss clause suppresses terrain even with the window closed (Godot disjunct).
+            run.Clauses.Install("cirno_domain", new[] { "field_replace" });
+            run.Clauses.Expose("cirno_domain");
+            run.Clauses.SealWithAnswer("cirno_domain", "field_replace", 2);
+            AssertEqual(true, run.IsTerrainSuppressed, "A sealed clause suppresses terrain.");
+
+            // Pressure clamps within [0, MaxTerrainPressure].
+            MigrationCardBuildRunController p = NewRun(); // TerrainPressure 2
+            p.AddTerrainPressure(10);
+            AssertEqual(MigrationCardBuildRunController.MaxTerrainPressure, p.TerrainPressure, "Pressure clamps at the max.");
+            p.AddTerrainPressure(-100);
+            AssertEqual(0, p.TerrainPressure, "Pressure clamps at zero.");
         }
 
         private static void AssertEqual<T>(T expected, T actual, string message)

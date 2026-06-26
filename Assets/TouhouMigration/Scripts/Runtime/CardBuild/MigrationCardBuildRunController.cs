@@ -46,12 +46,29 @@ namespace TouhouMigration.Runtime.CardBuild
         public MigrationMokouChargeState Mokou { get; }
 
         private readonly MigrationCardVulnerabilityWindow vulnerability = new MigrationCardVulnerabilityWindow();
+        private readonly MigrationCardVulnerabilityWindow terrainSuppression = new MigrationCardVulnerabilityWindow();
+
+        public const int MaxTerrainPressure = 6;
 
         public string BossClauseId { get; }
 
         // Godot init: terrain pressure starts at 2, no rewritten rules yet.
         public int TerrainPressure { get; set; } = 2;
         public int RewrittenRuleCount { get; set; }
+
+        // Terrain-suppression timer (Godot _terrain_suppression_seconds / is_terrain_suppressed): a window,
+        // extended by certain cards, that — like vulnerability — also reads suppressed when the boss clause
+        // is sealed. Bump TerrainPressure with the MAX clamp.
+        public double TerrainSuppressionSeconds => terrainSuppression.Seconds;
+        public void SuppressTerrain(double seconds) => terrainSuppression.Open(seconds);
+        public void TickTerrainSuppression(double deltaSeconds) => terrainSuppression.Tick(deltaSeconds);
+        public bool IsTerrainSuppressed => terrainSuppression.IsOpen || Clauses.IsSealed(BossClauseId);
+
+        public void AddTerrainPressure(int delta)
+        {
+            int next = TerrainPressure + delta;
+            TerrainPressure = next < 0 ? 0 : next > MaxTerrainPressure ? MaxTerrainPressure : next;
+        }
 
         public double VulnerabilitySeconds => vulnerability.Seconds;
 
