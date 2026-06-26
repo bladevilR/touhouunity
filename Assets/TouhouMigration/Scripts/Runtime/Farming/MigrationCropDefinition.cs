@@ -36,6 +36,8 @@ namespace TouhouMigration.Runtime.Farming
         public int MaxYield { get; }
         public MigrationCropRarity Rarity { get; }
         public MigrationCropSeason Season { get; }
+        public string Name { get; }
+        public int BasePrice { get; }
 
         public MigrationCropDefinition(
             string cropId,
@@ -45,7 +47,9 @@ namespace TouhouMigration.Runtime.Farming
             int minYield,
             int maxYield,
             MigrationCropRarity rarity = MigrationCropRarity.Common,
-            MigrationCropSeason season = MigrationCropSeason.Spring)
+            MigrationCropSeason season = MigrationCropSeason.Spring,
+            string name = "",
+            int basePrice = 0)
         {
             CropId = cropId ?? string.Empty;
             GrowthDays = Math.Max(0, growthDays);
@@ -55,6 +59,8 @@ namespace TouhouMigration.Runtime.Farming
             MaxYield = Math.Max(MinYield, maxYield);
             Rarity = rarity;
             Season = season;
+            Name = name ?? string.Empty;
+            BasePrice = Math.Max(0, basePrice);
         }
 
         // Whether this crop can be planted in the given season (Godot can_plant_in_season).

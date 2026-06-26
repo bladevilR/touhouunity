@@ -70,10 +70,46 @@ namespace TouhouMigration.Runtime.Farming
                 string harvestItemId = ResolveHarvestItemId(cropId);
                 MigrationCropRarity rarity = ParseRarity(GetString(data, "rarity"));
                 MigrationCropSeason season = ParseSeason(GetString(data, "season"));
-                crops[cropId] = new MigrationCropDefinition(cropId, growthDays, true, harvestItemId, 1, 1, rarity, season);
+                string name = GetString(data, "name");
+                int basePrice = GetInt(data, "base_price", 0);
+                crops[cropId] = new MigrationCropDefinition(cropId, growthDays, true, harvestItemId, 1, 1, rarity, season, name, basePrice);
             }
 
             return crops.Count > 0 && errors.Count == 0;
+        }
+
+        // Register each crop's harvest produce as a sellable item, derived from the crop's own name +
+        // base_price (Godot ItemData "crops" category), so the harvest -> inventory -> sell loop closes for
+        // crops whose produce wasn't pre-defined in items.json. Existing produce items are left untouched.
+        // Returns the count newly added.
+        public int RegisterProduceInto(TouhouMigration.Runtime.Inventory.ItemDatabase items)
+        {
+            if (items == null)
+            {
+                return 0;
+            }
+
+            int added = 0;
+            foreach (MigrationCropDefinition crop in crops.Values)
+            {
+                if (string.IsNullOrEmpty(crop.HarvestItemId) || items.HasItem(crop.HarvestItemId))
+                {
+                    continue;
+                }
+
+                TouhouMigration.Runtime.Inventory.ItemDefinition produce = new TouhouMigration.Runtime.Inventory.ItemDefinition(
+                    crop.HarvestItemId, "crops", "crop",
+                    string.IsNullOrEmpty(crop.Name) ? crop.HarvestItemId : crop.Name,
+                    string.Empty, crop.BasePrice, 99, string.Empty,
+                    crop.Rarity.ToString().ToUpperInvariant(), crop.CropId, "farming", string.Empty);
+
+                if (items.RegisterItem(produce))
+                {
+                    added++;
+                }
+            }
+
+            return added;
         }
 
         public MigrationCropDefinition GetCrop(string cropId)

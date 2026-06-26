@@ -113,6 +113,19 @@ namespace TouhouMigration.Runtime.Inventory
             return items.ContainsKey(itemId);
         }
 
+        // Register an item at runtime (e.g. produce derived from crop data). No-ops + returns false if the
+        // id is empty or already known, so it never clobbers an authored definition.
+        public bool RegisterItem(ItemDefinition definition)
+        {
+            if (definition == null || string.IsNullOrEmpty(definition.Id) || items.ContainsKey(definition.Id))
+            {
+                return false;
+            }
+
+            items[definition.Id] = definition;
+            return true;
+        }
+
         public ItemDefinition GetItem(string itemId)
         {
             return items.TryGetValue(itemId, out ItemDefinition item) ? item : null;
