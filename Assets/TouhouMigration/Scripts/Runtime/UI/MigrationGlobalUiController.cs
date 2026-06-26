@@ -547,11 +547,6 @@ namespace TouhouMigration.Runtime.UI
             {
                 unifiedMenuController?.Toggle("overview");
             }
-
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                StartSampleDialogue();
-            }
         }
 
         private static void LoadScene(Data.MigrationSceneId sceneId)
@@ -561,33 +556,6 @@ namespace TouhouMigration.Runtime.UI
             {
                 TouhouMigrationBootstrap.Instance.SceneTransitions.Load(sceneId);
             }
-        }
-
-        private void StartSampleDialogue()
-        {
-            if (dialogueDatabase == null || dialogueFacade == null || dialogueFacade.IsActive)
-            {
-                return;
-            }
-
-            var context = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["bond_level"] = 5,
-                ["time_of_day"] = "afternoon"
-            };
-            Dictionary<string, object> mergedContext = BuildDialogueContext("marisa");
-            foreach (KeyValuePair<string, object> pair in context)
-            {
-                mergedContext[pair.Key] = pair.Value;
-            }
-
-            var lines = dialogueDatabase.GetDialogue("marisa", "question", mergedContext);
-            if (lines.Count == 0)
-            {
-                lines = dialogueDatabase.GetDialogue("marisa", "greeting", mergedContext);
-            }
-
-            dialogueFacade.StartLines("marisa", lines);
         }
 
         public bool StartDialogueForNpc(string npcId)
